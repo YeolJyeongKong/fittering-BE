@@ -1,11 +1,16 @@
 package yeolJyeongKong.mall.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NonNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.FetchType.*;
 
 @Entity
+@Getter
 public class Mall {
 
     @Id @GeneratedValue
@@ -27,9 +32,9 @@ public class Mall {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(mappedBy = "mall")
-    private Product product;
+    @OneToMany(mappedBy = "mall")
+    private List<Product> products = new ArrayList<>();
 
-    @OneToOne(mappedBy = "mall")
+    @OneToOne(mappedBy = "mall", fetch = LAZY)
     private Rank rank;
 }

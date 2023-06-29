@@ -4,24 +4,27 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-public class Rank {
+public class Recent {
 
     @Id @GeneratedValue
-    @Column(name = "rank_id")
+    @Column(name = "recent_id")
     private Long id;
 
     @NonNull
-    private Long view;
+    private LocalDateTime timestamp;
 
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "mall_id")
-    private Mall mall;
+    @OneToMany(mappedBy = "recent", fetch = LAZY)
+    private List<Product> products = new ArrayList<>();
 }

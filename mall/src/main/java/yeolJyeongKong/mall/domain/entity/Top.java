@@ -1,9 +1,13 @@
 package yeolJyeongKong.mall.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NonNull;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
+@Getter
 public class Top {
 
     @Id @GeneratedValue
@@ -21,6 +25,6 @@ public class Top {
     @NonNull
     private Integer sleeve;
 
-    @OneToOne(mappedBy = "top")
+    @OneToOne(mappedBy = "top", fetch = LAZY)
     private Size size;
 }

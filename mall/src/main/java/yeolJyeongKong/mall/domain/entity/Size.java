@@ -1,13 +1,12 @@
 package yeolJyeongKong.mall.domain.entity;
 
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Getter;
 
 import static jakarta.persistence.FetchType.*;
 
 @Entity
+@Getter
 public class Size {
 
     @Id @GeneratedValue

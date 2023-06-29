@@ -1,9 +1,13 @@
 package yeolJyeongKong.mall.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NonNull;
 
+import static jakarta.persistence.FetchType.LAZY;
+
 @Entity
+@Getter
 public class Measurement {
 
     @Id @GeneratedValue
@@ -24,6 +28,6 @@ public class Measurement {
     private Integer thigh;
     private Integer hip;
 
-    @OneToOne(mappedBy = "measurement")
+    @OneToOne(mappedBy = "measurement", fetch = LAZY)
     private User user;
 }

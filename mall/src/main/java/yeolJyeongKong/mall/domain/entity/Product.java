@@ -1,6 +1,7 @@
 package yeolJyeongKong.mall.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
+@Getter
 public class Product {
 
     @Id @GeneratedValue
@@ -19,10 +21,19 @@ public class Product {
     private Integer price;
 
     @NonNull
+    private String name;
+
+    @NonNull
     private String gender;
 
     @NonNull
     private String image;
+
+    @NonNull
+    private Integer view;
+
+    @NonNull
+    private Integer timeView;
 
     private String descriptionImage;
 
@@ -34,10 +45,14 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "mall_id")
     private Mall mall;
 
     @OneToMany(mappedBy = "product")
     private List<Size> sizes = new ArrayList<>();
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "recent_id")
+    private Recent recent;
 }

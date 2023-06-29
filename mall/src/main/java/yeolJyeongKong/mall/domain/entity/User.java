@@ -26,6 +26,15 @@ public class User {
     @NonNull
     private String gender;
 
+    @NonNull
+    private Integer year;
+
+    @NonNull
+    private Integer month;
+
+    @NonNull
+    private Integer day;
+
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "measurement_id")
     private Measurement measurement;
@@ -36,6 +45,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Product> products = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", fetch = LAZY)
     private Rank rank;
+
+    @OneToOne(mappedBy = "user", fetch = LAZY)
+    private Recent recent;
 }
