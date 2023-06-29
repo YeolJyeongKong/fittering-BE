@@ -18,6 +18,8 @@ public class Mall {
     @NonNull
     private String url;
 
+    private String image;
+
     @NonNull
     private String description;
 
