@@ -20,10 +20,21 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<?> productWithCategory(@PathVariable("categoryId") String category,
+    public ResponseEntity<?> productWithCategory(@PathVariable("categoryId") Long categoryId,
                                                  @RequestParam String gender,
                                                  Pageable pageable) {
-        Page<ProductPreviewDto> products = productService.productWithCategory(category, gender, pageable);
+        Page<ProductPreviewDto> products = productService.productWithCategory(categoryId, gender, pageable);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/malls/{mallId}/{categoryId}")
+    public ResponseEntity<?> productWithCategoryOfMall(@PathVariable("mallId") Long mallId,
+                                                       @PathVariable("categoryId") Long categoryId,
+                                                       @RequestParam String gender,
+                                                       Pageable pageable) {
+        Page<ProductPreviewDto> products = productService.productWithCategoryOfMall(
+                                                   mallId, categoryId, gender, pageable
+                                           );
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
