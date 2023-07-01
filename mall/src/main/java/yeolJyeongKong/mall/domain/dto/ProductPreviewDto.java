@@ -11,13 +11,16 @@ public class ProductPreviewDto {
     private String productName;
     private Integer price;
     private String mallName;
+    private String mallUrl;
 
     @QueryProjection
-    public ProductPreviewDto(Long productId, String productImage, String productName, Integer price, String mallName) {
+    public ProductPreviewDto(Long productId, String productImage, String productName,
+                             Integer price, String mallName, String mallUrl) {
         this.productId = productId;
         this.productImage = productImage;
         this.productName = productName;
         this.price = price;
         this.mallName = mallName;
+        this.mallUrl = mallUrl;
     }
 }

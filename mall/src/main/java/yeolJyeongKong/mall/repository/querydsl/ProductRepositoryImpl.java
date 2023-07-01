@@ -27,7 +27,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public Page<ProductPreviewDto> productCategoryPreview(String categoryName, String gender, Pageable pageable) {
+    public Page<ProductPreviewDto> productWithCategory(String categoryName, String gender, Pageable pageable) {
 
         List<ProductPreviewDto> content = queryFactory
                 .select(new QProductPreviewDto(
@@ -35,7 +35,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         product.image.as("productImage"),
                         product.name.as("productName"),
                         product.price,
-                        product.mall.name.as("mallName")
+                        mall.name.as("mallName"),
+                        mall.url.as("mallUrl")
                 ))
                 .from(product)
                 .leftJoin(product.category, category)
@@ -64,7 +65,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public Page<ProductPreviewDto> productLikePreview(Long userId, Pageable pageable) {
+    public Page<ProductPreviewDto> productWithFavorite(Long userId, Pageable pageable) {
 
         List<ProductPreviewDto> content = queryFactory
                 .select(new QProductPreviewDto(
@@ -72,7 +73,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         product.image.as("productImage"),
                         product.name.as("productName"),
                         product.price,
-                        product.mall.name.as("mallName")
+                        mall.name.as("mallName"),
+                        mall.url.as("mallUrl")
                 ))
                 .from(product)
                 .leftJoin(product.user, user)
@@ -100,7 +102,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public Page<ProductPreviewDto> productSearchPreview(String productName, String gender, Pageable pageable) {
+    public Page<ProductPreviewDto> searchProduct(String productName, String gender, Pageable pageable) {
 
         List<ProductPreviewDto> content = queryFactory
                 .select(new QProductPreviewDto(
@@ -108,7 +110,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         product.image.as("productImage"),
                         product.name.as("productName"),
                         product.price,
-                        product.mall.name.as("mallName")
+                        mall.name.as("mallName"),
+                        mall.url.as("mallUrl")
                 ))
                 .from(product)
                 .leftJoin(product.category, category)
