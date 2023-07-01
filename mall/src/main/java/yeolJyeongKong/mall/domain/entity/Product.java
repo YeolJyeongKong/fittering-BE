@@ -26,6 +26,14 @@ public class Product {
     @NonNull
     private String gender;
 
+    /**
+     * 0 : 상의(Top)
+     * 1 : 하의(Bottom)
+     * ...
+     */
+    @NonNull
+    private Integer type;
+
     @NonNull
     private String image;
 

@@ -2,6 +2,7 @@ package yeolJyeongKong.mall.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NonNull;
 
 import static jakarta.persistence.FetchType.*;
 
@@ -12,6 +13,9 @@ public class Size {
     @Id @GeneratedValue
     @Column(name = "size_id")
     private Long id;
+
+    @NonNull
+    private String name;
 
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "top_id")
