@@ -24,8 +24,13 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final MallRepository mallRepository;
 
-    public Page<ProductPreviewDto> productWithCategory(String category, String gender, Pageable pageable) {
-        return productRepository.productWithCategory(category, gender, pageable);
+    public Page<ProductPreviewDto> productWithCategory(Long categoryId, String gender, Pageable pageable) {
+        return productRepository.productWithCategory(null, categoryId, gender, pageable);
+    }
+
+    public Page<ProductPreviewDto> productWithCategoryOfMall(Long mallId, Long categoryId,
+                                                             String gender, Pageable pageable) {
+        return productRepository.productWithCategory(mallId, categoryId, gender, pageable);
     }
 
     public Page<ProductPreviewDto> productWithUserFavorite(Long userId, Pageable pageable) {
@@ -39,7 +44,7 @@ public class ProductService {
 
         for (Category category : categories) {
             result.add(new ProductCategoryDto(category.getName(),
-                                              productRepository.productCountWithCategory(category.getName())));
+                                              productRepository.productCountWithCategory(category.getId())));
         }
 
         return result;
@@ -54,7 +59,7 @@ public class ProductService {
 
         for (Category category : categories) {
             result.add(new ProductCategoryDto(category.getName(),
-                    productRepository.productCountWithCategoryOfMall(mall.getName(), category.getName())));
+                    productRepository.productCountWithCategoryOfMall(mall.getName(), category.getId())));
         }
 
         return result;
