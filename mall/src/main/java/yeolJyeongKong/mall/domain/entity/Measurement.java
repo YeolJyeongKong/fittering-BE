@@ -3,6 +3,7 @@ package yeolJyeongKong.mall.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
+import yeolJyeongKong.mall.domain.dto.MeasurementDto;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -30,4 +31,16 @@ public class Measurement {
 
     @OneToOne(mappedBy = "measurement", fetch = LAZY)
     private User user;
+
+    public void update(MeasurementDto measurementDto) {
+        height = measurementDto.getHeight();
+        weight = measurementDto.getWeight();
+        arm = measurementDto.getArm();
+        leg = measurementDto.getLeg();
+        shoulder = measurementDto.getShoulder();
+        waist = measurementDto.getWaist();
+        chest = measurementDto.getChest();
+        thigh = measurementDto.getThigh();
+        hip = measurementDto.getHip();
+    }
 }

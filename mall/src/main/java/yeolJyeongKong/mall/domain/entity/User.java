@@ -1,7 +1,9 @@
 package yeolJyeongKong.mall.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NonNull;
+import yeolJyeongKong.mall.domain.dto.UserDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.List;
 import static jakarta.persistence.FetchType.*;
 
 @Entity
+@Getter
 public class User {
 
     @Id @GeneratedValue
@@ -50,4 +53,12 @@ public class User {
 
     @OneToOne(mappedBy = "user", fetch = LAZY)
     private Recent recent;
+
+    public void update(UserDto userDto) {
+        username = userDto.getUsername();
+        gender = userDto.getGender();
+        year = userDto.getYear();
+        month = userDto.getMonth();
+        day = userDto.getDay();
+    }
 }
