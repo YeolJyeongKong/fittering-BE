@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import yeolJyeongKong.mall.domain.dto.MeasurementDto;
 import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
+import yeolJyeongKong.mall.domain.dto.RecommendProductsDto;
 import yeolJyeongKong.mall.domain.dto.UserDto;
 import yeolJyeongKong.mall.service.ProductService;
 import yeolJyeongKong.mall.service.UserService;
@@ -60,6 +61,40 @@ public class UserController {
     @GetMapping("/user/recent")
     public ResponseEntity<?> recentProduct(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         List<ProductPreviewDto> products = userService.recentProduct(principalDetails.getUser().getId());
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    /**
+     * ML server에서 상품 인덱스 받아오는 방식에 따라 수정 필요 (미완성)
+     * - Restful API : productId List를 @RequestParam이 아닌 다른 API URL로부터 받아오는 로직 추가 필요
+     * - kafka : 전달 방식 이해 및 로직 수정 필요
+     *
+     * type에 따라 전달되는 내용이 다르도록 만들어야 함
+     * 처리하는 로직이 같아서 아직 구분해서 구현하지 않았음 (추후 수정)
+     * - 1 : 추천 상품
+     * - 2 : 비슷한 체형 고객 pick
+     */
+    @GetMapping("/user/recommendation/preview")
+    public ResponseEntity<?> recommendProductPreview(@RequestParam RecommendProductsDto recommendProductsDto) {
+        List<Long> productIds = recommendProductsDto.getProductIds();
+        List<ProductPreviewDto> products = productService.recommendProduct(productIds, true);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    /**
+     * ML server에서 상품 인덱스 받아오는 방식에 따라 수정 필요 (미완성)
+     * - Restful API : productId List를 @RequestParam이 아닌 다른 API URL로부터 받아오는 로직 추가 필요
+     * - kafka : 전달 방식 이해 및 로직 수정 필요
+     *
+     * type에 따라 전달되는 내용이 다르도록 만들어야 함
+     * 처리하는 로직이 같아서 아직 구분해서 구현하지 않았음 (추후 수정)
+     * - 1 : 추천 상품
+     * - 2 : 비슷한 체형 고객 pick
+     */
+    @GetMapping("/user/recommendation")
+    public ResponseEntity<?> recommendProduct(@RequestParam RecommendProductsDto recommendProductsDto) {
+        List<Long> productIds = recommendProductsDto.getProductIds();
+        List<ProductPreviewDto> products = productService.recommendProduct(productIds, false);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }

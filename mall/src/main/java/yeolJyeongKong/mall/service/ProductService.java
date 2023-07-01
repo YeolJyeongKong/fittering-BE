@@ -64,4 +64,18 @@ public class ProductService {
 
         return result;
     }
+
+    public List<ProductPreviewDto> recommendProduct(List<Long> productIds, boolean preview) {
+
+        List<ProductPreviewDto> result = new ArrayList<>();
+
+        for(int i = 0; i < productIds.size(); i++) {
+            if (preview && i >= 4) break;
+
+            Long productId = productIds.get(i);
+            result.add(productRepository.productById(productId));
+        }
+
+        return result;
+    }
 }

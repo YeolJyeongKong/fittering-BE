@@ -28,6 +28,25 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
+    public ProductPreviewDto productById(Long productId) {
+        return queryFactory
+                .select(new QProductPreviewDto(
+                        product.id.as("productId"),
+                        product.image.as("productImage"),
+                        product.name.as("productName"),
+                        product.price,
+                        mall.name.as("mallName"),
+                        mall.url.as("mallUrl")
+                ))
+                .from(product)
+                .leftJoin(product.mall, mall)
+                .where(
+                        productIdEq(productId)
+                )
+                .fetchOne();
+    }
+
+    @Override
     public Page<ProductPreviewDto> productWithCategory(Long mallId, Long categoryId, String gender, Pageable pageable) {
 
         List<ProductPreviewDto> content = queryFactory
@@ -200,5 +219,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
      */
     public BooleanExpression mallIdEq(Long mallId) {
         return mallId != null ? mall.id.eq(mallId) : Expressions.asBoolean(true).isTrue();
+    }
+
+    public BooleanExpression productIdEq(Long productId) {
+        return productId != null ? mall.id.eq(productId) : null;
     }
 }
