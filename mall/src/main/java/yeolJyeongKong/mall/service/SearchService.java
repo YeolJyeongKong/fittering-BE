@@ -13,7 +13,7 @@ public class SearchService {
 
     private final ProductRepository productRepository;
 
-    public Page<ProductPreviewDto> productSearchPreview(String productName, String gender, Pageable pageable) {
-        return productRepository.productSearchPreview(productName, gender, pageable);
+    public Page<ProductPreviewDto> products(String productName, String gender, Pageable pageable) {
+        return productRepository.searchProduct(productName, gender, pageable);
     }
 }

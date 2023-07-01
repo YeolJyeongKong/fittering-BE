@@ -21,7 +21,7 @@ public class SearchController {
 
     @GetMapping("/search")
     public ResponseEntity<?> search(SearchDto searchDto, Pageable pageable) {
-        Page<ProductPreviewDto> result = searchService.productSearchPreview(
+        Page<ProductPreviewDto> result = searchService.products(
                                                 searchDto.getKeyword(),
                                                 searchDto.getGender(),
                                                 pageable
