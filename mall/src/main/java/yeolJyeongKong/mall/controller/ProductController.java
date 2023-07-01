@@ -17,10 +17,10 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<?> productWithCategory(@PathVariable("categoryId") String categoryName,
+    public ResponseEntity<?> productWithCategory(@PathVariable("categoryId") String category,
                                                  @RequestParam String gender,
                                                  Pageable pageable) {
-        Page<ProductPreviewDto> products = productService.productWithCategory(categoryName, gender, pageable);
+        Page<ProductPreviewDto> products = productService.productWithCategory(category, gender, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }

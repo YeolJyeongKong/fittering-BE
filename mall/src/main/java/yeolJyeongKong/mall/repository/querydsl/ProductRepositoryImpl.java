@@ -10,6 +10,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.util.StringUtils;
 import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
 import yeolJyeongKong.mall.domain.dto.QProductPreviewDto;
+import yeolJyeongKong.mall.domain.entity.QCategory;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public Page<ProductPreviewDto> productWithCategory(String categoryName, String gender, Pageable pageable) {
+    public Page<ProductPreviewDto> productWithCategory(String category, String gender, Pageable pageable) {
 
         List<ProductPreviewDto> content = queryFactory
                 .select(new QProductPreviewDto(
@@ -39,10 +40,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         mall.url.as("mallUrl")
                 ))
                 .from(product)
-                .leftJoin(product.category, category)
+                .leftJoin(product.category, QCategory.category)
                 .leftJoin(product.mall, mall)
                 .where(
-                        categoryNameEq(categoryName),
+                        categoryEq(category),
                         genderEq(gender)
                 )
                 .offset(pageable.getOffset())
@@ -52,9 +53,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         Long count = queryFactory
                 .select(product.count())
                 .from(product)
-                .leftJoin(product.category, category)
+                .leftJoin(product.category, QCategory.category)
                 .where(
-                        categoryNameEq(categoryName),
+                        categoryEq(category),
                         genderEq(gender)
                 )
                 .offset(pageable.getOffset())
@@ -139,8 +140,34 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, () -> count);
     }
 
-    public BooleanExpression categoryNameEq(String categoryName) {
-        return StringUtils.hasText(categoryName) ? category.name.eq(categoryName) : null;
+    @Override
+    public Long productCountWithCategory(String category) {
+        return queryFactory
+                .select(product.count())
+                .from(product)
+                .leftJoin(product.category, QCategory.category)
+                .where(
+                        categoryEq(category)
+                )
+                .fetchOne();
+    }
+
+    @Override
+    public Long productCountWithCategoryOfMall(String mallName, String category) {
+        return queryFactory
+                .select(product.count())
+                .from(product)
+                .leftJoin(product.category, QCategory.category)
+                .leftJoin(product.mall, mall)
+                .where(
+                        categoryEq(category),
+                        mallNameEq(mallName)
+                )
+                .fetchOne();
+    }
+
+    public BooleanExpression categoryEq(String category) {
+        return StringUtils.hasText(category) ? QCategory.category.name.eq(category) : null;
     }
 
     public BooleanExpression userIdEq(Long userId) {
@@ -158,5 +185,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     public BooleanExpression productNameCotnains(String productName) {
         return StringUtils.hasText(productName) ? product.name.contains(productName) : null;
+    }
+
+    public BooleanExpression mallNameEq(String mallName) {
+        return StringUtils.hasText(mallName) ? category.name.eq(mallName) : null;
     }
 }
