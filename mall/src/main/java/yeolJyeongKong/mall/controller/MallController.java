@@ -47,7 +47,7 @@ public class MallController {
     /**
      * user flow에 맞게 추후 수정
      */
-    @GetMapping("/malls/favorite")
+    @GetMapping("/malls/favorite_malls")
     public ResponseEntity<?> mallRank(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         List<MallDto> mallDtos = mallService.userFavoriteMall(principalDetails.getUser().getId());
         return new ResponseEntity<>(mallDtos, HttpStatus.OK);
