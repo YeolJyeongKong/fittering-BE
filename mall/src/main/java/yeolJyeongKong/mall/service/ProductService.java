@@ -1,6 +1,7 @@
 package yeolJyeongKong.mall.service;
 
 import jakarta.persistence.NoResultException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -93,5 +94,11 @@ public class ProductService {
 
     public BottomProductDto bottomProductDetail(Long productId) {
         return productRepository.bottomProductDetail(productId);
+    }
+
+    @Transactional
+    public void updateView(Long productId) {
+        Product product = findById(productId);
+        product.updateView();
     }
 }

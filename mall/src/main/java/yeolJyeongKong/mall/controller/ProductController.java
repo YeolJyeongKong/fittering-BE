@@ -61,6 +61,7 @@ public class ProductController {
      */
     @GetMapping("/products/{productId}")
     public ResponseEntity<?> productDetail(@PathVariable("productId") Long productId) {
+        productService.updateView(productId);
         Product product = productService.findById(productId);
 
         if(product.getType().equals(0)) {

@@ -63,4 +63,8 @@ public class Product {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "recent_id")
     private Recent recent;
+
+    public void updateView() {
+        view = view + 1;
+    }
 }

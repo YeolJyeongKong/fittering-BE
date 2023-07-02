@@ -16,6 +16,7 @@ public class TopProductDto {
     private String mallUrl;
     private String mallImage;
     private String category;
+    private Integer view;
     private String popularGender;
     private Integer popularAgeRange;
 
@@ -32,6 +33,7 @@ public class TopProductDto {
         mallUrl = product.getMall().getUrl();
         mallImage = product.getMall().getImage();
         category = product.getCategory().getName();
+        view = product.getView();
         this.popularGender = popularGender;
         this.popularAgeRange = popularAgeRange;
         this.sizes = sizes;
