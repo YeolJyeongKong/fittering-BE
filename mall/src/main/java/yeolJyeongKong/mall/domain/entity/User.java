@@ -38,6 +38,17 @@ public class User {
     @NonNull
     private Integer day;
 
+    /**
+     * 0 : 0~18세
+     * 1 : 19~23세
+     * 2 : 24~28세
+     * 3 : 29~33세
+     * 4 : 34~39세
+     * 5 : 40세~
+     */
+    @NonNull
+    private Integer ageRange;
+
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "measurement_id")
     private Measurement measurement;

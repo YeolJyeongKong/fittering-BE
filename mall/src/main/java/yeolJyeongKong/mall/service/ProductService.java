@@ -5,10 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import yeolJyeongKong.mall.domain.dto.BottomProductDto;
 import yeolJyeongKong.mall.domain.dto.ProductCategoryDto;
 import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
+import yeolJyeongKong.mall.domain.dto.TopProductDto;
 import yeolJyeongKong.mall.domain.entity.Category;
 import yeolJyeongKong.mall.domain.entity.Mall;
+import yeolJyeongKong.mall.domain.entity.Product;
 import yeolJyeongKong.mall.repository.CategoryRepository;
 import yeolJyeongKong.mall.repository.MallRepository;
 import yeolJyeongKong.mall.repository.ProductRepository;
@@ -23,6 +26,11 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final MallRepository mallRepository;
+
+    public Product findById(Long productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new NoResultException("product dosen't exist"));
+    }
 
     public Page<ProductPreviewDto> productWithCategory(Long categoryId, String gender, Pageable pageable) {
         return productRepository.productWithCategory(null, categoryId, gender, pageable);
@@ -77,5 +85,13 @@ public class ProductService {
         }
 
         return result;
+    }
+
+    public TopProductDto topProductDetail(Long productId) {
+        return productRepository.topProductDetail(productId);
+    }
+
+    public BottomProductDto bottomProductDetail(Long productId) {
+        return productRepository.bottomProductDetail(productId);
     }
 }

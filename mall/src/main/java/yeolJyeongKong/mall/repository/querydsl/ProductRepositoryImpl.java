@@ -1,5 +1,6 @@
 package yeolJyeongKong.mall.repository.querydsl;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -8,15 +9,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.util.StringUtils;
-import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
-import yeolJyeongKong.mall.domain.dto.QProductPreviewDto;
-import yeolJyeongKong.mall.domain.entity.QCategory;
+import yeolJyeongKong.mall.domain.dto.*;
+import yeolJyeongKong.mall.domain.entity.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static yeolJyeongKong.mall.domain.entity.QBottom.bottom;
 import static yeolJyeongKong.mall.domain.entity.QCategory.category;
 import static yeolJyeongKong.mall.domain.entity.QMall.mall;
 import static yeolJyeongKong.mall.domain.entity.QProduct.product;
+import static yeolJyeongKong.mall.domain.entity.QSize.size;
+import static yeolJyeongKong.mall.domain.entity.QTop.top;
 import static yeolJyeongKong.mall.domain.entity.QUser.user;
 
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
@@ -185,6 +190,100 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         mallNameEq(mallName)
                 )
                 .fetchOne();
+    }
+
+    @Override
+    public TopProductDto topProductDetail(Long productId) {
+        Long favoriteCount = queryFactory
+                .select(user.count())
+                .from(user)
+                .where(user.products.any().id.eq(productId))
+                .fetchOne();
+
+        Tuple tuple = queryFactory
+                .select(product.count(), user.gender, user.ageRange)
+                .from(product)
+                .leftJoin(product.user, user)
+                .where(
+                        productIdEq(productId)
+                )
+                .groupBy(user.gender, user.ageRange)
+                .orderBy(product.count().desc())
+                .limit(1)
+                .fetchOne();
+
+        Tuple popular = Optional.ofNullable(tuple)
+                .orElseThrow(() -> new NullPointerException("popular information doesn't exist"));
+
+        String gender = popular.get(user.gender);
+        Integer ageRange = popular.get(user.ageRange);
+
+        Product productInfo = queryFactory
+                .selectFrom(product)
+                .from(product)
+                .leftJoin(product.mall, mall)
+                .leftJoin(product.category, category)
+                .leftJoin(product.sizes, size)
+                .leftJoin(size.top, top)
+                .where(
+                        productIdEq(productId)
+                )
+                .fetchOne();
+
+        List<Size> sizes = productInfo.getSizes();
+        List<TopDto> topDtos = new ArrayList<>();
+        for (Size size : sizes) {
+            topDtos.add(new TopDto(size));
+        }
+
+        return new TopProductDto(favoriteCount, productInfo, gender, ageRange, topDtos);
+    }
+
+    @Override
+    public BottomProductDto bottomProductDetail(Long productId) {
+        Long favoriteCount = queryFactory
+                .select(user.count())
+                .from(user)
+                .where(user.products.any().id.eq(productId))
+                .fetchOne();
+
+        Tuple tuple = queryFactory
+                .select(product.count(), user.gender, user.ageRange)
+                .from(product)
+                .leftJoin(product.user, user)
+                .where(
+                        productIdEq(productId)
+                )
+                .groupBy(user.gender, user.ageRange)
+                .orderBy(product.count().desc())
+                .limit(1)
+                .fetchOne();
+
+        Tuple popular = Optional.ofNullable(tuple)
+                .orElseThrow(() -> new NullPointerException("popular information doesn't exist"));
+
+        String gender = popular.get(user.gender);
+        Integer ageRange = popular.get(user.ageRange);
+
+        Product productInfo = queryFactory
+                .selectFrom(product)
+                .from(product)
+                .leftJoin(product.mall, mall)
+                .leftJoin(product.category, category)
+                .leftJoin(product.sizes, size)
+                .leftJoin(size.bottom, bottom)
+                .where(
+                        productIdEq(productId)
+                )
+                .fetchOne();
+
+        List<Size> sizes = productInfo.getSizes();
+        List<BottomDto> bottomDtos = new ArrayList<>();
+        for (Size size : sizes) {
+            bottomDtos.add(new BottomDto(size));
+        }
+
+        return new BottomProductDto(favoriteCount, productInfo, gender, ageRange, bottomDtos);
     }
 
     public BooleanExpression categoryIdEq(Long categoryId) {

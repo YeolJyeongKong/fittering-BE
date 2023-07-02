@@ -2,6 +2,8 @@ package yeolJyeongKong.mall.repository.querydsl;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import yeolJyeongKong.mall.domain.dto.BottomProductDto;
+import yeolJyeongKong.mall.domain.dto.TopProductDto;
 import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
 
 public interface ProductRepositoryCustom {
@@ -11,4 +13,6 @@ public interface ProductRepositoryCustom {
     Page<ProductPreviewDto> searchProduct(String productName, String gender, Pageable pageable);
     Long productCountWithCategory(Long categoryId);
     Long productCountWithCategoryOfMall(String mallName, Long categoryId);
+    TopProductDto topProductDetail(Long productId);
+    BottomProductDto bottomProductDetail(Long productId);
 }
