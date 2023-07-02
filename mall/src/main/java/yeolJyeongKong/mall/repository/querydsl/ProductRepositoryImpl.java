@@ -1,6 +1,5 @@
 package yeolJyeongKong.mall.repository.querydsl;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -9,19 +8,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.util.StringUtils;
-import yeolJyeongKong.mall.domain.dto.*;
-import yeolJyeongKong.mall.domain.entity.*;
+import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
+import yeolJyeongKong.mall.domain.dto.QProductPreviewDto;
+import yeolJyeongKong.mall.domain.entity.QCategory;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static yeolJyeongKong.mall.domain.entity.QBottom.bottom;
 import static yeolJyeongKong.mall.domain.entity.QCategory.category;
 import static yeolJyeongKong.mall.domain.entity.QMall.mall;
 import static yeolJyeongKong.mall.domain.entity.QProduct.product;
-import static yeolJyeongKong.mall.domain.entity.QSize.size;
-import static yeolJyeongKong.mall.domain.entity.QTop.top;
 import static yeolJyeongKong.mall.domain.entity.QUser.user;
 
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
@@ -33,26 +28,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public ProductPreviewDto productById(Long productId) {
-        return queryFactory
-                .select(new QProductPreviewDto(
-                        product.id.as("productId"),
-                        product.image.as("productImage"),
-                        product.name.as("productName"),
-                        product.price,
-                        mall.name.as("mallName"),
-                        mall.url.as("mallUrl")
-                ))
-                .from(product)
-                .leftJoin(product.mall, mall)
-                .where(
-                        productIdEq(productId)
-                )
-                .fetchOne();
-    }
-
-    @Override
-    public Page<ProductPreviewDto> productWithCategory(Long mallId, Long categoryId, String gender, Pageable pageable) {
+    public Page<ProductPreviewDto> productWithCategory(String category, String gender, Pageable pageable) {
 
         List<ProductPreviewDto> content = queryFactory
                 .select(new QProductPreviewDto(
@@ -67,9 +43,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .leftJoin(product.category, QCategory.category)
                 .leftJoin(product.mall, mall)
                 .where(
-                        categoryIdEq(categoryId),
-                        genderEq(gender),
-                        mallIdEq(mallId)
+                        categoryEq(category),
+                        genderEq(gender)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -80,9 +55,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .from(product)
                 .leftJoin(product.category, QCategory.category)
                 .where(
-                        categoryIdEq(categoryId),
-                        genderEq(gender),
-                        mallIdEq(mallId)
+                        categoryEq(category),
+                        genderEq(gender)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -167,127 +141,33 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public Long productCountWithCategory(Long categoryId) {
+    public Long productCountWithCategory(String category) {
         return queryFactory
                 .select(product.count())
                 .from(product)
                 .leftJoin(product.category, QCategory.category)
                 .where(
-                        categoryIdEq(categoryId)
+                        categoryEq(category)
                 )
                 .fetchOne();
     }
 
     @Override
-    public Long productCountWithCategoryOfMall(String mallName, Long categoryId) {
+    public Long productCountWithCategoryOfMall(String mallName, String category) {
         return queryFactory
                 .select(product.count())
                 .from(product)
                 .leftJoin(product.category, QCategory.category)
                 .leftJoin(product.mall, mall)
                 .where(
-                        categoryIdEq(categoryId),
+                        categoryEq(category),
                         mallNameEq(mallName)
                 )
                 .fetchOne();
     }
 
-    @Override
-    public TopProductDto topProductDetail(Long productId) {
-        Long favoriteCount = queryFactory
-                .select(user.count())
-                .from(user)
-                .where(user.products.any().id.eq(productId))
-                .fetchOne();
-
-        Tuple tuple = queryFactory
-                .select(product.count(), user.gender, user.ageRange)
-                .from(product)
-                .leftJoin(product.user, user)
-                .where(
-                        productIdEq(productId)
-                )
-                .groupBy(user.gender, user.ageRange)
-                .orderBy(product.count().desc())
-                .limit(1)
-                .fetchOne();
-
-        Tuple popular = Optional.ofNullable(tuple)
-                .orElseThrow(() -> new NullPointerException("popular information doesn't exist"));
-
-        String gender = popular.get(user.gender);
-        Integer ageRange = popular.get(user.ageRange);
-
-        Product productInfo = queryFactory
-                .selectFrom(product)
-                .from(product)
-                .leftJoin(product.mall, mall)
-                .leftJoin(product.category, category)
-                .leftJoin(product.sizes, size)
-                .leftJoin(size.top, top)
-                .where(
-                        productIdEq(productId)
-                )
-                .fetchOne();
-
-        List<Size> sizes = productInfo.getSizes();
-        List<TopDto> topDtos = new ArrayList<>();
-        for (Size size : sizes) {
-            topDtos.add(new TopDto(size));
-        }
-
-        return new TopProductDto(favoriteCount, productInfo, gender, ageRange, topDtos);
-    }
-
-    @Override
-    public BottomProductDto bottomProductDetail(Long productId) {
-        Long favoriteCount = queryFactory
-                .select(user.count())
-                .from(user)
-                .where(user.products.any().id.eq(productId))
-                .fetchOne();
-
-        Tuple tuple = queryFactory
-                .select(product.count(), user.gender, user.ageRange)
-                .from(product)
-                .leftJoin(product.user, user)
-                .where(
-                        productIdEq(productId)
-                )
-                .groupBy(user.gender, user.ageRange)
-                .orderBy(product.count().desc())
-                .limit(1)
-                .fetchOne();
-
-        Tuple popular = Optional.ofNullable(tuple)
-                .orElseThrow(() -> new NullPointerException("popular information doesn't exist"));
-
-        String gender = popular.get(user.gender);
-        Integer ageRange = popular.get(user.ageRange);
-
-        Product productInfo = queryFactory
-                .selectFrom(product)
-                .from(product)
-                .leftJoin(product.mall, mall)
-                .leftJoin(product.category, category)
-                .leftJoin(product.sizes, size)
-                .leftJoin(size.bottom, bottom)
-                .where(
-                        productIdEq(productId)
-                )
-                .fetchOne();
-
-        List<Size> sizes = productInfo.getSizes();
-        List<BottomDto> bottomDtos = new ArrayList<>();
-        for (Size size : sizes) {
-            bottomDtos.add(new BottomDto(size));
-        }
-
-        return new BottomProductDto(favoriteCount, productInfo, gender, ageRange, bottomDtos);
-    }
-
-    public BooleanExpression categoryIdEq(Long categoryId) {
-        return categoryId != null ? category.id.eq(categoryId) : null;
+    public BooleanExpression categoryEq(String category) {
+        return StringUtils.hasText(category) ? QCategory.category.name.eq(category) : null;
     }
 
     public BooleanExpression userIdEq(Long userId) {
@@ -296,8 +176,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     /**
      * @param gender
-     * null     : 전체
-     * not null : 이외 성별 구분
+     * null == 전체
+     * 이외 성별 구분
      */
     public BooleanExpression genderEq(String gender) {
         return StringUtils.hasText(gender) ? product.gender.eq(gender) : Expressions.asBoolean(true).isTrue();
@@ -309,18 +189,5 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     public BooleanExpression mallNameEq(String mallName) {
         return StringUtils.hasText(mallName) ? category.name.eq(mallName) : null;
-    }
-
-    /**
-     * @param mallId
-     * null     : 전체
-     * not null : 쇼핑몰 구분
-     */
-    public BooleanExpression mallIdEq(Long mallId) {
-        return mallId != null ? mall.id.eq(mallId) : Expressions.asBoolean(true).isTrue();
-    }
-
-    public BooleanExpression productIdEq(Long productId) {
-        return productId != null ? mall.id.eq(productId) : null;
     }
 }

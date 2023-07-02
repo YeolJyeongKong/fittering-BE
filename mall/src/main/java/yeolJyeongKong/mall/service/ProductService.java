@@ -5,13 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import yeolJyeongKong.mall.domain.dto.BottomProductDto;
 import yeolJyeongKong.mall.domain.dto.ProductCategoryDto;
 import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
-import yeolJyeongKong.mall.domain.dto.TopProductDto;
 import yeolJyeongKong.mall.domain.entity.Category;
 import yeolJyeongKong.mall.domain.entity.Mall;
-import yeolJyeongKong.mall.domain.entity.Product;
 import yeolJyeongKong.mall.repository.CategoryRepository;
 import yeolJyeongKong.mall.repository.MallRepository;
 import yeolJyeongKong.mall.repository.ProductRepository;
@@ -27,18 +24,8 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final MallRepository mallRepository;
 
-    public Product findById(Long productId) {
-        return productRepository.findById(productId)
-                .orElseThrow(() -> new NoResultException("product dosen't exist"));
-    }
-
-    public Page<ProductPreviewDto> productWithCategory(Long categoryId, String gender, Pageable pageable) {
-        return productRepository.productWithCategory(null, categoryId, gender, pageable);
-    }
-
-    public Page<ProductPreviewDto> productWithCategoryOfMall(Long mallId, Long categoryId,
-                                                             String gender, Pageable pageable) {
-        return productRepository.productWithCategory(mallId, categoryId, gender, pageable);
+    public Page<ProductPreviewDto> productWithCategory(String category, String gender, Pageable pageable) {
+        return productRepository.productWithCategory(category, gender, pageable);
     }
 
     public Page<ProductPreviewDto> productWithUserFavorite(Long userId, Pageable pageable) {
@@ -52,7 +39,7 @@ public class ProductService {
 
         for (Category category : categories) {
             result.add(new ProductCategoryDto(category.getName(),
-                                              productRepository.productCountWithCategory(category.getId())));
+                                              productRepository.productCountWithCategory(category.getName())));
         }
 
         return result;
@@ -67,31 +54,9 @@ public class ProductService {
 
         for (Category category : categories) {
             result.add(new ProductCategoryDto(category.getName(),
-                    productRepository.productCountWithCategoryOfMall(mall.getName(), category.getId())));
+                    productRepository.productCountWithCategoryOfMall(mall.getName(), category.getName())));
         }
 
         return result;
-    }
-
-    public List<ProductPreviewDto> recommendProduct(List<Long> productIds, boolean preview) {
-
-        List<ProductPreviewDto> result = new ArrayList<>();
-
-        for(int i = 0; i < productIds.size(); i++) {
-            if (preview && i >= 4) break;
-
-            Long productId = productIds.get(i);
-            result.add(productRepository.productById(productId));
-        }
-
-        return result;
-    }
-
-    public TopProductDto topProductDetail(Long productId) {
-        return productRepository.topProductDetail(productId);
-    }
-
-    public BottomProductDto bottomProductDetail(Long productId) {
-        return productRepository.bottomProductDetail(productId);
     }
 }
