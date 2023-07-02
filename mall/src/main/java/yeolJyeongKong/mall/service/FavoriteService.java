@@ -1,28 +1,35 @@
 package yeolJyeongKong.mall.service;
 
 import jakarta.persistence.NoResultException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import yeolJyeongKong.mall.domain.dto.MallDto;
 import yeolJyeongKong.mall.domain.dto.MallRankProductDto;
+import yeolJyeongKong.mall.domain.entity.Favorite;
 import yeolJyeongKong.mall.domain.entity.Mall;
 import yeolJyeongKong.mall.domain.entity.Product;
+import yeolJyeongKong.mall.domain.entity.User;
+import yeolJyeongKong.mall.repository.FavoriteRepository;
 import yeolJyeongKong.mall.repository.MallRepository;
 import yeolJyeongKong.mall.repository.ProductRepository;
+import yeolJyeongKong.mall.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MallService {
+public class FavoriteService {
 
+    private final FavoriteRepository favoriteRepository;
     private final MallRepository mallRepository;
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
     public List<MallDto> userFavoriteMall(Long userId) {
 
-        List<Mall> malls = mallRepository.userFavoriteMall(userId);
+        List<Mall> malls = favoriteRepository.userFavoriteMall(userId);
         List<MallDto> result = new ArrayList<>();
 
         for (Mall mall : malls) {
@@ -44,5 +51,21 @@ public class MallService {
         }
 
         return result;
+    }
+
+    @Transactional
+    public void setFavoriteMall(Long userId, Long mallId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoResultException("user doesn't exist"));
+
+        Mall mall = mallRepository.findById(mallId)
+                .orElseThrow(() -> new NoResultException("mall doesn't exist"));
+
+        favoriteRepository.save(new Favorite(user, mall));
+    }
+
+    @Transactional
+    public void deleteFavoriteMall(Long userId, Long mallId) {
+        favoriteRepository.deleteByUserIdAndMallId(userId, mallId);
     }
 }

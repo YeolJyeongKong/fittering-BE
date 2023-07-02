@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import yeolJyeongKong.mall.domain.dto.MallDto;
-import yeolJyeongKong.mall.service.MallService;
+import yeolJyeongKong.mall.service.FavoriteService;
 import yeolJyeongKong.mall.service.RankService;
 
 import java.awt.print.Pageable;
@@ -20,7 +20,7 @@ import java.util.List;
 public class MallController {
 
     private final RankService rankService;
-    private final MallService mallService;
+    private final FavoriteService favoriteService;
 
     @GetMapping("/malls/preview/mobile")
     public ResponseEntity<?> mallRankPreviewMobile(@AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -49,7 +49,7 @@ public class MallController {
      */
     @GetMapping("/malls/favorite_malls")
     public ResponseEntity<?> mallRank(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        List<MallDto> mallDtos = mallService.userFavoriteMall(principalDetails.getUser().getId());
+        List<MallDto> mallDtos = favoriteService.userFavoriteMall(principalDetails.getUser().getId());
         return new ResponseEntity<>(mallDtos, HttpStatus.OK);
     }
 }

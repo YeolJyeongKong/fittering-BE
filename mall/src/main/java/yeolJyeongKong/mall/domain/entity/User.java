@@ -38,6 +38,9 @@ public class User {
     @NonNull
     private Integer day;
 
+    @OneToMany(mappedBy = "user")
+    private List<Favorite> favorites = new ArrayList<>();
+
     /**
      * 0 : 0~18세
      * 1 : 19~23세
@@ -52,9 +55,6 @@ public class User {
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "measurement_id")
     private Measurement measurement;
-
-    @OneToMany(mappedBy = "user")
-    private List<Mall> malls = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Product> products = new ArrayList<>();

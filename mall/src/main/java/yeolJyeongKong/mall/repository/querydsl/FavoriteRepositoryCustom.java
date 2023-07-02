@@ -4,6 +4,6 @@ import yeolJyeongKong.mall.domain.entity.Mall;
 
 import java.util.List;
 
-public interface MallRepositoryCustom {
+public interface FavoriteRepositoryCustom {
     List<Mall> userFavoriteMall(Long userId);
 }

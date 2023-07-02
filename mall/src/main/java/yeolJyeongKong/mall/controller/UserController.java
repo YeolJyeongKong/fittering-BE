@@ -11,6 +11,7 @@ import yeolJyeongKong.mall.domain.dto.MeasurementDto;
 import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
 import yeolJyeongKong.mall.domain.dto.RecommendProductsDto;
 import yeolJyeongKong.mall.domain.dto.UserDto;
+import yeolJyeongKong.mall.service.FavoriteService;
 import yeolJyeongKong.mall.service.ProductService;
 import yeolJyeongKong.mall.service.UserService;
 
@@ -22,6 +23,7 @@ public class UserController {
 
     private final UserService userService;
     private final ProductService productService;
+    private final FavoriteService favoriteService;
 
     @GetMapping("/user/edit")
     public ResponseEntity<?> edit(@AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -96,5 +98,19 @@ public class UserController {
         List<Long> productIds = recommendProductsDto.getProductIds();
         List<ProductPreviewDto> products = productService.recommendProduct(productIds, false);
         return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @PostMapping("/favorite/{userId}/{mallId}")
+    public ResponseEntity<?> setFavoriteMall(@PathVariable("userId") Long userId,
+                                             @PathVariable("mallId") Long mallId) {
+        favoriteService.setFavoriteMall(userId, mallId);
+        return new ResponseEntity<>("즐겨찾기 등록 완료", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/favorite/{userId}/{mallId}")
+    public ResponseEntity<?> deleteFavoriteMall(@PathVariable("userId") Long userId,
+                                                @PathVariable("mallId") Long mallId) {
+        favoriteService.deleteFavoriteMall(userId, mallId);
+        return new ResponseEntity<>("즐겨찾기 삭제 완료", HttpStatus.OK);
     }
 }

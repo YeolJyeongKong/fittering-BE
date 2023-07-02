@@ -28,13 +28,12 @@ public class Mall {
     @NonNull
     private String description;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @OneToMany(mappedBy = "mall")
     private List<Product> products = new ArrayList<>();
 
     @OneToOne(mappedBy = "mall", fetch = LAZY)
     private Rank rank;
+
+    @OneToMany(mappedBy = "user")
+    private List<Favorite> favorites = new ArrayList<>();
 }
