@@ -5,6 +5,6 @@ import yeolJyeongKong.mall.domain.entity.Measurement;
 
 import java.util.Optional;
 
-public interface MeasurementRepository extends JpaRepository<MeasurementRepository, Long> {
+public interface MeasurementRepository extends JpaRepository<Measurement, Long> {
     Optional<Measurement> findByUserId(Long userId);
 }
