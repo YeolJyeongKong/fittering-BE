@@ -1,9 +1,9 @@
 package yeolJyeongKong.mall.repository.querydsl;
 
-import yeolJyeongKong.mall.domain.entity.Mall;
+import yeolJyeongKong.mall.domain.entity.Favorite;
 
 import java.util.List;
 
 public interface FavoriteRepositoryCustom {
-    List<Mall> userFavoriteMall(Long userId);
+    List<Favorite> userFavoriteMall(Long userId);
 }

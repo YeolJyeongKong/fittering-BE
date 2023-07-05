@@ -29,11 +29,12 @@ public class FavoriteService {
 
     public List<MallDto> userFavoriteMall(Long userId) {
 
-        List<Mall> malls = favoriteRepository.userFavoriteMall(userId);
+        List<Favorite> favoriteMalls = favoriteRepository.userFavoriteMall(userId);
         List<MallDto> result = new ArrayList<>();
 
-        for (Mall mall : malls) {
+        for (Favorite favorite : favoriteMalls) {
 
+            Mall mall = favorite.getMall();
             List<Product> products = mall.getProducts();
             List<MallRankProductDto> productDtos = new ArrayList<>();
 

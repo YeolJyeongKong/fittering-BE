@@ -34,6 +34,6 @@ public class Mall {
     @OneToOne(mappedBy = "mall", fetch = LAZY)
     private Rank rank;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "mall")
     private List<Favorite> favorites = new ArrayList<>();
 }
