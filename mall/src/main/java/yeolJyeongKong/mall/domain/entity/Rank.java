@@ -8,6 +8,7 @@ import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
+@Table(name = "`rank`")
 public class Rank {
 
     @Id @GeneratedValue
