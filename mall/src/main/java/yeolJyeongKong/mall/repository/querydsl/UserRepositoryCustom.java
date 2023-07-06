@@ -6,4 +6,6 @@ import yeolJyeongKong.mall.domain.dto.UserDto;
 public interface UserRepositoryCustom {
     UserDto info(Long userId);
     MeasurementDto measurementInfo(Long userId);
+    Long usernameCount(String username);
+    Long emailCount(String email);
 }
