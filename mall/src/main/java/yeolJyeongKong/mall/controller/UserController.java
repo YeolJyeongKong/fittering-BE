@@ -7,10 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import yeolJyeongKong.mall.domain.dto.MeasurementDto;
-import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
-import yeolJyeongKong.mall.domain.dto.RecommendProductsDto;
-import yeolJyeongKong.mall.domain.dto.UserDto;
+import yeolJyeongKong.mall.config.PrincipalDetails;
+import yeolJyeongKong.mall.domain.dto.*;
 import yeolJyeongKong.mall.service.FavoriteService;
 import yeolJyeongKong.mall.service.ProductService;
 import yeolJyeongKong.mall.service.UserService;
@@ -19,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
