@@ -26,7 +26,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers("/login", "/signup").permitAll()
-                                .anyRequest().hasRole("USER")
+//                                .anyRequest().hasRole("USER")
+                                .anyRequest().permitAll()
                 )
                 .formLogin((formLogin) ->
                         formLogin
