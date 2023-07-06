@@ -94,6 +94,13 @@ public class User {
         LocalDate currentDate = LocalDate.now();
 
         int yearDiff = currentDate.getYear() - year;
-        return birthDate.isBefore(currentDate) ? yearDiff - 1 : yearDiff;
+        int age = birthDate.isBefore(currentDate) ? yearDiff - 1 : yearDiff;
+
+        if (age <= 18) return 0;
+        if (age <= 23) return 1;
+        if (age <= 28) return 2;
+        if (age <= 33) return 3;
+        if (age <= 39) return 4;
+        return 5;
     }
 }
