@@ -57,6 +57,10 @@ public class User {
     @NonNull
     private Integer ageRange;
 
+    @NonNull
+    @ElementCollection(fetch = EAGER)
+    private List<String> roles = new ArrayList<>();
+
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "measurement_id")
     private Measurement measurement;
@@ -79,6 +83,7 @@ public class User {
         day = signUpDto.getDay();
         ageRange = getAgeRange(year, month, day);
         this.password = password;
+        roles.add("USER");
     }
 
     public void update(UserDto userDto) {

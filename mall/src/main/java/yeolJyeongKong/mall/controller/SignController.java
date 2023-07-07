@@ -5,10 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import yeolJyeongKong.mall.config.jwt.JwtTokenProvider;
+import yeolJyeongKong.mall.domain.dto.LoginDto;
 import yeolJyeongKong.mall.domain.dto.SignUpDto;
+import yeolJyeongKong.mall.domain.entity.User;
 import yeolJyeongKong.mall.service.UserService;
 
 @Slf4j
@@ -17,6 +18,15 @@ import yeolJyeongKong.mall.service.UserService;
 public class SignController {
 
     private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    @PostMapping("/api/login")
+    @ResponseBody
+    public String loginFromAPI(@RequestBody LoginDto loginDto) {
+        User user = userService.login(loginDto);
+        return user != null ?
+                jwtTokenProvider.createToken(user.getEmail(), user.getRoles()) : "일치하는 유저 정보가 없습니다.";
+    }
 
     @GetMapping("/login")
     public String login(Model model) {

@@ -7,10 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
-import yeolJyeongKong.mall.domain.dto.MeasurementDto;
-import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
-import yeolJyeongKong.mall.domain.dto.SignUpDto;
-import yeolJyeongKong.mall.domain.dto.UserDto;
+import yeolJyeongKong.mall.domain.dto.*;
 import yeolJyeongKong.mall.domain.entity.Measurement;
 import yeolJyeongKong.mall.domain.entity.User;
 import yeolJyeongKong.mall.repository.MeasurementRepository;
@@ -67,6 +64,13 @@ public class UserService {
                 .orElseThrow(() -> new NoResultException("User doesn't exist"));
 
         return passwordEncoder.matches(userDto.getPassword(), user.getPassword());
+    }
+
+    public User login(LoginDto loginDto) {
+        User user = userRepository.findByEmail(loginDto.getEmail())
+                .orElseThrow(() -> new NoResultException("User doesn't exist"));
+
+        return passwordEncoder.matches(loginDto.getPassword(), user.getPassword()) ? user : null;
     }
 
     public boolean usernameExist(String username) {

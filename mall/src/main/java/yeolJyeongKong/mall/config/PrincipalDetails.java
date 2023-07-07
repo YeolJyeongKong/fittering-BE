@@ -2,10 +2,12 @@ package yeolJyeongKong.mall.config;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import yeolJyeongKong.mall.domain.entity.User;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Data
 public class PrincipalDetails implements UserDetails {
@@ -18,7 +20,9 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return user.getRoles().stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 
     @Override
