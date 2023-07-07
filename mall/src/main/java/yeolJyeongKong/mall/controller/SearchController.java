@@ -27,10 +27,7 @@ public class SearchController {
     private final SearchService searchService;
 
     @Operation(summary = "검색 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ProductPreviewDto.class))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = ProductPreviewDto.class)))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ProductPreviewDto.class)))
     @GetMapping("/search")
     public ResponseEntity<?> search(SearchDto searchDto, Pageable pageable) {
         Page<ProductPreviewDto> result = searchService.products(

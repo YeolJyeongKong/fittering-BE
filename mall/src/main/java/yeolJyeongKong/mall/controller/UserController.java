@@ -34,10 +34,7 @@ public class UserController {
     private final FavoriteService favoriteService;
 
     @Operation(summary = "마이페이지 조회 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserDto.class))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = UserDto.class)))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserDto.class)))
     @GetMapping("/user/edit")
     public ResponseEntity<?> edit(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         UserDto userDto = userService.info(principalDetails.getUser().getId());
@@ -45,10 +42,7 @@ public class UserController {
     }
 
     @Operation(summary = "마이페이지 수정 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserDto.class))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = UserDto.class)))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserDto.class)))
     @PostMapping("/user/edit")
     public ResponseEntity<?> edit(UserDto userDto,
                                   @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -57,10 +51,7 @@ public class UserController {
     }
 
     @Operation(summary = "체형 정보 조회 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MeasurementDto.class))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = MeasurementDto.class)))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MeasurementDto.class)))
     @GetMapping("/user/mysize/edit")
     public ResponseEntity<?> measurementEdit(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         MeasurementDto measurementDto = userService.measurementInfo(principalDetails.getUser().getId());
@@ -68,10 +59,7 @@ public class UserController {
     }
 
     @Operation(summary = "체형 정보 수정 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MeasurementDto.class))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = MeasurementDto.class)))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MeasurementDto.class)))
     @PostMapping("/user/mysize/edit")
     public ResponseEntity<?> measurementEdit(MeasurementDto measurementDto,
                                              @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -80,10 +68,7 @@ public class UserController {
     }
 
     @Operation(summary = "유저 즐겨찾기 상품 조회 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class)))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/user/favorite_goods")
     public ResponseEntity<?> favoriteProduct(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                                  Pageable pageable) {
@@ -94,10 +79,7 @@ public class UserController {
     }
 
     @Operation(summary = "유저 최근 본 상품 조회 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class)))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/user/recent")
     public ResponseEntity<?> recentProduct(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         List<ProductPreviewDto> products = userService.recentProduct(principalDetails.getUser().getId());
@@ -115,10 +97,7 @@ public class UserController {
      * - 2 : 비슷한 체형 고객 pick
      */
     @Operation(summary = "추천 상품 조회 메소드 (미리보기)")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class)))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/user/recommendation/preview")
     public ResponseEntity<?> recommendProductPreview(@RequestParam RecommendProductsDto recommendProductsDto) {
         List<Long> productIds = recommendProductsDto.getProductIds();
@@ -137,10 +116,7 @@ public class UserController {
      * - 2 : 비슷한 체형 고객 pick
      */
     @Operation(summary = "추천 상품 조회 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class)))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/user/recommendation")
     public ResponseEntity<?> recommendProduct(@RequestParam RecommendProductsDto recommendProductsDto) {
         List<Long> productIds = recommendProductsDto.getProductIds();
@@ -149,10 +125,7 @@ public class UserController {
     }
 
     @Operation(summary = "유저 즐겨찾기 쇼핑몰 등록 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"즐겨찾기 등록 완료\""))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"즐겨찾기 등록 실페\"")))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"즐겨찾기 등록 완료\"")))
     @PostMapping("/favorite/{userId}/{mallId}")
     public ResponseEntity<?> setFavoriteMall(@PathVariable("userId") Long userId,
                                              @PathVariable("mallId") Long mallId) {
@@ -161,10 +134,7 @@ public class UserController {
     }
 
     @Operation(summary = "유저 즐겨찾기 쇼핑몰 삭제 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"즐겨찾기 삭제 완료\""))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"즐겨찾기 삭제 실패\"")))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"즐겨찾기 삭제 완료\"")))
     @DeleteMapping("/favorite/{userId}/{mallId}")
     public ResponseEntity<?> deleteFavoriteMall(@PathVariable("userId") Long userId,
                                                 @PathVariable("mallId") Long mallId) {

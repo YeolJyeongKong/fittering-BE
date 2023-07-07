@@ -28,10 +28,7 @@ public class ProductController {
     private final ProductService productService;
 
     @Operation(summary = "카테고리별 상품 조회 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class)))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<?> productWithCategory(@PathVariable("categoryId") Long categoryId,
                                                  @RequestParam String gender,
@@ -41,10 +38,7 @@ public class ProductController {
     }
 
     @Operation(summary = "쇼핑몰 내 카테고리별 상품 조회 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class)))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/malls/{mallId}/{categoryId}")
     public ResponseEntity<?> productWithCategoryOfMall(@PathVariable("mallId") Long mallId,
                                                        @PathVariable("categoryId") Long categoryId,
@@ -57,10 +51,7 @@ public class ProductController {
     }
 
     @Operation(summary = "카테고리별 상품 개수 조회 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductCategoryDto.class)))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductCategoryDto.class))))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductCategoryDto.class))))
     @GetMapping("/category/count")
     public ResponseEntity<?> multipleProductCountWithCategory() {
         List<ProductCategoryDto> categoryWithProductCounts = productService.multipleProductCountWithCategory();
@@ -68,10 +59,7 @@ public class ProductController {
     }
 
     @Operation(summary = "쇼핑몰 내 카테고리별 상품 개수 조회 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductCategoryDto.class)))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductCategoryDto.class))))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductCategoryDto.class))))
     @GetMapping("/malls/{mallId}/category/count")
     public ResponseEntity<?> productCountWithCategoryOfMall(@PathVariable("mallId") Long mallId) {
         List<ProductCategoryDto> categoryWithProductCounts = productService.productCountWithCategoryOfMall(mallId);
@@ -85,12 +73,9 @@ public class ProductController {
      * ...
      */
     @Operation(summary = "상품 상세 조회 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = {
-                    @Content(schema = @Schema(implementation = TopProductDto.class)),
-                    @Content(schema = @Schema(implementation = BottomProductDto.class))
-            }),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductCategoryDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = {
+            @Content(schema = @Schema(implementation = TopProductDto.class)),
+            @Content(schema = @Schema(implementation = BottomProductDto.class))
     })
     @GetMapping("/products/{productId}")
     public ResponseEntity<?> productDetail(@PathVariable("productId") Long productId) {

@@ -33,10 +33,7 @@ public class MallController {
     private final FavoriteService favoriteService;
 
     @Operation(summary = "쇼핑몰 랭킹 조회 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MallDto.class)))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MallDto.class))))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MallDto.class))))
     @GetMapping("/malls")
     public ResponseEntity<?> mallRank(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         List<MallDto> mallDtos = rankService.mallRank(principalDetails.getUser().getId());
@@ -44,10 +41,7 @@ public class MallController {
     }
 
     @Operation(summary = "모바일 환경 쇼핑몰 랭킹 조회 메소드 (미리보기)")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MallPreviewDto.class))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = MallPreviewDto.class)))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MallPreviewDto.class)))
     @GetMapping("/malls/preview/mobile")
     public ResponseEntity<?> mallRankPreviewMobile(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                                    Pageable pageable) {
@@ -57,10 +51,7 @@ public class MallController {
     }
 
     @Operation(summary = "쇼핑몰 랭킹 조회 메소드 (미리보기)")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MallPreviewDto.class))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = MallPreviewDto.class)))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MallPreviewDto.class)))
     @GetMapping("/malls/preview")
     public ResponseEntity<?> mallRankPreview(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                              Pageable pageable) {
@@ -73,10 +64,7 @@ public class MallController {
      * user flow에 맞게 추후 수정
      */
     @Operation(summary = "즐겨찾기 쇼핑몰 상세 조회 메소드")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MallDto.class))),
-//            @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(schema = @Schema(implementation = MallDto.class)))
-    })
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MallDto.class)))
     @GetMapping("/malls/favorite_malls")
     public ResponseEntity<?> favoriteMall(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         List<MallDto> mallDtos = favoriteService.userFavoriteMall(principalDetails.getUser().getId());
