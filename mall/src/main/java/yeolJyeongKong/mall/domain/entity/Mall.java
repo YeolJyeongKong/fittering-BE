@@ -3,6 +3,7 @@ package yeolJyeongKong.mall.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ public class Mall {
     @Column(name = "mall_id")
     private Long id;
 
-    @NonNull
+    @NonNull @Length(max = 15)
     private String name;
 
     @NonNull

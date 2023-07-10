@@ -3,6 +3,7 @@ package yeolJyeongKong.mall.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
+import org.hibernate.validator.constraints.Length;
 
 import static jakarta.persistence.FetchType.*;
 
@@ -14,7 +15,7 @@ public class Size {
     @Column(name = "size_id")
     private Long id;
 
-    @NonNull
+    @NonNull @Length(max = 4)
     private String name;
 
     @OneToOne(fetch = LAZY)

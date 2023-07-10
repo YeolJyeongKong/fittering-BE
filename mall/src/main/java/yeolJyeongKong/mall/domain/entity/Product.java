@@ -3,6 +3,7 @@ package yeolJyeongKong.mall.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +21,10 @@ public class Product {
     @NonNull
     private Integer price;
 
-    @NonNull
+    @NonNull @Length(max = 30)
     private String name;
 
-    @NonNull
+    @NonNull @Length(max = 1)
     private String gender;
 
     /**

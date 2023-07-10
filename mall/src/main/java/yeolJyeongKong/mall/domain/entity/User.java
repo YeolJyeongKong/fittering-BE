@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.hibernate.validator.constraints.Length;
 import yeolJyeongKong.mall.domain.dto.SignUpDto;
 import yeolJyeongKong.mall.domain.dto.UserDto;
 
@@ -23,15 +24,16 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @NonNull
+    @NonNull @Length(max = 10)
     private String username;
 
-    @NonNull
+    @NonNull @Length(min = 8, max = 15)
     private String password;
 
+    @NonNull @Length(min = 7, max = 64)
     private String email;
 
-    @NonNull
+    @NonNull @Length(max = 1)
     private String gender;
 
     @NonNull
