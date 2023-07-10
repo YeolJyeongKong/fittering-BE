@@ -1,10 +1,14 @@
 package yeolJyeongKong.mall.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import yeolJyeongKong.mall.config.jwt.JwtTokenProvider;
 import yeolJyeongKong.mall.domain.dto.LoginDto;
@@ -12,61 +16,40 @@ import yeolJyeongKong.mall.domain.dto.SignUpDto;
 import yeolJyeongKong.mall.domain.entity.User;
 import yeolJyeongKong.mall.service.UserService;
 
-@Slf4j
-@Controller
+@Tag(name = "로그인/회원가입", description = "로그인/회원가입 서비스 관련 API")
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class SignController {
 
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @PostMapping("/api/login")
-    @ResponseBody
-    public String loginFromAPI(@RequestBody LoginDto loginDto) {
-        User user = userService.login(loginDto);
-        return user != null ?
-                jwtTokenProvider.createToken(user.getEmail(), user.getRoles()) : "일치하는 유저 정보가 없습니다.";
-    }
-
-    @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("LoginUserDto", new SignUpDto());
-        return "login";
-    }
-
-    /**
-     * 로그인 테스트용
-     */
+    @Operation(summary = "로그인 메소드")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "{token}")))
     @PostMapping("/login")
-    public String login(@ModelAttribute("LoginUserDto") SignUpDto userDto, BindingResult result) {
-        boolean login = userService.login(userDto);
-        log.info("[로그인 결과] {}", login);
-        return "test";
-    }
+    public ResponseEntity<?> loginFromAPI(@ModelAttribute("loginDto") LoginDto loginDto) {
+        User user = userService.login(loginDto);
 
-    @GetMapping("/signup")
-    public String signUp(Model model) {
-        model.addAttribute("userDto", new SignUpDto());
-        return "signUp";
-    }
-
-    @PostMapping("/signup")
-    public String signUp(@ModelAttribute("userDto") SignUpDto userDto, BindingResult result) {
-        if(result.hasErrors()) {
-            return "signUp";
+        if(user == null) {
+            return new ResponseEntity<>("일치하는 유저 정보가 없습니다.", HttpStatus.BAD_REQUEST);
         }
+        return new ResponseEntity<>(jwtTokenProvider.createToken(user.getEmail(), user.getRoles()), HttpStatus.OK);
+    }
 
+    @Operation(summary = "로그아웃 메소드")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = SignUpDto.class)))
+    @PostMapping("/signup")
+    public ResponseEntity<?> signUp(@ModelAttribute("userDto") SignUpDto userDto) {
         if (userService.usernameExist(userDto.getUsername())) {
-            result.rejectValue("username", "username.exist", "같은 이름이 존재합니다.");
-            return "signUp";
+            return new ResponseEntity<>("같은 이름이 존재합니다.", HttpStatus.BAD_REQUEST);
         }
 
         if (userService.emailExist(userDto.getEmail())) {
-            result.rejectValue("email", "email.exist", "같은 이메일이 존재합니다.");
-            return "signUp";
+            return new ResponseEntity<>("같은 이메일이 존재합니다.", HttpStatus.BAD_REQUEST);
         }
 
         userService.save(userDto);
-        return "redirect:/login";
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 }
