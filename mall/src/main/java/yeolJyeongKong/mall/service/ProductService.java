@@ -3,6 +3,7 @@ package yeolJyeongKong.mall.service;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,24 +29,29 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final MallRepository mallRepository;
 
+    @Cacheable(value = "Product", key = "#productId")
     public Product findById(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new NoResultException("product dosen't exist"));
     }
 
+    @Cacheable(value = "Product", key = "#categoryId + '_' + #gender")
     public Page<ProductPreviewDto> productWithCategory(Long categoryId, String gender, Pageable pageable) {
         return productRepository.productWithCategory(null, categoryId, gender, pageable);
     }
 
+    @Cacheable(value = "MallProduct", key = "#mallId + '_' + #categoryId + '_' + #gender")
     public Page<ProductPreviewDto> productWithCategoryOfMall(Long mallId, Long categoryId,
                                                              String gender, Pageable pageable) {
         return productRepository.productWithCategory(mallId, categoryId, gender, pageable);
     }
 
+    @Cacheable(value = "FavoriteProductOfUser", key = "#userId")
     public Page<ProductPreviewDto> productWithUserFavorite(Long userId, Pageable pageable) {
         return productRepository.productWithFavorite(userId, pageable);
     }
 
+    @Cacheable(value = "Product", key = "'count'")
     public List<ProductCategoryDto> multipleProductCountWithCategory() {
 
         List<Category> categories = categoryRepository.findAll();
@@ -59,6 +65,7 @@ public class ProductService {
         return result;
     }
 
+    @Cacheable(value = "MallProduct", key = "#mallId + '_' + 'count'")
     public List<ProductCategoryDto> productCountWithCategoryOfMall(Long mallId) {
 
         Mall mall = mallRepository.findById(mallId)
@@ -88,10 +95,12 @@ public class ProductService {
         return result;
     }
 
+    @Cacheable(value = "TopProduct", key = "#productId")
     public TopProductDto topProductDetail(Long productId) {
         return productRepository.topProductDetail(productId);
     }
 
+    @Cacheable(value = "BottomProduct", key = "#productId")
     public BottomProductDto bottomProductDetail(Long productId) {
         return productRepository.bottomProductDetail(productId);
     }

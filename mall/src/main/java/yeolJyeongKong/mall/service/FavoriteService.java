@@ -3,6 +3,9 @@ package yeolJyeongKong.mall.service;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import yeolJyeongKong.mall.domain.dto.MallDto;
 import yeolJyeongKong.mall.domain.dto.MallRankProductDto;
@@ -27,6 +30,7 @@ public class FavoriteService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
+    @Cacheable(value = "UserFavoriteMall", key = "#userId")
     public List<MallDto> userFavoriteMall(Long userId) {
 
         List<Favorite> favoriteMalls = favoriteRepository.userFavoriteMall(userId);
@@ -54,6 +58,7 @@ public class FavoriteService {
         return result;
     }
 
+    @CachePut(value = "UserFavoriteMall", key = "#userId + '_' + #mallId")
     @Transactional
     public void setFavoriteMall(Long userId, Long mallId) {
         User user = userRepository.findById(userId)
@@ -65,6 +70,7 @@ public class FavoriteService {
         favoriteRepository.save(new Favorite(user, mall));
     }
 
+    @CacheEvict(value = "UserFavoriteMall", key = "#userId + '_' + #mallId")
     @Transactional
     public void deleteFavoriteMall(Long userId, Long mallId) {
         favoriteRepository.deleteByUserIdAndMallId(userId, mallId);
