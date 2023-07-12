@@ -76,6 +76,12 @@ public class User {
     @OneToOne(mappedBy = "user", fetch = LAZY)
     private Recent recent;
 
+    @OneToOne(mappedBy = "user", fetch = LAZY)
+    private UserRecommendation userRecommendation;
+
+    @OneToOne(mappedBy = "user", fetch = LAZY)
+    private RecentRecommendation recentRecommendation;
+
     public User(SignUpDto signUpDto, String password) {
         email = signUpDto.getEmail();
         username = signUpDto.getUsername();

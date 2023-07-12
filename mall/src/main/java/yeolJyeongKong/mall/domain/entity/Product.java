@@ -65,6 +65,14 @@ public class Product {
     @JoinColumn(name = "recent_id")
     private Recent recent;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_recommendation_id")
+    private UserRecommendation userRecommendation;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "recent_recommendation_id")
+    private RecentRecommendation recentRecommendation;
+
     public void updateView() {
         view = view + 1;
     }
