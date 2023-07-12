@@ -14,9 +14,7 @@ import yeolJyeongKong.mall.domain.dto.TopProductDto;
 import yeolJyeongKong.mall.domain.entity.Category;
 import yeolJyeongKong.mall.domain.entity.Mall;
 import yeolJyeongKong.mall.domain.entity.Product;
-import yeolJyeongKong.mall.repository.CategoryRepository;
-import yeolJyeongKong.mall.repository.MallRepository;
-import yeolJyeongKong.mall.repository.ProductRepository;
+import yeolJyeongKong.mall.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +26,8 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final MallRepository mallRepository;
+    private final RecentRecommendationRepository recentRecommendationRepository;
+    private final UserRecommendationRepository userRecommendationRepository;
 
     @Cacheable(value = "Product", key = "#productId")
     public Product findById(Long productId) {
@@ -109,5 +109,19 @@ public class ProductService {
     public void updateView(Long productId) {
         Product product = findById(productId);
         product.updateView();
+    }
+
+    @Cacheable(value = "ProductWithRecentRecommendation", key = "#userId")
+    public List<Product> productWithRecentRecommendation(Long userId) {
+        return recentRecommendationRepository.findByUserId(userId)
+                .orElseThrow(() -> new NoResultException("recent recommendation doesn't exist"))
+                .getProducts();
+    }
+
+    @Cacheable(value = "ProductWithUserRecommendation", key = "#userId")
+    public List<Product> productWithUserRecommendation(Long userId) {
+        return userRecommendationRepository.findByUserId(userId)
+                .orElseThrow(() -> new NoResultException("user recommendation doesn't exist"))
+                .getProducts();
     }
 }
