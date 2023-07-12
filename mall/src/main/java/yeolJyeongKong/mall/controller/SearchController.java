@@ -11,10 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
-import yeolJyeongKong.mall.domain.dto.SearchDto;
 import yeolJyeongKong.mall.service.SearchService;
 
 @Tag(name = "검색", description = "검색 서비스 관련 API")
@@ -27,11 +27,13 @@ public class SearchController {
 
     @Operation(summary = "검색 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ProductPreviewDto.class)))
-    @GetMapping("/search")
-    public ResponseEntity<?> search(SearchDto searchDto, Pageable pageable) {
+    @GetMapping("/search/{keyword}/{gender}")
+    public ResponseEntity<?> search(@PathVariable("keyword") String keyword,
+                                    @PathVariable("gender") String gender,
+                                    Pageable pageable) {
         Page<ProductPreviewDto> result = searchService.products(
-                                                searchDto.getKeyword(),
-                                                searchDto.getGender(),
+                                                keyword,
+                                                gender,
                                                 pageable
                                          );
         return new ResponseEntity<>(result, HttpStatus.OK);

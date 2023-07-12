@@ -28,24 +28,11 @@ public class ProductController {
 
     @Operation(summary = "카테고리별 상품 조회 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
-    @GetMapping("/category/{categoryId}")
+    @GetMapping("/category/{categoryId}/{gender}")
     public ResponseEntity<?> productWithCategory(@PathVariable("categoryId") Long categoryId,
-                                                 @RequestParam String gender,
+                                                 @PathVariable("gender") String gender,
                                                  Pageable pageable) {
         Page<ProductPreviewDto> products = productService.productWithCategory(categoryId, gender, pageable);
-        return new ResponseEntity<>(products, HttpStatus.OK);
-    }
-
-    @Operation(summary = "쇼핑몰 내 카테고리별 상품 조회 메소드")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
-    @GetMapping("/malls/{mallId}/{categoryId}")
-    public ResponseEntity<?> productWithCategoryOfMall(@PathVariable("mallId") Long mallId,
-                                                       @PathVariable("categoryId") Long categoryId,
-                                                       @RequestParam String gender,
-                                                       Pageable pageable) {
-        Page<ProductPreviewDto> products = productService.productWithCategoryOfMall(
-                                                   mallId, categoryId, gender, pageable
-                                           );
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -55,6 +42,19 @@ public class ProductController {
     public ResponseEntity<?> multipleProductCountWithCategory() {
         List<ProductCategoryDto> categoryWithProductCounts = productService.multipleProductCountWithCategory();
         return new ResponseEntity<>(categoryWithProductCounts, HttpStatus.OK);
+    }
+
+    @Operation(summary = "쇼핑몰 내 카테고리별 상품 조회 메소드")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @GetMapping("/malls/{mallId}/{categoryId}/{gender}")
+    public ResponseEntity<?> productWithCategoryOfMall(@PathVariable("mallId") Long mallId,
+                                                       @PathVariable("categoryId") Long categoryId,
+                                                       @PathVariable("gender") String gender,
+                                                       Pageable pageable) {
+        Page<ProductPreviewDto> products = productService.productWithCategoryOfMall(
+                mallId, categoryId, gender, pageable
+        );
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @Operation(summary = "쇼핑몰 내 카테고리별 상품 개수 조회 메소드")

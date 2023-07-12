@@ -28,7 +28,7 @@ public class SignController {
     @Operation(summary = "로그인 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "{token}")))
     @PostMapping("/login")
-    public ResponseEntity<?> loginFromAPI(@ModelAttribute("loginDto") LoginDto loginDto) {
+    public ResponseEntity<?> login(@ModelAttribute LoginDto loginDto) {
         User user = userService.login(loginDto);
 
         if(user == null) {
@@ -40,16 +40,16 @@ public class SignController {
     @Operation(summary = "로그아웃 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = SignUpDto.class)))
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@ModelAttribute("userDto") SignUpDto userDto) {
-        if (userService.usernameExist(userDto.getUsername())) {
+    public ResponseEntity<?> signUp(@ModelAttribute SignUpDto signUpDto) {
+        if (userService.usernameExist(signUpDto.getUsername())) {
             return new ResponseEntity<>("같은 이름이 존재합니다.", HttpStatus.BAD_REQUEST);
         }
 
-        if (userService.emailExist(userDto.getEmail())) {
+        if (userService.emailExist(signUpDto.getEmail())) {
             return new ResponseEntity<>("같은 이메일이 존재합니다.", HttpStatus.BAD_REQUEST);
         }
 
-        userService.save(userDto);
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        userService.save(signUpDto);
+        return new ResponseEntity<>(signUpDto, HttpStatus.OK);
     }
 }
