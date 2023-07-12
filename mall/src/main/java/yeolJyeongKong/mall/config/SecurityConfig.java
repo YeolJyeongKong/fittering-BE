@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -37,16 +38,10 @@ public class SecurityConfig {
                                 .requestMatchers("/login", "/signup").permitAll()
                                 .requestMatchers("/api/login", "api/signup").permitAll()
                                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/api-docs/**").permitAll()
+                                .requestMatchers("/actuator/prometheus/**").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .formLogin((formLogin) ->
-                        formLogin
-                                .usernameParameter("email")
-                                .passwordParameter("password")
-                                .loginPage("/login")
-                                .failureUrl("/login?failed")
-                                .loginProcessingUrl("/login/process")
-                )
+                .formLogin(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
