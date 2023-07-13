@@ -196,4 +196,13 @@ public class UserController {
         favoriteService.deleteFavoriteMall(userId, mallId);
         return new ResponseEntity<>("즐겨찾기 삭제 완료", HttpStatus.OK);
     }
+
+    @Operation(summary = "최근 본 상품 업데이트 메소드")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"최근 본 상품 업데이트 완료\"")))
+    @PostMapping("/user/recent/{userId}/{productId}")
+    public ResponseEntity<?> updateRecentProduct(@PathVariable("userId") Long userId,
+                                                 @PathVariable("productId") Long productId) {
+        userService.saveRecentProduct(userId, productId);
+        return new ResponseEntity<>("최근 본 상품 업데이트 완료", HttpStatus.OK);
+    }
 }

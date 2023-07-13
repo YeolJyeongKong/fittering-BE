@@ -9,12 +9,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import yeolJyeongKong.mall.domain.dto.*;
 import yeolJyeongKong.mall.domain.entity.Measurement;
+import yeolJyeongKong.mall.domain.entity.Product;
+import yeolJyeongKong.mall.domain.entity.Recent;
 import yeolJyeongKong.mall.domain.entity.User;
 import yeolJyeongKong.mall.repository.MeasurementRepository;
+import yeolJyeongKong.mall.repository.ProductRepository;
 import yeolJyeongKong.mall.repository.RecentRepository;
 import yeolJyeongKong.mall.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -25,12 +29,18 @@ public class UserService {
     private final UserRepository userRepository;
     private final MeasurementRepository measurementRepository;
     private final RecentRepository recentRepository;
+    private final ProductRepository productRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
     public void save(SignUpDto signUpDto) {
         User user = new User(signUpDto, passwordEncoder.encode(signUpDto.getPassword()));
         userRepository.save(user);
+    }
+
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NoResultException("user dosen't exist"));
     }
 
     public UserDto info(Long userId) {
@@ -57,6 +67,21 @@ public class UserService {
 
     public List<ProductPreviewDto> recentProduct(Long userId) {
         return recentRepository.recentProduct(userId);
+    }
+
+    @Transactional
+    public void saveRecentProduct(Long userId, Long productId) {
+        Optional<Recent> recent = recentRepository.findByUserId(userId);
+        User user = findById(userId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NoResultException("product dosen't exist"));
+
+        if(recent.isEmpty()) {
+            recentRepository.save(new Recent(user, product));
+            return;
+        }
+
+        recent.get().update(product);
     }
 
     public User login(LoginDto loginDto) {
