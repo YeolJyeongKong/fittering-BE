@@ -59,13 +59,6 @@ public class UserService {
         return recentRepository.recentProduct(userId);
     }
 
-    public boolean login(SignUpDto userDto) {
-        User user = userRepository.findByEmail(userDto.getEmail())
-                .orElseThrow(() -> new NoResultException("User doesn't exist"));
-
-        return passwordEncoder.matches(userDto.getPassword(), user.getPassword());
-    }
-
     public User login(LoginDto loginDto) {
         User user = userRepository.findByEmail(loginDto.getEmail())
                 .orElseThrow(() -> new NoResultException("User doesn't exist"));

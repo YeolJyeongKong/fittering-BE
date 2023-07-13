@@ -37,7 +37,7 @@ public class SignController {
         return new ResponseEntity<>(jwtTokenProvider.createToken(user.getEmail(), user.getRoles()), HttpStatus.OK);
     }
 
-    @Operation(summary = "로그아웃 메소드")
+    @Operation(summary = "회원가입 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = SignUpDto.class)))
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@ModelAttribute SignUpDto signUpDto) {
