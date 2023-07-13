@@ -286,6 +286,23 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         return new BottomProductDto(favoriteCount, productInfo, gender, ageRange, bottomDtos);
     }
 
+    @Override
+    public List<Product> findByIds(List<Long> productIds) {
+        List<Product> result = new ArrayList<>();
+
+        for (Long productId : productIds) {
+            Product product = queryFactory
+                    .selectFrom(QProduct.product)
+                    .where(
+                            productIdEq(productId)
+                    )
+                    .fetchOne();
+            result.add(product);
+        }
+
+        return result;
+    }
+
     public BooleanExpression categoryIdEq(Long categoryId) {
         return categoryId != null ? category.id.eq(categoryId) : null;
     }

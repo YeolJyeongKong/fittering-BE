@@ -5,6 +5,9 @@ import org.springframework.data.domain.Pageable;
 import yeolJyeongKong.mall.domain.dto.BottomProductDto;
 import yeolJyeongKong.mall.domain.dto.TopProductDto;
 import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
+import yeolJyeongKong.mall.domain.entity.Product;
+
+import java.util.List;
 
 public interface ProductRepositoryCustom {
     ProductPreviewDto productById(Long productId);
@@ -15,4 +18,5 @@ public interface ProductRepositoryCustom {
     Long productCountWithCategoryOfMall(String mallName, Long categoryId);
     TopProductDto topProductDetail(Long productId);
     BottomProductDto bottomProductDetail(Long productId);
+    List<Product> findByIds(List<Long> productIds);
 }

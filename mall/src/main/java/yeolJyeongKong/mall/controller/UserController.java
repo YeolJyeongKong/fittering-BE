@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import yeolJyeongKong.mall.config.PrincipalDetails;
 import yeolJyeongKong.mall.domain.dto.*;
 import yeolJyeongKong.mall.domain.entity.Product;
+import yeolJyeongKong.mall.domain.entity.RecentRecommendation;
+import yeolJyeongKong.mall.domain.entity.UserRecommendation;
 import yeolJyeongKong.mall.service.FavoriteService;
 import yeolJyeongKong.mall.service.ProductService;
 import yeolJyeongKong.mall.service.UserService;
@@ -101,8 +103,8 @@ public class UserController {
     @Operation(summary = "추천 상품 조회 메소드 (미리보기)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/user/recommendation/preview")
-    public ResponseEntity<?> recommendProductPreview(@RequestParam RecommendProductsDto recommendProductsDto) {
-        List<Long> productIds = recommendProductsDto.getProductIds();
+    public ResponseEntity<?> recommendProductPreview(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        List<Long> productIds = findRecommendedProductIds(principalDetails.getUser().getId());
         List<ProductPreviewDto> products = productService.recommendProduct(productIds, true);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
@@ -124,11 +126,16 @@ public class UserController {
             for (Product recommendedProduct : recommendedProducts) {
                 productIds.add(recommendedProduct.getId());
             }
-        } else {
-            List<ProductPreviewDto> recentProducts = userService.recentProduct(userId); //request
-            //TODO: API Gateway에 등록된 추천 상품 API에서 데이터를 받아오는 로직 추가 필요
-            productIds = new ArrayList<>(); //response
+            return productIds;
         }
+
+        RecentRecommendation recentRecommendation = productService.saveRecentRecommendation(userId);
+
+        List<ProductPreviewDto> recentProducts = userService.recentProduct(userId); //request
+        //TODO: API Gateway에 등록된 추천 상품 API에서 데이터를 받아오는 로직 추가 필요
+        productIds = new ArrayList<>(); //response
+
+        productService.updateRecentRecommendation(recentRecommendation, productIds);
 
         return productIds;
     }
@@ -170,11 +177,16 @@ public class UserController {
             for (Product recommendedProduct : recommendedProducts) {
                 productIds.add(recommendedProduct.getId());
             }
-        } else {
-            MeasurementDto measurement = userService.measurementInfo(userId); //request
-            //TODO: API Gateway에 등록된 비슷한 체형 고객 pick API에서 데이터를 받아오는 로직 추가 필요
-            productIds = new ArrayList<>(); //response
+            return productIds;
         }
+
+        UserRecommendation userRecommendation = productService.saveUserRecommendation(userId);
+
+        MeasurementDto measurement = userService.measurementInfo(userId); //request
+        //TODO: API Gateway에 등록된 비슷한 체형 고객 pick API에서 데이터를 받아오는 로직 추가 필요
+        productIds = new ArrayList<>(); //response
+
+        productService.updateUserRecommendation(userRecommendation, productIds);
 
         return productIds;
     }

@@ -11,9 +11,7 @@ import yeolJyeongKong.mall.domain.dto.BottomProductDto;
 import yeolJyeongKong.mall.domain.dto.ProductCategoryDto;
 import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
 import yeolJyeongKong.mall.domain.dto.TopProductDto;
-import yeolJyeongKong.mall.domain.entity.Category;
-import yeolJyeongKong.mall.domain.entity.Mall;
-import yeolJyeongKong.mall.domain.entity.Product;
+import yeolJyeongKong.mall.domain.entity.*;
 import yeolJyeongKong.mall.repository.*;
 
 import java.util.ArrayList;
@@ -23,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
 
+    private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final MallRepository mallRepository;
@@ -111,17 +110,49 @@ public class ProductService {
         product.updateView();
     }
 
+    @Transactional
+    public RecentRecommendation saveRecentRecommendation(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoResultException("user doesn't exist"));
+
+        RecentRecommendation recentRecommendation = new RecentRecommendation(user);
+        recentRecommendationRepository.save(recentRecommendation);
+        return recentRecommendation;
+    }
+
+    @Transactional
+    public void updateRecentRecommendation(RecentRecommendation recentRecommendation, List<Long> productIds) {
+        List<Product> products = productRepository.findByIds(productIds);
+        recentRecommendation.update(products);
+    }
+
+    @Transactional
+    public UserRecommendation saveUserRecommendation(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoResultException("user doesn't exist"));
+
+        UserRecommendation userRecommendation = new UserRecommendation(user);
+        userRecommendationRepository.save(userRecommendation);
+        return userRecommendation;
+    }
+
+    @Transactional
+    public void updateUserRecommendation(UserRecommendation userRecommendation, List<Long> productIds) {
+        List<Product> products = productRepository.findByIds(productIds);
+        userRecommendation.update(products);
+    }
+
     @Cacheable(value = "ProductWithRecentRecommendation", key = "#userId")
     public List<Product> productWithRecentRecommendation(Long userId) {
         return recentRecommendationRepository.findByUserId(userId)
-                .orElseThrow(() -> new NoResultException("recent recommendation doesn't exist"))
-                .getProducts();
+                .map(RecentRecommendation::getProducts)
+                .orElse(new ArrayList<>());
     }
 
     @Cacheable(value = "ProductWithUserRecommendation", key = "#userId")
     public List<Product> productWithUserRecommendation(Long userId) {
         return userRecommendationRepository.findByUserId(userId)
-                .orElseThrow(() -> new NoResultException("user recommendation doesn't exist"))
-                .getProducts();
+                .map(UserRecommendation::getProducts)
+                .orElse(new ArrayList<>());
     }
 }
