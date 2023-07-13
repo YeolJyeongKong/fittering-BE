@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -118,7 +119,8 @@ public class UserController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    private List<Long> findRecommendedProductIds(Long userId) {
+    @Cacheable(value = "recommendation", key = "#userId")
+    public List<Long> findRecommendedProductIds(Long userId) {
         List<Long> productIds = new ArrayList<>();
         List<Product> recommendedProducts = productService.productWithRecentRecommendation(userId);
 
@@ -169,7 +171,8 @@ public class UserController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    private List<Long> findRecommendedProductIdsOnPick(Long userId) {
+    @Cacheable(value = "recommendationOnPick", key = "#userId")
+    public List<Long> findRecommendedProductIdsOnPick(Long userId) {
         List<Long> productIds = new ArrayList<>();
         List<Product> recommendedProducts = productService.productWithUserRecommendation(userId);
 
