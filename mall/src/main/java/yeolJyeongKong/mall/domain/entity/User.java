@@ -24,10 +24,10 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @NonNull @Length(max = 10)
+    @NonNull @Length(max = 20)
     private String username;
 
-    @NonNull @Length(min = 8, max = 15)
+    @NonNull
     private String password;
 
     @NonNull @Length(min = 7, max = 64)
@@ -63,6 +63,10 @@ public class User {
     @ElementCollection(fetch = EAGER)
     private List<String> roles = new ArrayList<>();
 
+    private String provider;
+    private String providerId;
+    private String providerLoginId; //{provider}_{providerId}
+
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "measurement_id")
     private Measurement measurement;
@@ -91,6 +95,15 @@ public class User {
         day = signUpDto.getDay();
         ageRange = getAgeRange(year, month, day);
         this.password = password;
+        roles.add("USER");
+    }
+
+    public User(String email, String provider, String providerId) {
+        username = email.substring(0, email.indexOf('@'));
+        providerLoginId = provider + "_" + providerId;
+        this.email = email;
+        this.provider = provider;
+        this.providerId = providerId;
         roles.add("USER");
     }
 
