@@ -115,6 +115,10 @@ public class User {
         day = userDto.getDay();
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     private Integer getAgeRange(Integer year, Integer month, Integer day) {
         LocalDate birthDate = LocalDate.of(year, month, day);
         LocalDate currentDate = LocalDate.now();

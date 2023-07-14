@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -52,6 +53,23 @@ public class UserController {
                                   @AuthenticationPrincipal PrincipalDetails principalDetails) {
         userService.infoUpdate(userDto, principalDetails.getUser().getId());
         return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
+    @Operation(summary = "비밀번호 수정 메소드")
+    @ApiResponses (value = {
+            @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"비밀번호 변경 성공\""))),
+            @ApiResponse(responseCode = "401", description = "FAIL", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"현재 비밀번호 인증 실패\"")))
+    })
+    @PostMapping("/user/check/password/{password}/{newPassword}")
+    public ResponseEntity<?> checkPassword(@PathVariable("password") String password,
+                                           @PathVariable("newPassword") String newPassword,
+                                           @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        Long userId = principalDetails.getUser().getId();
+        if(userService.passwordCheck(userId, password)) {
+            userService.setPassword(userId, newPassword);
+            return new ResponseEntity<>("비밀번호 변경 성공", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("현재 비밀번호 인증 실패", HttpStatus.UNAUTHORIZED);
     }
 
     @Operation(summary = "체형 정보 조회 메소드")

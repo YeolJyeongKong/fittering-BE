@@ -54,6 +54,16 @@ public class UserService {
         user.update(userDto);
     }
 
+    public boolean passwordCheck(Long userId, String inputPassword) {
+        String password = findById(userId).getPassword();
+        return passwordEncoder.matches(inputPassword, password);
+    }
+
+    public void setPassword(Long userId, String newPassword) {
+        User user = findById(userId);
+        user.setPassword(passwordEncoder.encode(newPassword));
+    }
+
     public MeasurementDto measurementInfo(Long userId) {
         return userRepository.measurementInfo(userId);
     }
