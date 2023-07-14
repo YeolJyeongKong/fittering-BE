@@ -1,5 +1,6 @@
 package yeolJyeongKong.mall.service;
 
+import com.querydsl.core.NonUniqueResultException;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +66,13 @@ public class UserService {
     }
 
     public MeasurementDto measurementInfo(Long userId) {
-        return userRepository.measurementInfo(userId);
+        try {
+            return userRepository.measurementInfo(userId);
+        } catch (NonUniqueResultException e) {
+            //Measurement 생성해서 User와 연결해주기
+            MeasurementDto measurementDto = null;
+            return measurementDto;
+        }
     }
 
     @Transactional

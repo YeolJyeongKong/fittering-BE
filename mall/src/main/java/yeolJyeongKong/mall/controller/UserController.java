@@ -108,6 +108,18 @@ public class UserController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @Operation(summary = "체형 측정 메소드")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MeasurementDto.class))))
+    @PostMapping("/user/recommendation/measurement")
+    public ResponseEntity<?> recommendMeasurement(@ModelAttribute ImageDto imageDto,
+                                                  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        String image = imageDto.getImage(); //request
+        //TODO: API Gateway에 등록된 체형 측정 API에서 체형 측정 결과를 받아오는 로직 필요
+        MeasurementDto measurementDto = null; //response
+        userService.measurementUpdate(measurementDto, principalDetails.getUser().getId());
+        return new ResponseEntity<>(measurementDto, HttpStatus.OK);
+    }
+
     /**
      * <추천 상품 기능 설명>
      * Request  : 해당 유저의 모든 최근 본 상품 정보들

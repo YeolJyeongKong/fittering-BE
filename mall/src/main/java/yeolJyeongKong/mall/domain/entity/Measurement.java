@@ -2,13 +2,16 @@ package yeolJyeongKong.mall.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import yeolJyeongKong.mall.domain.dto.MeasurementDto;
 
 import static jakarta.persistence.FetchType.LAZY;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class Measurement {
 
     @Id @GeneratedValue
@@ -31,6 +34,10 @@ public class Measurement {
 
     @OneToOne(mappedBy = "measurement", fetch = LAZY)
     private User user;
+
+    public Measurement(User user) {
+        this.user = user;
+    }
 
     public void update(MeasurementDto measurementDto) {
         height = measurementDto.getHeight();
