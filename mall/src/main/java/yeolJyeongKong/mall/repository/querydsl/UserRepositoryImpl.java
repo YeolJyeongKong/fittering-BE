@@ -38,7 +38,6 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     public MeasurementDto measurementInfo(Long userId) {
         return queryFactory
                 .select(new QMeasurementDto(
-                        user.username,
                         measurement.height,
                         measurement.weight,
                         measurement.arm,

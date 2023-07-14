@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class MeasurementDto {
-    private String username;
     private Integer height;
     private Integer weight;
     private Integer arm;
@@ -17,9 +16,8 @@ public class MeasurementDto {
     private Integer hip;
 
     @QueryProjection
-    public MeasurementDto(String username, Integer height, Integer weight, Integer arm, Integer leg,
-                          Integer shoulder, Integer waist, Integer chest, Integer thigh, Integer hip) {
-        this.username = username;
+    public MeasurementDto(Integer height, Integer weight, Integer arm, Integer leg, Integer shoulder,
+                          Integer waist, Integer chest, Integer thigh, Integer hip) {
         this.height = height;
         this.weight = weight;
         this.arm = arm;
