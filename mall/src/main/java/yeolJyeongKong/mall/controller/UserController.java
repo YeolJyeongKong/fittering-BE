@@ -102,6 +102,24 @@ public class UserController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @Operation(summary = "유저 즐겨찾기 상품 등록 메소드")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"유저 즐겨찾기 상품 등록 완료\"")))
+    @PostMapping("/user/favorite_goods/{productId}")
+    public ResponseEntity<?> saveFavoriteProduct(@PathVariable("productId") Long productId,
+                                                 @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        userService.saveFavoriteProduct(principalDetails.getUser().getId(), productId);
+        return new ResponseEntity<>("유저 즐겨찾기 상품 등록 완료", HttpStatus.OK);
+    }
+
+    @Operation(summary = "유저 즐겨찾기 상품 삭제 메소드")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"유저 즐겨찾기 상품 삭제 완료\"")))
+    @DeleteMapping("/user/favorite_goods/{productId}")
+    public ResponseEntity<?> deleteFavoriteProduct(@PathVariable("productId") Long productId,
+                                                   @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        userService.deleteFavoriteProduct(principalDetails.getUser().getId(), productId);
+        return new ResponseEntity<>("유저 즐겨찾기 상품 삭제 완료", HttpStatus.OK);
+    }
+
     @Operation(summary = "유저 최근 본 상품 조회 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/user/recent")

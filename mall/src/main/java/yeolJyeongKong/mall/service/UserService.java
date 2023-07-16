@@ -95,6 +95,24 @@ public class UserService {
         recent.get().update(product);
     }
 
+    @Transactional
+    public void saveFavoriteProduct(Long userId, Long productId) {
+        User user = findById(userId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NoResultException("product dosen't exist"));
+
+        user.getProducts().add(product);
+    }
+
+    @Transactional
+    public void deleteFavoriteProduct(Long userId, Long productId) {
+        User user = findById(userId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NoResultException("product dosen't exist"));
+
+        user.getProducts().remove(product);
+    }
+
     public User login(LoginDto loginDto) {
         User user = userRepository.findByEmail(loginDto.getEmail())
                 .orElseThrow(() -> new NoResultException("User doesn't exist"));
