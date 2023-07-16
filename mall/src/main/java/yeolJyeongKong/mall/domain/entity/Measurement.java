@@ -18,12 +18,8 @@ public class Measurement {
     @Column(name = "measurement_id")
     private Long id;
 
-    @NonNull
     private Integer height;
-
-    @NonNull
     private Integer weight;
-
     private Integer arm;
     private Integer leg;
     private Integer shoulder;
