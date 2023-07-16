@@ -42,11 +42,9 @@ public class FavoriteService {
             List<Product> products = mall.getProducts();
             List<MallRankProductDto> productDtos = new ArrayList<>();
 
-            /**
-             * 해당 쇼핑몰에서 노출시킬 상품 개수 설정 필요
-             * 현재는 전부로 설정
-             */
+            int productCount = 0;
             for (Product productProxy : products) {
+                if(productCount++ == 5) break;
                 Product product = productRepository.findById(productProxy.getId())
                         .orElseThrow(() -> new NoResultException("product dosen't exist"));
                 productDtos.add(new MallRankProductDto(product.getId(), product.getImage()));
