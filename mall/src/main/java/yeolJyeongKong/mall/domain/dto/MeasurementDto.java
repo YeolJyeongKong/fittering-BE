@@ -2,6 +2,7 @@ package yeolJyeongKong.mall.domain.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
+import yeolJyeongKong.mall.domain.entity.Measurement;
 
 @Getter
 public class MeasurementDto {
@@ -27,5 +28,17 @@ public class MeasurementDto {
         this.chest = chest;
         this.thigh = thigh;
         this.hip = hip;
+    }
+
+    public MeasurementDto(Measurement measurement) {
+        this.height = measurement.getHeight();
+        this.weight = measurement.getWeight();
+        this.arm = measurement.getArm();
+        this.leg = measurement.getLeg();
+        this.shoulder = measurement.getShoulder();
+        this.waist = measurement.getWaist();
+        this.chest = measurement.getChest();
+        this.thigh = measurement.getThigh();
+        this.hip = measurement.getHip();
     }
 }

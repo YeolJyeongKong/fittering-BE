@@ -96,6 +96,9 @@ public class User {
         ageRange = getAgeRange(year, month, day);
         this.password = password;
         roles.add("USER");
+
+        measurement = new Measurement(this);
+
     }
 
     public User(String email, String provider, String providerId) {
@@ -105,6 +108,8 @@ public class User {
         this.provider = provider;
         this.providerId = providerId;
         roles.add("USER");
+
+        measurement = new Measurement(this);
     }
 
     public void update(UserDto userDto) {

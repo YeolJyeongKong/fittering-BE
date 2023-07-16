@@ -7,13 +7,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import yeolJyeongKong.mall.domain.dto.*;
 import yeolJyeongKong.mall.domain.entity.*;
-import yeolJyeongKong.mall.repository.ProductRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static yeolJyeongKong.mall.domain.entity.QMall.mall;
-import static yeolJyeongKong.mall.domain.entity.QProduct.product;
 import static yeolJyeongKong.mall.domain.entity.QRank.rank;
 import static yeolJyeongKong.mall.domain.entity.QUser.user;
 

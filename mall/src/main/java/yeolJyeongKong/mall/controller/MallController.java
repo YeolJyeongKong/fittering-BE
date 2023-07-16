@@ -3,6 +3,7 @@ package yeolJyeongKong.mall.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,12 +13,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import yeolJyeongKong.mall.config.PrincipalDetails;
 import yeolJyeongKong.mall.domain.dto.MallDto;
 import yeolJyeongKong.mall.domain.dto.MallPreviewDto;
 import yeolJyeongKong.mall.service.FavoriteService;
+import yeolJyeongKong.mall.service.MallService;
 import yeolJyeongKong.mall.service.RankService;
 
 import java.util.List;
@@ -28,8 +31,17 @@ import java.util.List;
 @RequestMapping("/api")
 public class MallController {
 
+    private final MallService mallService;
     private final RankService rankService;
     private final FavoriteService favoriteService;
+
+    @Operation(summary = "쇼핑몰 등록 메소드")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"쇼핑몰 등록 완료\"")))
+    @GetMapping("/malls/add")
+    public ResponseEntity<?> save(@ModelAttribute MallDto mallDto) {
+        mallService.save(mallDto);
+        return new ResponseEntity<>("쇼핑몰 등록 완료", HttpStatus.OK);
+    }
 
     @Operation(summary = "쇼핑몰 랭킹 조회 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MallDto.class))))

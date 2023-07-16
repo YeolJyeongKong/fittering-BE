@@ -3,6 +3,7 @@ package yeolJyeongKong.mall.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,11 +12,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import yeolJyeongKong.mall.config.PrincipalDetails;
 import yeolJyeongKong.mall.domain.dto.*;
+import yeolJyeongKong.mall.domain.entity.Category;
+import yeolJyeongKong.mall.domain.entity.Mall;
 import yeolJyeongKong.mall.domain.entity.Product;
-import yeolJyeongKong.mall.service.ProductService;
+import yeolJyeongKong.mall.domain.entity.Size;
+import yeolJyeongKong.mall.service.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Tag(name = "상품", description = "상품 서비스 관련 API")
@@ -25,6 +32,39 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final CategoryService categoryService;
+    private final MallService mallService;
+    private final UserService userService;
+    private final SizeService sizeService;
+    private final RankService rankService;
+
+    @Operation(summary = "상품 등록 메소드")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"상품 등록 완료\"")))
+    @PostMapping("/product/add")
+    public ResponseEntity<?> save(@ModelAttribute ProductDetailDto productDto) {
+        Category category = categoryService.findByName(productDto.getCategoryName());
+        Mall mall = mallService.findByName(productDto.getMallName());
+        Product product = new Product(category, mall);
+        List<Size> sizes = new ArrayList<>();
+
+        if(productDto.getType() == 0) {
+            for(TopDto topDto : productDto.getTopSizes()) {
+                Size size = sizeService.saveTop(topDto);
+                size.setProduct(product);
+                sizes.add(size);
+            }
+        } else {
+            for(BottomDto bottomDto : productDto.getBottomSizes()) {
+                Size size = sizeService.saveBottom(bottomDto);
+                size.setProduct(product);
+                sizes.add(size);
+            }
+        }
+
+        product.setSizes(sizes);
+        productService.save(product);
+        return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
+    }
 
     @Operation(summary = "카테고리별 상품 조회 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
@@ -76,9 +116,12 @@ public class ProductController {
             @Content(schema = @Schema(implementation = TopProductDto.class)),
             @Content(schema = @Schema(implementation = BottomProductDto.class))
     })
-    @GetMapping("/products/{productId}")
-    public ResponseEntity<?> productDetail(@PathVariable("productId") Long productId) {
-        productService.updateView(productId);
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<?> productDetail(@PathVariable("productId") Long productId,
+                                           @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        productService.updateView(productId); //상품 조회수
+        rankService.updateView(principalDetails.getUser().getId(), productId); //유저가 조회한 상품의 쇼핑몰 조회수
+        userService.saveRecentProduct(principalDetails.getUser().getId(), productId); //최근 본 상품 업데이트
         Product product = productService.findById(productId);
 
         if(product.getType().equals(0)) {

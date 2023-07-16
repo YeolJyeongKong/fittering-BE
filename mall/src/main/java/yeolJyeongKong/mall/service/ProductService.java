@@ -7,10 +7,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import yeolJyeongKong.mall.domain.dto.BottomProductDto;
-import yeolJyeongKong.mall.domain.dto.ProductCategoryDto;
-import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
-import yeolJyeongKong.mall.domain.dto.TopProductDto;
+import yeolJyeongKong.mall.domain.dto.*;
 import yeolJyeongKong.mall.domain.entity.*;
 import yeolJyeongKong.mall.repository.*;
 
@@ -27,6 +24,11 @@ public class ProductService {
     private final MallRepository mallRepository;
     private final RecentRecommendationRepository recentRecommendationRepository;
     private final UserRecommendationRepository userRecommendationRepository;
+
+    @Transactional
+    public void save(Product product) {
+        productRepository.save(product);
+    }
 
     @Cacheable(value = "Product", key = "#productId")
     public Product findById(Long productId) {

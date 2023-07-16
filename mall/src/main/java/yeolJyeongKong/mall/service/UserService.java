@@ -66,13 +66,7 @@ public class UserService {
     }
 
     public MeasurementDto measurementInfo(Long userId) {
-        try {
-            return userRepository.measurementInfo(userId);
-        } catch (NonUniqueResultException e) {
-            //Measurement 생성해서 User와 연결해주기
-            MeasurementDto measurementDto = null;
-            return measurementDto;
-        }
+        return userRepository.measurementInfo(userId);
     }
 
     @Transactional

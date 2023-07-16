@@ -2,16 +2,20 @@ package yeolJyeongKong.mall.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
+import yeolJyeongKong.mall.domain.dto.MallDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.*;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class Mall {
 
     @Id @GeneratedValue
@@ -37,4 +41,11 @@ public class Mall {
 
     @OneToMany(mappedBy = "mall")
     private List<Favorite> favorites = new ArrayList<>();
+
+    public Mall(MallDto mallDto) {
+        this.name = mallDto.getName();
+        this.url = mallDto.getUrl();
+        this.image = mallDto.getImage();
+        this.description = mallDto.getDescription();
+    }
 }

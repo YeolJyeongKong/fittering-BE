@@ -52,7 +52,7 @@ public class FavoriteService {
                 productDtos.add(new MallRankProductDto(product.getId(), product.getImage()));
             }
 
-            result.add(new MallDto(mall.getName(), mall.getUrl(), mall.getImage(), productDtos));
+            result.add(new MallDto(mall.getName(), mall.getUrl(), mall.getImage(), mall.getDescription(), productDtos));
         }
 
         return result;
