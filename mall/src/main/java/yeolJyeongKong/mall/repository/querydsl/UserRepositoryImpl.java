@@ -65,15 +65,6 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 .fetchOne();
     }
 
-    @Override
-    public Long emailCount(String email) {
-        return queryFactory
-                .select(user.count())
-                .from(user)
-                .where(user.email.eq(email))
-                .fetchOne();
-    }
-
     public BooleanExpression userIdEq(Long userId) {
         return userId != null ? user.id.eq(userId) : null;
     }
