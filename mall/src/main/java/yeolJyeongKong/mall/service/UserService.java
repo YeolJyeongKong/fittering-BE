@@ -44,6 +44,11 @@ public class UserService {
                 .orElseThrow(() -> new NoResultException("user dosen't exist"));
     }
 
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoResultException("user dosen't exist"));
+    }
+
     public UserDto info(Long userId) {
         return userRepository.info(userId);
     }
@@ -125,6 +130,36 @@ public class UserService {
     }
 
     public boolean emailExist(String email) {
-        return userRepository.emailCount(email) != 0L;
+        return userRepository.existsByEmail(email);
+    }
+
+    public String getTmpPassword() {
+        char[] charSet = new char[]{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+                'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
+        String newPassword = "";
+
+        for (int i = 0; i < 10; i++) {
+            int idx = (int) (charSet.length * Math.random());
+            newPassword += charSet[idx];
+        }
+
+        return newPassword;
+    }
+
+    @Transactional
+    public void updatePassword(String tmpPassword, String memberEmail) {
+        String encryptedPassword = passwordEncoder.encode(tmpPassword);
+        User user = userRepository.findByEmail(memberEmail).orElseThrow(() ->
+                new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+
+        user.setPassword(encryptedPassword);
+    }
+
+    @Transactional
+    public boolean updatePasswordToken(String email) {
+        User user = findByEmail(email);
+        return user.updatePasswordToken();
     }
 }

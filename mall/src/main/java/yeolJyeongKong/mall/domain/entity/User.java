@@ -8,7 +8,9 @@ import org.hibernate.validator.constraints.Length;
 import yeolJyeongKong.mall.domain.dto.SignUpDto;
 import yeolJyeongKong.mall.domain.dto.UserDto;
 
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +46,8 @@ public class User {
 
     @NonNull
     private Integer day;
+
+    private LocalDateTime passwordToken;
 
     @OneToMany(mappedBy = "user")
     private List<Favorite> favorites = new ArrayList<>();
@@ -137,5 +141,21 @@ public class User {
         if (age <= 33) return 3;
         if (age <= 39) return 4;
         return 5;
+    }
+
+    public boolean updatePasswordToken() {
+        LocalDateTime now = LocalDateTime.now();
+
+        if(passwordToken == null) {
+            passwordToken = now;
+            return true;
+        }
+
+        if(Duration.between(passwordToken, now).getSeconds() < 3600) {
+            return false;
+        }
+
+        passwordToken = now;
+        return true;
     }
 }
