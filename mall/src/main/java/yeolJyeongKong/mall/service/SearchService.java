@@ -15,7 +15,7 @@ public class SearchService {
     private final ProductRepository productRepository;
 
     @Cacheable(value = "Search", key = "#productName + '_' + #gender")
-    public Page<ProductPreviewDto> products(String productName, String gender, Pageable pageable) {
-        return productRepository.searchProduct(productName, gender, pageable);
+    public Page<ProductPreviewDto> products(String productName, String gender, Long filterId, Pageable pageable) {
+        return productRepository.searchProduct(productName, gender, filterId, pageable);
     }
 }

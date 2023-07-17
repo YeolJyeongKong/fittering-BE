@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface ProductRepositoryCustom {
     ProductPreviewDto productById(Long productId);
-    Page<ProductPreviewDto> productWithCategory(Long mallId, Long categoryId, String gender, Pageable pageable);
+    Page<ProductPreviewDto> productWithCategory(Long mallId, Long categoryId, String gender, Long filterId, Pageable pageable);
     Page<ProductPreviewDto> productWithFavorite(Long userId, Pageable pageable);
-    Page<ProductPreviewDto> searchProduct(String productName, String gender, Pageable pageable);
+    Page<ProductPreviewDto> searchProduct(String productName, String gender, Long filterId, Pageable pageable);
     Long productCountWithCategory(Long categoryId);
     Long productCountWithCategoryOfMall(String mallName, Long categoryId);
     TopProductDto topProductDetail(Long productId);

@@ -37,14 +37,14 @@ public class ProductService {
     }
 
     @Cacheable(value = "Product", key = "#categoryId + '_' + #gender")
-    public Page<ProductPreviewDto> productWithCategory(Long categoryId, String gender, Pageable pageable) {
-        return productRepository.productWithCategory(null, categoryId, gender, pageable);
+    public Page<ProductPreviewDto> productWithCategory(Long categoryId, String gender, Long filterId, Pageable pageable) {
+        return productRepository.productWithCategory(null, categoryId, gender, filterId, pageable);
     }
 
     @Cacheable(value = "MallProduct", key = "#mallId + '_' + #categoryId + '_' + #gender")
-    public Page<ProductPreviewDto> productWithCategoryOfMall(Long mallId, Long categoryId,
-                                                             String gender, Pageable pageable) {
-        return productRepository.productWithCategory(mallId, categoryId, gender, pageable);
+    public Page<ProductPreviewDto> productWithCategoryOfMall(Long mallId, Long categoryId, String gender,
+                                                             Long filterId, Pageable pageable) {
+        return productRepository.productWithCategory(mallId, categoryId, gender, filterId, pageable);
     }
 
     @Cacheable(value = "FavoriteProductOfUser", key = "#userId")

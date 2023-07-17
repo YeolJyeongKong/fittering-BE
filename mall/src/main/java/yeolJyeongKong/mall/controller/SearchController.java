@@ -27,15 +27,12 @@ public class SearchController {
 
     @Operation(summary = "검색 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ProductPreviewDto.class)))
-    @GetMapping("/search/{keyword}/{gender}")
+    @GetMapping("/search/{keyword}/{gender}/{filterId}")
     public ResponseEntity<?> search(@PathVariable("keyword") String keyword,
                                     @PathVariable("gender") String gender,
+                                    @PathVariable("filterId") Long filterId,
                                     Pageable pageable) {
-        Page<ProductPreviewDto> result = searchService.products(
-                                                keyword,
-                                                gender,
-                                                pageable
-                                         );
+        Page<ProductPreviewDto> result = searchService.products(keyword, gender, filterId, pageable);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

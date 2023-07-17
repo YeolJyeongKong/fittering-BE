@@ -1,6 +1,7 @@
 package yeolJyeongKong.mall.repository.querydsl;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -52,7 +53,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public Page<ProductPreviewDto> productWithCategory(Long mallId, Long categoryId, String gender, Pageable pageable) {
+    public Page<ProductPreviewDto> productWithCategory(Long mallId, Long categoryId, String gender,
+                                                       Long filterId, Pageable pageable) {
 
         List<ProductPreviewDto> content = queryFactory
                 .select(new QProductPreviewDto(
@@ -71,6 +73,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         genderEq(gender),
                         mallIdEq(mallId)
                 )
+                .orderBy(filter(filterId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -129,7 +132,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public Page<ProductPreviewDto> searchProduct(String productName, String gender, Pageable pageable) {
+    public Page<ProductPreviewDto> searchProduct(String productName, String gender, Long filterId, Pageable pageable) {
 
         List<ProductPreviewDto> content = queryFactory
                 .select(new QProductPreviewDto(
@@ -147,6 +150,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         productNameCotnains(productName),
                         genderEq(gender)
                 )
+                .orderBy(filter(filterId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -339,5 +343,18 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     public BooleanExpression productIdEq(Long productId) {
         return productId != null ? mall.id.eq(productId) : null;
+    }
+
+    public OrderSpecifier<? extends Number> filter(Long filterId) {
+        if(filterId == 0) {
+            return product.id.asc();
+        }
+        if(filterId == 1) {
+            return product.view.desc();
+        }
+        if(filterId == 2) {
+            return product.price.asc();
+        }
+        return product.price.desc();
     }
 }
