@@ -68,11 +68,12 @@ public class ProductController {
 
     @Operation(summary = "카테고리별 상품 조회 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
-    @GetMapping("/category/{categoryId}/{gender}")
+    @GetMapping("/category/{categoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithCategory(@PathVariable("categoryId") Long categoryId,
                                                  @PathVariable("gender") String gender,
+                                                 @PathVariable("filterId") Long filterId,
                                                  Pageable pageable) {
-        Page<ProductPreviewDto> products = productService.productWithCategory(categoryId, gender, pageable);
+        Page<ProductPreviewDto> products = productService.productWithCategory(categoryId, gender, filterId, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -86,13 +87,14 @@ public class ProductController {
 
     @Operation(summary = "쇼핑몰 내 카테고리별 상품 조회 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
-    @GetMapping("/malls/{mallId}/{categoryId}/{gender}")
+    @GetMapping("/malls/{mallId}/{categoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithCategoryOfMall(@PathVariable("mallId") Long mallId,
                                                        @PathVariable("categoryId") Long categoryId,
                                                        @PathVariable("gender") String gender,
+                                                       @PathVariable("filterId") Long filterId,
                                                        Pageable pageable) {
         Page<ProductPreviewDto> products = productService.productWithCategoryOfMall(
-                mallId, categoryId, gender, pageable
+                mallId, categoryId, gender, filterId, pageable
         );
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
