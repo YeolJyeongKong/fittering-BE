@@ -246,19 +246,19 @@ public class UserController {
 
     @Operation(summary = "유저 즐겨찾기 쇼핑몰 등록 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"즐겨찾기 등록 완료\"")))
-    @PostMapping("/favorite/{userId}/{mallId}")
-    public ResponseEntity<?> setFavoriteMall(@PathVariable("userId") Long userId,
-                                             @PathVariable("mallId") Long mallId) {
-        favoriteService.setFavoriteMall(userId, mallId);
+    @PostMapping("/favorite/{mallId}")
+    public ResponseEntity<?> setFavoriteMall(@PathVariable("mallId") Long mallId,
+                                             @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        favoriteService.setFavoriteMall(principalDetails.getUser().getId(), mallId);
         return new ResponseEntity<>("즐겨찾기 등록 완료", HttpStatus.OK);
     }
 
     @Operation(summary = "유저 즐겨찾기 쇼핑몰 삭제 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"즐겨찾기 삭제 완료\"")))
-    @DeleteMapping("/favorite/{userId}/{mallId}")
-    public ResponseEntity<?> deleteFavoriteMall(@PathVariable("userId") Long userId,
-                                                @PathVariable("mallId") Long mallId) {
-        favoriteService.deleteFavoriteMall(userId, mallId);
+    @DeleteMapping("/favorite/{mallId}")
+    public ResponseEntity<?> deleteFavoriteMall(@PathVariable("mallId") Long mallId,
+                                                @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        favoriteService.deleteFavoriteMall(principalDetails.getUser().getId(), mallId);
         return new ResponseEntity<>("즐겨찾기 삭제 완료", HttpStatus.OK);
     }
 }
