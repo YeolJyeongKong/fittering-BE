@@ -1,11 +1,13 @@
 package yeolJyeongKong.mall.domain.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import yeolJyeongKong.mall.domain.entity.Product;
 
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class BottomProductDto {
     private Long FavoriteCount;
     private String productImage;

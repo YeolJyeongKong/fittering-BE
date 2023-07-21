@@ -1,10 +1,12 @@
 package yeolJyeongKong.mall.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
+import yeolJyeongKong.mall.domain.dto.ProductDetailDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +51,7 @@ public class Product {
 
     private String descriptionImage;
 
+    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -57,6 +60,7 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "mall_id")
     private Mall mall;
@@ -76,13 +80,29 @@ public class Product {
     @JoinColumn(name = "recent_recommendation_id")
     private RecentRecommendation recentRecommendation;
 
-    public Product(Category category, Mall mall) {
+    public Product(ProductDetailDto productDto, Category category, Mall mall) {
+        price = productDto.getPrice();
+        name = productDto.getName();
+        gender = productDto.getGender();
+        type = productDto.getType();
+        image = productDto.getImage();
+        descriptionImage = productDto.getDescriptionImage();
+        view = 0;
+        timeView = 0;
         this.category = category;
         this.mall = mall;
     }
 
     public void setSizes(List<Size> sizes) {
         this.sizes = sizes;
+    }
+
+    public void setRecent(Recent recent) {
+        this.recent = recent;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void updateView() {

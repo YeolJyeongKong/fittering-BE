@@ -1,5 +1,6 @@
 package yeolJyeongKong.mall.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,7 @@ public class Size {
     @JoinColumn(name = "bottom_id")
     private Bottom bottom;
 
+    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id")
     private Product product;

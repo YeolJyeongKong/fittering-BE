@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import yeolJyeongKong.mall.config.auth.GoogleUserInfo;
 import yeolJyeongKong.mall.config.auth.KakaoUserInfo;
 import yeolJyeongKong.mall.config.auth.Oauth2UserInfo;
+import yeolJyeongKong.mall.domain.entity.Measurement;
 import yeolJyeongKong.mall.domain.entity.User;
+import yeolJyeongKong.mall.repository.MeasurementRepository;
 import yeolJyeongKong.mall.repository.UserRepository;
 
 import java.util.Optional;
@@ -22,6 +24,7 @@ import java.util.Optional;
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
+    private final MeasurementRepository measurementRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -44,8 +47,9 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         User user;
 
         if (optionalUser.isEmpty()) {
-            user = new User(email, provider, providerId);
-            userRepository.save(user);
+            Measurement measurement = measurementRepository.save(new Measurement());
+            user = userRepository.save(new User(email, provider, providerId, measurement));
+            measurement.setUser(user);
         } else {
             user = optionalUser.get();
         }

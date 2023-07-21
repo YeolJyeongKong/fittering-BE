@@ -1,9 +1,13 @@
 package yeolJyeongKong.mall.domain.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@Data
+@NoArgsConstructor
 public class ProductPreviewDto {
 
     private Long productId;

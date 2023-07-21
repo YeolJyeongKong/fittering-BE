@@ -1,17 +1,21 @@
 package yeolJyeongKong.mall.domain.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import yeolJyeongKong.mall.domain.entity.Size;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class BottomDto {
     private String name;
-    private Integer full;
-    private Integer waist;
-    private Integer thigh;
-    private Integer rise;
-    private Integer bottomWidth;
-    private Integer hipWidth;
+    private Double full;
+    private Double waist;
+    private Double thigh;
+    private Double rise;
+    private Double bottomWidth;
+    private Double hipWidth;
 
     public BottomDto(Size size) {
         name = size.getName();

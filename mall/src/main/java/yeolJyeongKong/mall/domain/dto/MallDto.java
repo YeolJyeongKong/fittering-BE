@@ -2,10 +2,12 @@ package yeolJyeongKong.mall.domain.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class MallDto {
 
     private String name;

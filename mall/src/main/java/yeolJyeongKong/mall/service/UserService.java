@@ -1,6 +1,5 @@
 package yeolJyeongKong.mall.service;
 
-import com.querydsl.core.NonUniqueResultException;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +33,11 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
-    public void save(SignUpDto signUpDto) {
-        User user = new User(signUpDto, passwordEncoder.encode(signUpDto.getPassword()));
-        userRepository.save(user);
+    public User save(SignUpDto signUpDto) {
+        Measurement measurement = measurementRepository.save(new Measurement());
+        User user = new User(signUpDto, passwordEncoder.encode(signUpDto.getPassword()), measurement);
+        measurement.setUser(user);
+        return userRepository.save(user);
     }
 
     public User findById(Long userId) {
@@ -82,7 +83,8 @@ public class UserService {
     }
 
     public List<ProductPreviewDto> recentProduct(Long userId) {
-        return recentRepository.recentProduct(userId);
+        List<ProductPreviewDto> productPreviewDtos = recentRepository.recentProduct(userId);
+        return productPreviewDtos;
     }
 
     @Transactional
@@ -93,7 +95,8 @@ public class UserService {
                 .orElseThrow(() -> new NoResultException("product dosen't exist"));
 
         if(recent.isEmpty()) {
-            recentRepository.save(new Recent(user, product));
+            Recent newRecent = recentRepository.save(new Recent(user, product));
+            product.setRecent(newRecent);
             return;
         }
 
@@ -106,6 +109,7 @@ public class UserService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResultException("product dosen't exist"));
 
+        product.setUser(user);
         user.getProducts().add(product);
     }
 
@@ -115,6 +119,7 @@ public class UserService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResultException("product dosen't exist"));
 
+        product.setUser(null);
         user.getProducts().remove(product);
     }
 

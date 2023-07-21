@@ -1,5 +1,6 @@
 package yeolJyeongKong.mall.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,22 +20,23 @@ public class Bottom {
     private Long id;
 
     @NonNull
-    private Integer full;
+    private Double full;
 
     @NonNull
-    private Integer waist;
+    private Double waist;
 
     @NonNull
-    private Integer thigh;
+    private Double thigh;
 
     @NonNull
-    private Integer rise;
+    private Double rise;
 
     @NonNull
-    private Integer bottomWidth;
+    private Double bottomWidth;
 
-    private Integer hipWidth;
+    private Double hipWidth;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "bottom", fetch = LAZY)
     private Size size;
 

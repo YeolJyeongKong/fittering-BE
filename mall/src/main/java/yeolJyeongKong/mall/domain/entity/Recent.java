@@ -1,5 +1,6 @@
 package yeolJyeongKong.mall.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,11 +25,13 @@ public class Recent {
     @NonNull
     private LocalDateTime timestamp;
 
+    @JsonIgnore
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "recent", fetch = LAZY)
+    @JsonIgnore
+    @OneToMany(mappedBy = "recent")
     private List<Product> products = new ArrayList<>();
 
     public Recent(User user, Product product) {
@@ -38,6 +41,7 @@ public class Recent {
     }
 
     public void update(Product product) {
+        product.setRecent(this);
         products.add(product);
     }
 }

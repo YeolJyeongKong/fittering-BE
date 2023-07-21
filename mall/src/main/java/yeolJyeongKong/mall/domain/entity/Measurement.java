@@ -1,17 +1,16 @@
 package yeolJyeongKong.mall.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import yeolJyeongKong.mall.domain.dto.MeasurementDto;
 
 import static jakarta.persistence.FetchType.LAZY;
-import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = PROTECTED)
+@NoArgsConstructor
 public class Measurement {
 
     @Id @GeneratedValue
@@ -28,10 +27,11 @@ public class Measurement {
     private Integer thigh;
     private Integer hip;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "measurement", fetch = LAZY)
     private User user;
 
-    public Measurement(User user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

@@ -9,6 +9,7 @@ import java.util.List;
 
 import static yeolJyeongKong.mall.domain.entity.QFavorite.favorite;
 import static yeolJyeongKong.mall.domain.entity.QMall.mall;
+import static yeolJyeongKong.mall.domain.entity.QProduct.product;
 import static yeolJyeongKong.mall.domain.entity.QUser.user;
 
 public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
@@ -22,14 +23,22 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
     @Override
     public List<Favorite> userFavoriteMall(Long userId) {
         return queryFactory
-                .select(favorite)
-                .from(user)
-                .leftJoin(user.favorites, favorite)
-                .leftJoin(favorite.mall, mall)
+                .selectFrom(favorite)
+                .join(favorite.user, user)
+                .join(favorite.mall, mall)
+                .join(mall.products, product)
                 .where(
                         userIdEq(userId)
                 )
                 .fetch();
+    }
+
+    @Override
+    public void deleteByUserIdAndMallId(Long userId, Long mallId) {
+        queryFactory
+                .delete(favorite)
+                .where(favorite.user.id.eq(userId).and(favorite.mall.id.eq(mallId)))
+                .execute();
     }
 
     public BooleanExpression userIdEq(Long userId) {

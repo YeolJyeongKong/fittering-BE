@@ -2,9 +2,11 @@ package yeolJyeongKong.mall.domain.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import yeolJyeongKong.mall.domain.entity.Measurement;
 
 @Getter
+@NoArgsConstructor
 public class MeasurementDto {
     private Integer height;
     private Integer weight;
