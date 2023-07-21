@@ -4,7 +4,6 @@ import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import yeolJyeongKong.mall.domain.dto.MallDto;
@@ -56,19 +55,18 @@ public class FavoriteService {
         return result;
     }
 
-    @CachePut(value = "UserFavoriteMall", key = "#userId + '_' + #mallId")
     @Transactional
-    public void setFavoriteMall(Long userId, Long mallId) {
+    public Favorite setFavoriteMall(Long userId, Long mallId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
 
         Mall mall = mallRepository.findById(mallId)
                 .orElseThrow(() -> new NoResultException("mall doesn't exist"));
 
-        favoriteRepository.save(new Favorite(user, mall));
+        return favoriteRepository.save(new Favorite(user, mall));
     }
 
-    @CacheEvict(value = "UserFavoriteMall", key = "#userId + '_' + #mallId")
+    @CacheEvict(value = "UserFavoriteMall", key = "#userId")
     @Transactional
     public void deleteFavoriteMall(Long userId, Long mallId) {
         favoriteRepository.deleteByUserIdAndMallId(userId, mallId);

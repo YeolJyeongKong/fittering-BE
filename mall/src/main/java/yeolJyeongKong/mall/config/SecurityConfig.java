@@ -42,6 +42,7 @@ public class SecurityConfig {
                                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/api-docs/**").permitAll()
                                 .requestMatchers("/actuator/prometheus/**").permitAll()
                                 .anyRequest().authenticated()
+//                                .anyRequest().permitAll()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .oauth2Login(withDefaults())

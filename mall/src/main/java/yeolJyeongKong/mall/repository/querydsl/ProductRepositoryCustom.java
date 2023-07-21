@@ -8,6 +8,7 @@ import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
 import yeolJyeongKong.mall.domain.entity.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepositoryCustom {
     ProductPreviewDto productById(Long productId);

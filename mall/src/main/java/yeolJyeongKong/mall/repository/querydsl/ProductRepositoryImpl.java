@@ -118,7 +118,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         Long count = queryFactory
                 .select(product.count())
-                .from(category)
+                .from(product)
                 .leftJoin(product.user, user)
                 .leftJoin(product.mall, mall)
                 .where(
@@ -329,7 +329,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     public BooleanExpression mallNameEq(String mallName) {
-        return StringUtils.hasText(mallName) ? category.name.eq(mallName) : null;
+        return StringUtils.hasText(mallName) ? mall.name.eq(mallName) : null;
     }
 
     /**
@@ -342,7 +342,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     public BooleanExpression productIdEq(Long productId) {
-        return productId != null ? mall.id.eq(productId) : null;
+        return productId != null ? product.id.eq(productId) : null;
     }
 
     public OrderSpecifier<? extends Number> filter(Long filterId) {

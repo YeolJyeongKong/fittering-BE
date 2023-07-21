@@ -4,9 +4,9 @@ import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import yeolJyeongKong.mall.domain.RestPage;
 import yeolJyeongKong.mall.domain.dto.*;
 import yeolJyeongKong.mall.domain.entity.*;
 import yeolJyeongKong.mall.repository.*;
@@ -26,8 +26,8 @@ public class ProductService {
     private final UserRecommendationRepository userRecommendationRepository;
 
     @Transactional
-    public void save(Product product) {
-        productRepository.save(product);
+    public Product save(Product product) {
+        return productRepository.save(product);
     }
 
     @Cacheable(value = "Product", key = "#productId")
@@ -36,20 +36,20 @@ public class ProductService {
                 .orElseThrow(() -> new NoResultException("product dosen't exist"));
     }
 
-    @Cacheable(value = "Product", key = "#categoryId + '_' + #gender")
-    public Page<ProductPreviewDto> productWithCategory(Long categoryId, String gender, Long filterId, Pageable pageable) {
-        return productRepository.productWithCategory(null, categoryId, gender, filterId, pageable);
+    @Cacheable(value = "Product", key = "'0_' + #categoryId + '_' + #gender + '_' + #filterId + '_' + #pageable.pageNumber")
+    public RestPage<ProductPreviewDto> productWithCategory(Long categoryId, String gender, Long filterId, Pageable pageable) {
+        return new RestPage<>(productRepository.productWithCategory(null, categoryId, gender, filterId, pageable));
     }
 
-    @Cacheable(value = "MallProduct", key = "#mallId + '_' + #categoryId + '_' + #gender")
-    public Page<ProductPreviewDto> productWithCategoryOfMall(Long mallId, Long categoryId, String gender,
+    @Cacheable(value = "MallProduct", key = "#mallId + '_' + #categoryId + '_' + #gender + '_' + #filterId +  '_' + #pageable.pageNumber")
+    public RestPage<ProductPreviewDto> productWithCategoryOfMall(Long mallId, Long categoryId, String gender,
                                                              Long filterId, Pageable pageable) {
-        return productRepository.productWithCategory(mallId, categoryId, gender, filterId, pageable);
+        return new RestPage<>(productRepository.productWithCategory(mallId, categoryId, gender, filterId, pageable));
     }
 
-    @Cacheable(value = "FavoriteProductOfUser", key = "#userId")
-    public Page<ProductPreviewDto> productWithUserFavorite(Long userId, Pageable pageable) {
-        return productRepository.productWithFavorite(userId, pageable);
+    @Cacheable(value = "FavoriteProductOfUser", key = "#userId + '_' + #pageable.pageNumber")
+    public RestPage<ProductPreviewDto> productWithUserFavorite(Long userId, Pageable pageable) {
+        return new RestPage<>(productRepository.productWithFavorite(userId, pageable));
     }
 
     @Cacheable(value = "Product", key = "'count'")
@@ -68,7 +68,6 @@ public class ProductService {
 
     @Cacheable(value = "MallProduct", key = "#mallId + '_' + 'count'")
     public List<ProductCategoryDto> productCountWithCategoryOfMall(Long mallId) {
-
         Mall mall = mallRepository.findById(mallId)
                 .orElseThrow(() -> new NoResultException("mall doesn't exist"));
         List<Category> categories = categoryRepository.findAll();
@@ -86,9 +85,8 @@ public class ProductService {
 
         List<ProductPreviewDto> result = new ArrayList<>();
 
-        for(int i = 0; i < productIds.size(); i++) {
+        for (int i = 0; i < productIds.size(); i++) {
             if (preview && i >= 4) break;
-
             Long productId = productIds.get(i);
             result.add(productRepository.productById(productId));
         }
@@ -118,8 +116,7 @@ public class ProductService {
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
 
         RecentRecommendation recentRecommendation = new RecentRecommendation(user);
-        recentRecommendationRepository.save(recentRecommendation);
-        return recentRecommendation;
+        return recentRecommendationRepository.save(recentRecommendation);
     }
 
     @Transactional
@@ -134,8 +131,7 @@ public class ProductService {
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
 
         UserRecommendation userRecommendation = new UserRecommendation(user);
-        userRecommendationRepository.save(userRecommendation);
-        return userRecommendation;
+        return userRecommendationRepository.save(userRecommendation);
     }
 
     @Transactional

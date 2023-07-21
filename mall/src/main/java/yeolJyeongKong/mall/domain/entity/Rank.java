@@ -1,5 +1,6 @@
 package yeolJyeongKong.mall.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,10 +22,12 @@ public class Rank {
     @NonNull
     private Long view;
 
-    @OneToOne(fetch = LAZY)
+    @JsonIgnore
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    @JsonIgnore
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "mall_id")
     private Mall mall;

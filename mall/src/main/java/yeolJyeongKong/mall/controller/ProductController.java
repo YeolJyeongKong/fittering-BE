@@ -44,7 +44,7 @@ public class ProductController {
     public ResponseEntity<?> save(@ModelAttribute ProductDetailDto productDto) {
         Category category = categoryService.findByName(productDto.getCategoryName());
         Mall mall = mallService.findByName(productDto.getMallName());
-        Product product = new Product(category, mall);
+        Product product = new Product(productDto, category, mall);
         List<Size> sizes = new ArrayList<>();
 
         if(productDto.getType() == 0) {
@@ -62,6 +62,7 @@ public class ProductController {
         }
 
         product.setSizes(sizes);
+
         productService.save(product);
         return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
     }

@@ -78,8 +78,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Product> products = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", fetch = LAZY)
-    private Rank rank;
+    @OneToMany(mappedBy = "user")
+    private List<Rank> ranks = new ArrayList<>();
 
     @OneToOne(mappedBy = "user", fetch = LAZY)
     private Recent recent;
@@ -90,7 +90,7 @@ public class User {
     @OneToOne(mappedBy = "user", fetch = LAZY)
     private RecentRecommendation recentRecommendation;
 
-    public User(SignUpDto signUpDto, String password) {
+    public User(SignUpDto signUpDto, String password, Measurement measurement) {
         email = signUpDto.getEmail();
         username = signUpDto.getUsername();
         gender = signUpDto.getGender();
@@ -99,21 +99,18 @@ public class User {
         day = signUpDto.getDay();
         ageRange = getAgeRange(year, month, day);
         this.password = password;
+        this.measurement = measurement;
         roles.add("USER");
-
-        measurement = new Measurement(this);
-
     }
 
-    public User(String email, String provider, String providerId) {
+    public User(String email, String provider, String providerId, Measurement measurement) {
         username = email.substring(0, email.indexOf('@'));
         providerLoginId = provider + "_" + providerId;
         this.email = email;
         this.provider = provider;
         this.providerId = providerId;
+        this.measurement = measurement;
         roles.add("USER");
-
-        measurement = new Measurement(this);
     }
 
     public void update(UserDto userDto) {

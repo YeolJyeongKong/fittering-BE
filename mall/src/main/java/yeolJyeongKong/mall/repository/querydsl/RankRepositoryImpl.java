@@ -3,7 +3,6 @@ package yeolJyeongKong.mall.repository.querydsl;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import yeolJyeongKong.mall.domain.dto.*;
 import yeolJyeongKong.mall.domain.entity.*;
@@ -14,7 +13,6 @@ import static yeolJyeongKong.mall.domain.entity.QMall.mall;
 import static yeolJyeongKong.mall.domain.entity.QRank.rank;
 import static yeolJyeongKong.mall.domain.entity.QUser.user;
 
-@RequiredArgsConstructor
 public class RankRepositoryImpl implements RankRepositoryCustom {
 
     private JPAQueryFactory queryFactory;

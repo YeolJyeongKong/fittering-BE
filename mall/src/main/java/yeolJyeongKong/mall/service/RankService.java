@@ -27,6 +27,20 @@ public class RankService {
     private final RankRepository rankRepository;
     private final ProductRepository productRepository;
 
+    @Transactional
+    public Rank save(Long userId, Long mallId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoResultException("user doesn't exist"));
+        Mall mall = mallRepository.findById(mallId)
+                .orElseThrow(() -> new NoResultException("mall doesn't exist"));
+        return rankRepository.save(new Rank(user, mall));
+    }
+
+    public Rank findById(Long rankId) {
+        return rankRepository.findById(rankId)
+                .orElseThrow(() -> new NoResultException("rank doesn't exist"));
+    }
+
     public List<MallDto> mallRank(Long userId) {
         List<Mall> malls = rankRepository.mallRank(userId);
         List<MallDto> result = new ArrayList<>();
@@ -36,11 +50,9 @@ public class RankService {
             List<Product> products = mall.getProducts();
             List<MallRankProductDto> productDtos = new ArrayList<>();
 
-            /**
-             * 해당 쇼핑몰에서 노출시킬 상품 개수 설정 필요
-             * 현재는 전부로 설정
-             */
+            int productCount = 0;
             for (Product productProxy : products) {
+                if(productCount++ == 5) break;
                 Product product = productRepository.findById(productProxy.getId())
                         .orElseThrow(() -> new NoResultException("product doesn't exist"));
                 productDtos.add(new MallRankProductDto(product.getId(), product.getImage()));
@@ -70,7 +82,8 @@ public class RankService {
                     .orElseThrow(() -> new NoResultException("user doesn't exist"));
             Mall mall = mallRepository.findById(product.getMall().getId())
                     .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-            rank = new Rank(user, mall);
+
+            rank = rankRepository.save(new Rank(user, mall));
         }
 
         rank.updateView();
