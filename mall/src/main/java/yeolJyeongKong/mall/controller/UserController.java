@@ -96,7 +96,7 @@ public class UserController {
     @GetMapping("/user/favorite_goods")
     public ResponseEntity<?> favoriteProduct(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                              Pageable pageable) {
-        Page<ProductPreviewDto> products = productService.productWithUserFavorite(
+        Page<ProductPreviewDto> products = favoriteService.userFavoriteProduct(
                                                 principalDetails.getUser().getId(), pageable
                                            );
         return new ResponseEntity<>(products, HttpStatus.OK);
@@ -107,7 +107,7 @@ public class UserController {
     @PostMapping("/user/favorite_goods/{productId}")
     public ResponseEntity<?> saveFavoriteProduct(@PathVariable("productId") Long productId,
                                                  @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        userService.saveFavoriteProduct(principalDetails.getUser().getId(), productId);
+        favoriteService.saveFavoriteProduct(principalDetails.getUser().getId(), productId);
         return new ResponseEntity<>("유저 즐겨찾기 상품 등록 완료", HttpStatus.OK);
     }
 
@@ -116,7 +116,7 @@ public class UserController {
     @DeleteMapping("/user/favorite_goods/{productId}")
     public ResponseEntity<?> deleteFavoriteProduct(@PathVariable("productId") Long productId,
                                                    @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        userService.deleteFavoriteProduct(principalDetails.getUser().getId(), productId);
+        favoriteService.deleteFavoriteProduct(principalDetails.getUser().getId(), productId);
         return new ResponseEntity<>("유저 즐겨찾기 상품 삭제 완료", HttpStatus.OK);
     }
 
@@ -249,7 +249,7 @@ public class UserController {
     @PostMapping("/favorite/{mallId}")
     public ResponseEntity<?> setFavoriteMall(@PathVariable("mallId") Long mallId,
                                              @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        favoriteService.setFavoriteMall(principalDetails.getUser().getId(), mallId);
+        favoriteService.saveFavoriteMall(principalDetails.getUser().getId(), mallId);
         return new ResponseEntity<>("즐겨찾기 등록 완료", HttpStatus.OK);
     }
 

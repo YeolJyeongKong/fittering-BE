@@ -47,11 +47,6 @@ public class ProductService {
         return new RestPage<>(productRepository.productWithCategory(mallId, categoryId, gender, filterId, pageable));
     }
 
-    @Cacheable(value = "FavoriteProductOfUser", key = "#userId + '_' + #pageable.pageNumber")
-    public RestPage<ProductPreviewDto> productWithUserFavorite(Long userId, Pageable pageable) {
-        return new RestPage<>(productRepository.productWithFavorite(userId, pageable));
-    }
-
     @Cacheable(value = "Product", key = "'count'")
     public List<ProductCategoryDto> multipleProductCountWithCategory() {
 

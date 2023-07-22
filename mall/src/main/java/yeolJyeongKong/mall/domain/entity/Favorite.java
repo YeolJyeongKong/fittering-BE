@@ -28,8 +28,18 @@ public class Favorite {
     @JoinColumn(name = "mall_id")
     private Mall mall;
 
+    @JsonIgnore
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     public Favorite(User user, Mall mall) {
         this.user = user;
         this.mall = mall;
+    }
+
+    public Favorite(User user, Product product) {
+        this.user = user;
+        this.product = product;
     }
 }

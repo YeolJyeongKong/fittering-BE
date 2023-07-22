@@ -83,8 +83,7 @@ public class UserService {
     }
 
     public List<ProductPreviewDto> recentProduct(Long userId) {
-        List<ProductPreviewDto> productPreviewDtos = recentRepository.recentProduct(userId);
-        return productPreviewDtos;
+        return recentRepository.recentProduct(userId);
     }
 
     @Transactional
@@ -101,26 +100,6 @@ public class UserService {
         }
 
         recent.get().update(product);
-    }
-
-    @Transactional
-    public void saveFavoriteProduct(Long userId, Long productId) {
-        User user = findById(userId);
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NoResultException("product dosen't exist"));
-
-        product.setUser(user);
-        user.getProducts().add(product);
-    }
-
-    @Transactional
-    public void deleteFavoriteProduct(Long userId, Long productId) {
-        User user = findById(userId);
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NoResultException("product dosen't exist"));
-
-        product.setUser(null);
-        user.getProducts().remove(product);
     }
 
     public User login(LoginDto loginDto) {

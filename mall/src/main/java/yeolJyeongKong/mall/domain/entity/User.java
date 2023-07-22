@@ -49,9 +49,6 @@ public class User {
 
     private LocalDateTime passwordToken;
 
-    @OneToMany(mappedBy = "user")
-    private List<Favorite> favorites = new ArrayList<>();
-
     /**
      * 0 : 0~18세
      * 1 : 19~23세
@@ -71,12 +68,12 @@ public class User {
     private String providerId;
     private String providerLoginId; //{provider}_{providerId}
 
+    @OneToMany(mappedBy = "user")
+    private List<Favorite> favorites = new ArrayList<>();
+
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "measurement_id")
     private Measurement measurement;
-
-    @OneToMany(mappedBy = "user")
-    private List<Product> products = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Rank> ranks = new ArrayList<>();

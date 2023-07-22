@@ -44,12 +44,12 @@ class ProductServiceTest {
         bottomCategory = categoryService.save("bottom");
         mall = mallService.save(new MallDto("testMall", "testMall.com",
                 "image.jpg", "desc", new ArrayList<>()));
+        user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         savedProduct = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
                         "image.jpg", "desc", "top",
                         "testMall", null, null),
                 topCategory, mall));
-        user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         product2 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp2", "M", 0,
                         "image.jpg", "desc", "top",
@@ -92,16 +92,6 @@ class ProductServiceTest {
         Page<ProductPreviewDto> findProductByCategoryOfMall =
                 productService.productWithCategoryOfMall(mall.getId(), topCategory.getId(), "M", 0L, PageRequest.of(0, 10));
         findProductByCategoryOfMall.forEach(productPreviewDto -> {
-            compareProduct(savedProduct, productPreviewDto);
-        });
-    }
-
-    @Test
-    void productWithUserFavorite() {
-        userService.saveFavoriteProduct(user.getId(), savedProduct.getId());
-        Page<ProductPreviewDto> findProductByUserFavorite =
-                productService.productWithUserFavorite(user.getId(), PageRequest.of(0, 10));
-        findProductByUserFavorite.forEach(productPreviewDto -> {
             compareProduct(savedProduct, productPreviewDto);
         });
     }

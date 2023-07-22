@@ -27,6 +27,8 @@ class UserServiceTest {
     CategoryService categoryService;
     @Autowired
     MallService mallService;
+    @Autowired
+    FavoriteService favoriteService;
 
     private User user;
     private Category category;
@@ -108,17 +110,13 @@ class UserServiceTest {
 
     @Test
     void favoriteProductTest() {
-        userService.saveFavoriteProduct(user.getId(), product.getId());
-        assertThat(user.getProducts().size()).isEqualTo(1);
-        assertThat(user.getProducts().get(0)).isEqualTo(product);
-        assertThat(product.getUser()).isEqualTo(user);
+        favoriteService.saveFavoriteProduct(user.getId(), product.getId());
+        RestPage<ProductPreviewDto> findProducts = favoriteService.userFavoriteProduct(user.getId(), PageRequest.of(0, 10));
+        compareProduct(product, findProducts.getContent().get(0));
 
-        RestPage<ProductPreviewDto> products = productService.productWithUserFavorite(user.getId(), PageRequest.of(0, 10));
-        compareProduct(product, products.getContent().get(0));
-
-        userService.deleteFavoriteProduct(user.getId(), product.getId());
-        assertThat(user.getProducts().size()).isEqualTo(0);
-        assertThat(product.getUser()).isNull();
+        favoriteService.deleteFavoriteProduct(user.getId(), product.getId());
+        RestPage<ProductPreviewDto> deletedProducts = favoriteService.userFavoriteProduct(user.getId(), PageRequest.of(0, 10));
+        assertThat(deletedProducts.getContent().size()).isEqualTo(0);
     }
 
     @Test

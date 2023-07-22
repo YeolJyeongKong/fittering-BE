@@ -5,9 +5,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import yeolJyeongKong.mall.domain.RestPage;
 import yeolJyeongKong.mall.domain.dto.MallDto;
 import yeolJyeongKong.mall.domain.dto.MallRankProductDto;
+import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
 import yeolJyeongKong.mall.domain.entity.Favorite;
 import yeolJyeongKong.mall.domain.entity.Mall;
 import yeolJyeongKong.mall.domain.entity.Product;
@@ -56,7 +59,7 @@ public class FavoriteService {
     }
 
     @Transactional
-    public Favorite setFavoriteMall(Long userId, Long mallId) {
+    public Favorite saveFavoriteMall(Long userId, Long mallId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
 
@@ -70,5 +73,25 @@ public class FavoriteService {
     @Transactional
     public void deleteFavoriteMall(Long userId, Long mallId) {
         favoriteRepository.deleteByUserIdAndMallId(userId, mallId);
+    }
+
+    public RestPage<ProductPreviewDto> userFavoriteProduct(Long userId, Pageable pageable) {
+        return new RestPage<>(favoriteRepository.userFavoriteProduct(userId, pageable));
+    }
+
+    @Transactional
+    public Favorite saveFavoriteProduct(Long userId, Long productId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoResultException("user doesn't exist"));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NoResultException("product doesn't exist"));
+
+        return favoriteRepository.save(new Favorite(user, product));
+    }
+
+    @Transactional
+    public void deleteFavoriteProduct(Long userId, Long productId) {
+        favoriteRepository.deleteByUserIdAndProductId(userId, productId);
     }
 }
