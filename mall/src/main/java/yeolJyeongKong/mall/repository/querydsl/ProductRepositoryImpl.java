@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static yeolJyeongKong.mall.domain.entity.QBottom.bottom;
 import static yeolJyeongKong.mall.domain.entity.QCategory.category;
+import static yeolJyeongKong.mall.domain.entity.QFavorite.favorite;
 import static yeolJyeongKong.mall.domain.entity.QMall.mall;
 import static yeolJyeongKong.mall.domain.entity.QProduct.product;
 import static yeolJyeongKong.mall.domain.entity.QSize.size;
@@ -66,7 +67,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         mall.url.as("mallUrl")
                 ))
                 .from(product)
-                .leftJoin(product.category, QCategory.category)
+                .leftJoin(product.category, category)
                 .leftJoin(product.mall, mall)
                 .where(
                         categoryIdEq(categoryId),
@@ -81,48 +82,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         Long count = queryFactory
                 .select(product.count())
                 .from(product)
-                .leftJoin(product.category, QCategory.category)
+                .leftJoin(product.category, category)
                 .where(
                         categoryIdEq(categoryId),
                         genderEq(gender),
                         mallIdEq(mallId)
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetchOne();
-
-        return PageableExecutionUtils.getPage(content, pageable, () -> count);
-    }
-
-    @Override
-    public Page<ProductPreviewDto> productWithFavorite(Long userId, Pageable pageable) {
-
-        List<ProductPreviewDto> content = queryFactory
-                .select(new QProductPreviewDto(
-                        product.id.as("productId"),
-                        product.image.as("productImage"),
-                        product.name.as("productName"),
-                        product.price,
-                        mall.name.as("mallName"),
-                        mall.url.as("mallUrl")
-                ))
-                .from(product)
-                .leftJoin(product.user, user)
-                .leftJoin(product.mall, mall)
-                .where(
-                        userIdEq(userId)
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        Long count = queryFactory
-                .select(product.count())
-                .from(product)
-                .leftJoin(product.user, user)
-                .leftJoin(product.mall, mall)
-                .where(
-                        userIdEq(userId)
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -175,7 +139,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         return queryFactory
                 .select(product.count())
                 .from(product)
-                .leftJoin(product.category, QCategory.category)
+                .leftJoin(product.category, category)
                 .where(
                         categoryIdEq(categoryId)
                 )
@@ -187,7 +151,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         return queryFactory
                 .select(product.count())
                 .from(product)
-                .leftJoin(product.category, QCategory.category)
+                .leftJoin(product.category, category)
                 .leftJoin(product.mall, mall)
                 .where(
                         categoryIdEq(categoryId),
@@ -199,20 +163,24 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     @Override
     public TopProductDto topProductDetail(Long productId) {
         Long favoriteCount = queryFactory
-                .select(user.count())
-                .from(user)
-                .where(user.products.any().id.eq(productId))
+                .select(favorite.count())
+                .from(favorite)
+                .leftJoin(favorite.product, product)
+                .where(
+                        productIdEq(productId)
+                )
                 .fetchOne();
 
         Tuple tuple = queryFactory
                 .select(product.count(), user.gender, user.ageRange)
-                .from(product)
-                .leftJoin(product.user, user)
+                .from(favorite)
+                .leftJoin(favorite.user, user)
+                .leftJoin(favorite.product, product)
                 .where(
                         productIdEq(productId)
                 )
                 .groupBy(user.gender, user.ageRange)
-                .orderBy(product.count().desc())
+                .orderBy(favorite.count().desc())
                 .limit(1)
                 .fetchOne();
 
@@ -246,20 +214,24 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     @Override
     public BottomProductDto bottomProductDetail(Long productId) {
         Long favoriteCount = queryFactory
-                .select(user.count())
-                .from(user)
-                .where(user.products.any().id.eq(productId))
+                .select(favorite.count())
+                .from(favorite)
+                .leftJoin(favorite.product, product)
+                .where(
+                        productIdEq(productId)
+                )
                 .fetchOne();
 
         Tuple tuple = queryFactory
                 .select(product.count(), user.gender, user.ageRange)
-                .from(product)
-                .leftJoin(product.user, user)
+                .from(favorite)
+                .leftJoin(favorite.user, user)
+                .leftJoin(favorite.product, product)
                 .where(
                         productIdEq(productId)
                 )
                 .groupBy(user.gender, user.ageRange)
-                .orderBy(product.count().desc())
+                .orderBy(favorite.count().desc())
                 .limit(1)
                 .fetchOne();
 

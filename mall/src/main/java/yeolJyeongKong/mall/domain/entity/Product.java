@@ -51,11 +51,6 @@ public class Product {
 
     private String descriptionImage;
 
-    @JsonIgnore
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
@@ -71,6 +66,9 @@ public class Product {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "recent_id")
     private Recent recent;
+
+    @OneToMany(mappedBy = "product")
+    private List<Favorite> favorites = new ArrayList<>();
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_recommendation_id")
@@ -99,10 +97,6 @@ public class Product {
 
     public void setRecent(Recent recent) {
         this.recent = recent;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public void updateView() {
