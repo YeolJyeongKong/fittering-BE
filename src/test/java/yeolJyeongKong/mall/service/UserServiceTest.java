@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import yeolJyeongKong.mall.domain.RestPage;
 import yeolJyeongKong.mall.domain.dto.*;
 import yeolJyeongKong.mall.domain.entity.*;
+import yeolJyeongKong.mall.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,25 @@ class UserServiceTest {
     MallService mallService;
     @Autowired
     FavoriteService favoriteService;
+    @Autowired
+    RankService rankService;
+
+    @Autowired
+    FavoriteRepository favoriteRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    RankRepository rankRepository;
+    @Autowired
+    MallRepository mallRepository;
+    @Autowired
+    ProductRepository productRepository;
+    @Autowired
+    MeasurementRepository measurementRepository;
+    @Autowired
+    RecentRecommendationRepository recentRecommendationRepository;
+    @Autowired
+    UserRecommendationRepository userRecommendationRepository;
 
     private User user;
     private Category category;
@@ -138,6 +158,45 @@ class UserServiceTest {
     void emailExist() {
         assertThat(userService.emailExist("test@test.com")).isTrue();
         assertThat(userService.emailExist("tes@tes.com")).isFalse();
+    }
+
+    @Test
+    void delete() {
+        Favorite favoriteMall = favoriteService.saveFavoriteMall(user.getId(), mall.getId());
+        Favorite favoriteProduct = favoriteService.saveFavoriteProduct(user.getId(), product.getId());
+
+        Rank rank = rankService.save(user.getId(), mall.getId());
+        Recent recent = userService.saveRecentProduct(user.getId(), product.getId());
+
+        List<Long> productIds = new ArrayList<>(){{
+            add(product.getId());
+        }};
+        RecentRecommendation recentRecommendation = productService.saveRecentRecommendation(user.getId());
+        productService.updateRecentRecommendation(recentRecommendation, productIds);
+
+        UserRecommendation userRecommendation = productService.saveUserRecommendation(user.getId());
+        productService.updateUserRecommendation(userRecommendation, productIds);
+
+        userService.delete(user.getId());
+
+        assertThat(favoriteRepository.findById(favoriteMall.getId())).isEmpty();
+        assertThat(favoriteRepository.findById(favoriteProduct.getId())).isEmpty();
+        assertThat(mallRepository.findFavoriteCount(mall.getId())).isEqualTo(0L);
+        assertThat(productRepository.findFavoriteCount(product.getId())).isEqualTo(0L);
+
+        assertThat(measurementRepository.findById(user.getMeasurement().getId())).isEmpty();
+
+        assertThat(rankRepository.findById(rank.getId())).isEmpty();
+        assertThat(mallRepository.findByRankId(rank.getId())).isEmpty();
+
+        assertThat(productRepository.findRecentCount(recent.getId())).isEqualTo(0L);
+
+        assertThat(recentRecommendationRepository.findById(recentRecommendation.getId())).isEmpty();
+        assertThat(productRepository.findRecentRecommendation(recentRecommendation.getId())).isEqualTo(0L);
+        assertThat(userRecommendationRepository.findById(userRecommendation.getId())).isEmpty();
+        assertThat(productRepository.findUserRecommendation(userRecommendation.getId())).isEqualTo(0L);
+
+        assertThat(userRepository.findById(user.getId())).isEmpty();
     }
 
     private static void measurementCheck(MeasurementDto measurementDto, MeasurementDto measurementDto2) {
