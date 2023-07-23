@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface MallRepository extends JpaRepository<Mall, Long>, MallRepositoryCustom {
     Optional<Mall> findByName(String name);
+    Optional<Mall> findByRankId(Long rankId);
 }

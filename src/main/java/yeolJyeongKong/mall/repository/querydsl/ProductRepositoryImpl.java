@@ -22,9 +22,12 @@ import static yeolJyeongKong.mall.domain.entity.QCategory.category;
 import static yeolJyeongKong.mall.domain.entity.QFavorite.favorite;
 import static yeolJyeongKong.mall.domain.entity.QMall.mall;
 import static yeolJyeongKong.mall.domain.entity.QProduct.product;
+import static yeolJyeongKong.mall.domain.entity.QRecent.recent;
+import static yeolJyeongKong.mall.domain.entity.QRecentRecommendation.recentRecommendation;
 import static yeolJyeongKong.mall.domain.entity.QSize.size;
 import static yeolJyeongKong.mall.domain.entity.QTop.top;
 import static yeolJyeongKong.mall.domain.entity.QUser.user;
+import static yeolJyeongKong.mall.domain.entity.QUserRecommendation.userRecommendation;
 
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
@@ -279,6 +282,54 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         return result;
     }
 
+    @Override
+    public Long findFavoriteCount(Long favoriteId) {
+        return queryFactory
+                .select(product.count())
+                .from(product)
+                .leftJoin(product.favorites, favorite)
+                .where(
+                        favoriteIdEq(favoriteId)
+                )
+                .fetchOne();
+    }
+
+    @Override
+    public Long findRecentCount(Long recentId) {
+        return queryFactory
+                .select(product.count())
+                .from(product)
+                .leftJoin(product.recent, recent)
+                .where(
+                        recentIdEq(recentId)
+                )
+                .fetchOne();
+    }
+
+    @Override
+    public Long findRecentRecommendation(Long recentRecommendationId) {
+        return queryFactory
+                .select(product.count())
+                .from(product)
+                .leftJoin(product.recentRecommendation, recentRecommendation)
+                .where(
+                        recentRecommendationIdEq(recentRecommendationId)
+                )
+                .fetchOne();
+    }
+
+    @Override
+    public Long findUserRecommendation(Long userRecommendationId) {
+        return queryFactory
+                .select(product.count())
+                .from(product)
+                .leftJoin(product.userRecommendation, userRecommendation)
+                .where(
+                        userRecommendationIdEq(userRecommendationId)
+                )
+                .fetchOne();
+    }
+
     public BooleanExpression categoryIdEq(Long categoryId) {
         return categoryId != null ? category.id.eq(categoryId) : null;
     }
@@ -315,6 +366,22 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     public BooleanExpression productIdEq(Long productId) {
         return productId != null ? product.id.eq(productId) : null;
+    }
+
+    public BooleanExpression favoriteIdEq(Long favoriteId) {
+        return favoriteId != null ? favorite.id.eq(favoriteId) : null;
+    }
+
+    public BooleanExpression recentIdEq(Long recentId) {
+        return recentId != null ? recent.id.eq(recentId) : null;
+    }
+
+    public BooleanExpression recentRecommendationIdEq(Long recentRecommendationId) {
+        return recentRecommendationId != null ? recentRecommendation.id.eq(recentRecommendationId) : null;
+    }
+
+    public BooleanExpression userRecommendationIdEq(Long userRecommendationId) {
+        return userRecommendationId != null ? userRecommendation.id.eq(userRecommendationId) : null;
     }
 
     public OrderSpecifier<? extends Number> filter(Long filterId) {

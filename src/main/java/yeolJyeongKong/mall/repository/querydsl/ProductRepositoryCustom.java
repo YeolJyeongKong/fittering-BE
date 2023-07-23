@@ -18,4 +18,8 @@ public interface ProductRepositoryCustom {
     TopProductDto topProductDetail(Long productId);
     BottomProductDto bottomProductDetail(Long productId);
     List<Product> findByIds(List<Long> productIds);
+    Long findFavoriteCount(Long favoriteId);
+    Long findRecentCount(Long recentId);
+    Long findRecentRecommendation(Long recentRecommendationId);
+    Long findUserRecommendation(Long userRecommendationId);
 }

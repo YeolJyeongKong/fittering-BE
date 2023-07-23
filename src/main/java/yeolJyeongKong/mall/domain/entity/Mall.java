@@ -48,4 +48,8 @@ public class Mall {
         this.image = mallDto.getImage();
         this.description = mallDto.getDescription();
     }
+
+    public void deleteRank() {
+        rank = null;
+    }
 }

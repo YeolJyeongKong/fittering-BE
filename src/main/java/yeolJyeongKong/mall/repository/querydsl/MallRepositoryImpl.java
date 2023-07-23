@@ -9,6 +9,7 @@ import yeolJyeongKong.mall.domain.dto.QProductPreviewDto;
 
 import java.util.List;
 
+import static yeolJyeongKong.mall.domain.entity.QFavorite.favorite;
 import static yeolJyeongKong.mall.domain.entity.QMall.mall;
 import static yeolJyeongKong.mall.domain.entity.QProduct.product;
 
@@ -37,6 +38,22 @@ public class MallRepositoryImpl implements MallRepositoryCustom {
                         mallNameEq(mallName)
                 )
                 .fetch();
+    }
+
+    @Override
+    public Long findFavoriteCount(Long favoriteId) {
+        return queryFactory
+                .select(mall.count())
+                .from(mall)
+                .leftJoin(mall.favorites, favorite)
+                .where(
+                        favoriteIdEq(favoriteId)
+                )
+                .fetchOne();
+    }
+
+    public BooleanExpression favoriteIdEq(Long favoriteId) {
+        return favoriteId != null ? favorite.id.eq(favoriteId) : null;
     }
 
     public BooleanExpression mallNameEq(String mallName) {

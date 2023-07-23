@@ -8,14 +8,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 import yeolJyeongKong.mall.domain.dto.*;
-import yeolJyeongKong.mall.domain.entity.Measurement;
-import yeolJyeongKong.mall.domain.entity.Product;
-import yeolJyeongKong.mall.domain.entity.Recent;
-import yeolJyeongKong.mall.domain.entity.User;
-import yeolJyeongKong.mall.repository.MeasurementRepository;
-import yeolJyeongKong.mall.repository.ProductRepository;
-import yeolJyeongKong.mall.repository.RecentRepository;
-import yeolJyeongKong.mall.repository.UserRepository;
+import yeolJyeongKong.mall.domain.entity.*;
+import yeolJyeongKong.mall.repository.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +24,11 @@ public class UserService {
     private final MeasurementRepository measurementRepository;
     private final RecentRepository recentRepository;
     private final ProductRepository productRepository;
+    private final FavoriteRepository favoriteRepository;
+    private final MallRepository mallRepository;
+    private final RankRepository rankRepository;
+    private final UserRecommendationRepository userRecommendationRepository;
+    private final RecentRecommendationRepository recentRecommendationRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
@@ -87,7 +86,7 @@ public class UserService {
     }
 
     @Transactional
-    public void saveRecentProduct(Long userId, Long productId) {
+    public Recent saveRecentProduct(Long userId, Long productId) {
         Optional<Recent> recent = recentRepository.findByUserId(userId);
         User user = findById(userId);
         Product product = productRepository.findById(productId)
@@ -96,10 +95,11 @@ public class UserService {
         if(recent.isEmpty()) {
             Recent newRecent = recentRepository.save(new Recent(user, product));
             product.setRecent(newRecent);
-            return;
+            return newRecent;
         }
 
         recent.get().update(product);
+        return recent.get();
     }
 
     public User login(LoginDto loginDto) {
@@ -145,5 +145,50 @@ public class UserService {
     public boolean updatePasswordToken(String email) {
         User user = findByEmail(email);
         return user.updatePasswordToken();
+    }
+
+    @Transactional
+    public void delete(Long userId) {
+        User user = findById(userId);
+
+        user.getRoles().clear();
+
+        for (Favorite favorite : user.getFavorites()) {
+            if (favorite.getProduct() != null) {
+                Product product = productRepository.findById(favorite.getProduct().getId()).get();
+                product.getFavorites().remove(favorite);
+                continue;
+            }
+
+            Mall mall = mallRepository.findById(favorite.getMall().getId()).get();
+            mall.getFavorites().remove(favorite);
+        }
+        favoriteRepository.deleteByUserId(userId);
+
+        measurementRepository.deleteByUserId(userId);
+
+        user.getRanks().forEach(rank -> {
+            Mall mall = mallRepository.findById(rank.getMall().getId())
+                    .orElseThrow(() -> new NoResultException("mall dosen't exist"));
+            mall.deleteRank();
+        });
+        rankRepository.deleteByUserId(userId);
+
+        Recent recent = recentRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new NoResultException("recent dosen't exist"));
+        recent.getProducts().forEach(Product::deleteRecent);
+        recentRepository.deleteById(recent.getId());
+
+        UserRecommendation userRecommendation = userRecommendationRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new NoResultException("user recommendation dosen't exist"));
+        userRecommendation.getProducts().forEach(Product::deleteUserRecommendation);
+        userRecommendationRepository.deleteById(userRecommendation.getId());
+
+        RecentRecommendation recentRecommendation = recentRecommendationRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new NoResultException("recent recommendation dosen't exist"));
+        recentRecommendation.getProducts().forEach(Product::deleteRecentRecommendation);
+        recentRecommendationRepository.deleteById(recentRecommendation.getId());
+
+        userRepository.delete(user);
     }
 }

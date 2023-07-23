@@ -99,6 +99,18 @@ public class Product {
         this.recent = recent;
     }
 
+    public void deleteRecent() {
+        recent = null;
+    }
+
+    public void deleteUserRecommendation() {
+        userRecommendation = null;
+    }
+
+    public void deleteRecentRecommendation() {
+        recentRecommendation = null;
+    }
+
     public void updateView() {
         view = view + 1;
     }
