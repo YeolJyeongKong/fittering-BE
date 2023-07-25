@@ -81,19 +81,23 @@ class ProductServiceTest {
     @Test
     void productWithCategory() {
         Page<ProductPreviewDto> findProductByCategory =
-                productService.productWithCategory(topCategory.getId(), "M", 0L, PageRequest.of(0, 1));
-        findProductByCategory.forEach(productPreviewDto -> {
-            compareProduct(savedProduct, productPreviewDto);
-        });
+                productService.productWithCategory(topCategory.getId(), "M", 0L, PageRequest.of(0, 10));
+        compareProduct(savedProduct, findProductByCategory.getContent().get(0));
+        compareProduct(product2, findProductByCategory.getContent().get(1));
+        compareProduct(product3, findProductByCategory.getContent().get(2));
+        compareProduct(product4, findProductByCategory.getContent().get(3));
+        compareProduct(product5, findProductByCategory.getContent().get(4));
     }
 
     @Test
     void productWithCategoryOfMall() {
         Page<ProductPreviewDto> findProductByCategoryOfMall =
                 productService.productWithCategoryOfMall(mall.getId(), topCategory.getId(), "M", 0L, PageRequest.of(0, 10));
-        findProductByCategoryOfMall.forEach(productPreviewDto -> {
-            compareProduct(savedProduct, productPreviewDto);
-        });
+        compareProduct(savedProduct, findProductByCategoryOfMall.getContent().get(0));
+        compareProduct(product2, findProductByCategoryOfMall.getContent().get(1));
+        compareProduct(product3, findProductByCategoryOfMall.getContent().get(2));
+        compareProduct(product4, findProductByCategoryOfMall.getContent().get(3));
+        compareProduct(product5, findProductByCategoryOfMall.getContent().get(4));
     }
 
     @Test
@@ -130,7 +134,7 @@ class ProductServiceTest {
                 bottomCategory, mall));
 
         List<ProductCategoryDto> findProductCountsOnCategory = productService.multipleProductCountWithCategory();
-        assertThat(findProductCountsOnCategory.get(0).getCount()).isEqualTo(3);
+        assertThat(findProductCountsOnCategory.get(0).getCount()).isEqualTo(7);
         assertThat(findProductCountsOnCategory.get(1).getCount()).isEqualTo(4);
     }
 
@@ -171,7 +175,7 @@ class ProductServiceTest {
                 bottomCategory, mall2));
 
         List<ProductCategoryDto> findProductCountsOnCategoryOfMall = productService.productCountWithCategoryOfMall(mall.getId());
-        assertThat(findProductCountsOnCategoryOfMall.get(0).getCount()).isEqualTo(3);
+        assertThat(findProductCountsOnCategoryOfMall.get(0).getCount()).isEqualTo(7);
         assertThat(findProductCountsOnCategoryOfMall.get(1).getCount()).isEqualTo(0);
 
         List<ProductCategoryDto> findProductCountsOnCategoryOfMall2 = productService.productCountWithCategoryOfMall(mall2.getId());
