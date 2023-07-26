@@ -63,17 +63,17 @@ jobs:
             --s3-location bucket=$S3_BUCKET_NAME,key=$GITHUB_SHA.zip,bundleType=zip
 
       # application.yml
-      - name:  make application.yml
+      - name: make application.yml
         run: touch ./src/main/resources/application.yml
-        shell: bash
       - name: deliver application.yml
-        run: echo "${{ secrets.APP_SECRET }}" > ./src/main/resources/application.yml
-        shell: bash
+        env:
+            APPLICATION: ${{ secrets.APP_SECRET }}
+        run: echo $APPLICATION >> ./src/main/resources/application.yml
 
       # application-oauth.yml
       - name: make application-oauth.yml
         run: touch ./src/main/resources/application-oauth.yml
-        shell: bash
       - name: deliver application-oauth.yml
-        run: echo "${{ secrets.APP_OAUTH_SECRET }}" > ./src/main/resources/application-oauth.yml
-        shell: bash
+        env:
+          APPLICATION_OAUTH: ${{ secrets.APP_OAUTH_SECRET }}
+        run: echo $APPLICATION_OAUTH >> ./src/main/resources/application-oauth.yml
