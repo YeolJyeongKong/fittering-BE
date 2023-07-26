@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 10s # 10초마다 매트릭을 수집
+  evaluation_interval: 1m # 1분마다 규칙을 평가
+
+  external_labels: # 외부 시스템에 표시할 이 서버의 레이블
+    monitor: 'fittering-server-monitor'
+
+rule_files: # 규칙을 로딩 및 평가 (evaluation_interval 기준)
+# - "first.rules"
+# - "second.rules"
+        
+scrape_configs:
+  - job_name: 'monitoring-app'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      # 도커 인스턴스 내부 호스트 (디폴트: 8080) -> 이후 배포 시 호스트 IP 주소로 변경 필요
+      - targets: ['host.docker.internal:8080']

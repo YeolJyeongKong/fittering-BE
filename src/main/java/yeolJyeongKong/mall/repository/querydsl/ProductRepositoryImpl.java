@@ -6,6 +6,8 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import org.hibernate.metamodel.model.domain.TupleType;
+import org.hibernate.sql.results.internal.TupleImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -174,25 +176,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 )
                 .fetchOne();
 
-        Tuple tuple = queryFactory
-                .select(product.count(), user.gender, user.ageRange)
-                .from(favorite)
-                .leftJoin(favorite.user, user)
-                .leftJoin(favorite.product, product)
-                .where(
-                        productIdEq(productId)
-                )
-                .groupBy(user.gender, user.ageRange)
-                .orderBy(favorite.count().desc())
-                .limit(1)
-                .fetchOne();
-
-        Tuple popular = Optional.ofNullable(tuple)
-                .orElseThrow(() -> new NullPointerException("popular information doesn't exist"));
-
-        String gender = popular.get(user.gender);
-        Integer ageRange = popular.get(user.ageRange);
-
         Product productInfo = queryFactory
                 .selectFrom(product)
                 .from(product)
@@ -211,7 +194,29 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             topDtos.add(new TopDto(size));
         }
 
-        return new TopProductDto(favoriteCount, productInfo, gender, ageRange, topDtos);
+        Tuple tuple = queryFactory
+                .select(product.count(), user.gender, user.ageRange)
+                .from(favorite)
+                .leftJoin(favorite.user, user)
+                .leftJoin(favorite.product, product)
+                .where(
+                        productIdEq(productId)
+                )
+                .groupBy(user.gender, user.ageRange)
+                .orderBy(favorite.count().desc())
+                .limit(1)
+                .fetchOne();
+
+        Optional<Tuple> optionalPopular = Optional.ofNullable(tuple);
+
+        if(optionalPopular.isPresent()) {
+            Tuple popular = optionalPopular.get();
+            String gender = popular.get(user.gender);
+            Integer ageRange = popular.get(user.ageRange);
+            return new TopProductDto(favoriteCount, productInfo, gender, ageRange, topDtos);
+        }
+
+        return new TopProductDto(favoriteCount, productInfo, "", null, topDtos);
     }
 
     @Override
@@ -238,12 +243,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .limit(1)
                 .fetchOne();
 
-        Tuple popular = Optional.ofNullable(tuple)
-                .orElseThrow(() -> new NullPointerException("popular information doesn't exist"));
-
-        String gender = popular.get(user.gender);
-        Integer ageRange = popular.get(user.ageRange);
-
         Product productInfo = queryFactory
                 .selectFrom(product)
                 .from(product)
@@ -262,7 +261,16 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             bottomDtos.add(new BottomDto(size));
         }
 
-        return new BottomProductDto(favoriteCount, productInfo, gender, ageRange, bottomDtos);
+        Optional<Tuple> optionalPopular = Optional.ofNullable(tuple);
+
+        if(optionalPopular.isPresent()) {
+            Tuple popular = optionalPopular.get();
+            String gender = popular.get(user.gender);
+            Integer ageRange = popular.get(user.ageRange);
+            return new BottomProductDto(favoriteCount, productInfo, gender, ageRange, bottomDtos);
+        }
+
+        return new BottomProductDto(favoriteCount, productInfo, "", null, bottomDtos);
     }
 
     @Override

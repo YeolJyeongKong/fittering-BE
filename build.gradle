@@ -76,7 +76,11 @@ compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
 }
 
-compileQuerydsl.doFirst {
+compileJava.doFirst {
 	if(file(querydslDir).exists())
 		delete(file(querydslDir))
+}
+
+jar {
+	enabled = false
 }
