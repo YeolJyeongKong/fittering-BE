@@ -64,16 +64,16 @@ jobs:
 
       # application.yml
       - name: make application.yml
-        env:
-          APPLICATION: ${{ secrets.APP_SECRET }}
         run: touch ./src/main/resources/application.yml
       - name: deliver application.yml
+        env:
+            APPLICATION: ${{ secrets.APP_SECRET }}
         run: echo $APPLICATION >> ./src/main/resources/application.yml
 
       # application-oauth.yml
       - name: make application-oauth.yml
-        env:
-          APPLICATION_OAUTH: ${{ secrets.APP_OAUTH_SECRET }}
         run: touch ./src/main/resources/application-oauth.yml
       - name: deliver application-oauth.yml
+        env:
+          APPLICATION_OAUTH: ${{ secrets.APP_OAUTH_SECRET }}
         run: echo $APPLICATION_OAUTH >> ./src/main/resources/application-oauth.yml
