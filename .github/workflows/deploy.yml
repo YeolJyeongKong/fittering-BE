@@ -65,10 +65,13 @@ jobs:
       # application.yml
       - name: make application.yml
         run: touch ./src/main/resources/application.yml
-      - name: deliver application.yml
+    
+      - name: deliver application.yml and copy
         env:
             APPLICATION: ${{ secrets.APP_SECRET }}
-        run: echo $APPLICATION >> ./src/main/resources/application.yml
+        run: |
+          echo $APPLICATION >> ./src/main/resources/application.yml
+          cp ./src/main/resources/application.yml .
 
       # application-oauth.yml
       - name: make application-oauth.yml
