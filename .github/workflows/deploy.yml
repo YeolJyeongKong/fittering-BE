@@ -30,11 +30,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # Test 제외
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
-        with:
-          arguments: clean build -x test
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Clean and Build with Gradle
+        run: ./gradlew clean build
 
       # AWS 인증
       - name: Configure AWS credentials
