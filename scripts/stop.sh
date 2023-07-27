@@ -18,3 +18,8 @@ else
   echo "$TIME_NOW > 실행중인 $CURRENT_PID 애플리케이션 종료 " >> $DEPLOY_LOG
   kill -15 $CURRENT_PID
 fi
+
+# docker-compose 닫기
+echo "$TIME_NOW > Docker Compose Down" >> $DEPLOY_LOG
+cd $PROJECT_ROOT
+docker-compose down -v
