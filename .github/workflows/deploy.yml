@@ -30,12 +30,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Clean and Build with Gradle
-        run: ./gradlew clean build
-
       # AWS 인증
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -65,10 +59,10 @@ jobs:
       # application.yml
       - name: make application.yml
         run: touch ./src/main/resources/application.yml
-    
+
       - name: deliver application.yml and copy
         env:
-            APPLICATION: ${{ secrets.APP_SECRET }}
+          APPLICATION: ${{ secrets.APP_SECRET }}
         run: |
           echo $APPLICATION >> ./src/main/resources/application.yml
           cp ./src/main/resources/application.yml .
@@ -80,3 +74,10 @@ jobs:
         env:
           APPLICATION_OAUTH: ${{ secrets.APP_OAUTH_SECRET }}
         run: echo $APPLICATION_OAUTH >> ./src/main/resources/application-oauth.yml
+
+      # clean & build
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Clean and Build with Gradle
+        run: ./gradlew clean build
