@@ -10,6 +10,9 @@ env:
   S3_BUCKET_NAME: fittering-bucket-test
   CODE_DEPLOY_APPLICATION_NAME: fittering-codedeploy-app
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: fittering-codedeploy-group
+  APPLICATION: ${{ secrets.APP_SECRET }}
+  APPLICATION_OAUTH: ${{ secrets.APP_OAUTH_SECRET }}
+
 
 permissions:
   contents: read
@@ -61,19 +64,13 @@ jobs:
         run: touch ./src/main/resources/application.yml
 
       - name: deliver application.yml and copy
-        env:
-          APPLICATION: ${{ secrets.APP_SECRET }}
-        run: |
-          echo $APPLICATION >> ./src/main/resources/application.yml
-          cp ./src/main/resources/application.yml .
+        run: echo "${{ env.APPLICATION }}" >> ./src/main/resources/application.yml
 
       # application-oauth.yml
       - name: make application-oauth.yml
         run: touch ./src/main/resources/application-oauth.yml
       - name: deliver application-oauth.yml
-        env:
-          APPLICATION_OAUTH: ${{ secrets.APP_OAUTH_SECRET }}
-        run: echo $APPLICATION_OAUTH >> ./src/main/resources/application-oauth.yml
+        run: echo "${{ env.APPLICATION_OAUTH }}" >> ./src/main/resources/application-oauth.yml
 
       # clean & build
       - name: Grant execute permission for gradlew
