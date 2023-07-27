@@ -1,0 +1,25 @@
+version: '3.0'
+
+services:
+  redis:
+    image: redis
+    container_name: redis-cache
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana-container
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus-container
+    ports:
+      - "9090:9090"
+    volumes:
+      - /home/ubuntu/app/src/main/resources/prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: unless-stopped
