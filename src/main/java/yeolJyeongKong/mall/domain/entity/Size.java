@@ -21,7 +21,7 @@ public class Size {
     @Column(name = "size_id")
     private Long id;
 
-    @NonNull @Length(max = 4)
+    @NonNull @Length(max = 10)
     private String name;
 
     @OneToOne(fetch = LAZY)

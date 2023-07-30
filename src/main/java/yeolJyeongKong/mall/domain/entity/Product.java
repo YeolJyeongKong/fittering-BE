@@ -26,7 +26,7 @@ public class Product {
     @NonNull
     private Integer price;
 
-    @NonNull @Length(max = 30)
+    @NonNull @Length(max = 50)
     private String name;
 
     @NonNull @Length(max = 1)
