@@ -49,8 +49,6 @@ public class Product {
     @NonNull
     private Integer timeView;
 
-    private String descriptionImage;
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
@@ -78,17 +76,21 @@ public class Product {
     @JoinColumn(name = "recent_recommendation_id")
     private RecentRecommendation recentRecommendation;
 
-    public Product(ProductDetailDto productDto, Category category, Mall mall) {
+    @OneToMany(mappedBy = "product")
+    private List<DescriptionImage> descriptionImages = new ArrayList<>();
+
+    public Product(ProductDetailDto productDto, Category category,
+                   Mall mall, List<DescriptionImage> descriptionImages) {
         price = productDto.getPrice();
         name = productDto.getName();
         gender = productDto.getGender();
         type = productDto.getType();
         image = productDto.getImage();
-        descriptionImage = productDto.getDescriptionImage();
         view = 0;
         timeView = 0;
         this.category = category;
         this.mall = mall;
+        this.descriptionImages = descriptionImages;
     }
 
     public void setSizes(List<Size> sizes) {

@@ -24,6 +24,7 @@ public class ProductService {
     private final MallRepository mallRepository;
     private final RecentRecommendationRepository recentRecommendationRepository;
     private final UserRecommendationRepository userRecommendationRepository;
+    private final DescriptionImageRepository descriptionImageRepository;
 
     @Transactional
     public Product save(Product product) {
@@ -147,5 +148,15 @@ public class ProductService {
         return userRecommendationRepository.findByUserId(userId)
                 .map(UserRecommendation::getProducts)
                 .orElse(new ArrayList<>());
+    }
+
+    @Transactional
+    public List<DescriptionImage> saveDescriptionImages(List<String> descriptionImages) {
+        List<DescriptionImage> result = new ArrayList<>();
+        descriptionImages.forEach(descriptionImageUrl -> {
+            DescriptionImage descriptionImage = new DescriptionImage(descriptionImageUrl);
+            result.add(descriptionImageRepository.save(descriptionImage));
+        });
+        return result;
     }
 }

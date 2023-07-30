@@ -11,6 +11,7 @@ import yeolJyeongKong.mall.domain.dto.TopDto;
 import yeolJyeongKong.mall.domain.entity.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -60,11 +61,13 @@ class SizeServiceTest {
         Category topCategory = categoryService.save("top");
         Mall mall = mallService.save(new MallDto("testMall", "testMall.com",
                 "image.jpg", "desc", new ArrayList<>()));
+        List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
+        List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
         Product product = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                topCategory, mall));
+                        "image.jpg", "top",
+                        "testMall", null, null, descImgsStr),
+                topCategory, mall, descImgs));
 
         BottomDto bottomDto = new BottomDto("S", 104.0, 37.5, 51.5, 33.8, 28.0, 26.0);
         Size bottomSize = sizeService.saveBottom(bottomDto);

@@ -16,10 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import yeolJyeongKong.mall.config.PrincipalDetails;
 import yeolJyeongKong.mall.domain.dto.*;
-import yeolJyeongKong.mall.domain.entity.Category;
-import yeolJyeongKong.mall.domain.entity.Mall;
-import yeolJyeongKong.mall.domain.entity.Product;
-import yeolJyeongKong.mall.domain.entity.Size;
+import yeolJyeongKong.mall.domain.entity.*;
 import yeolJyeongKong.mall.service.*;
 
 import java.util.ArrayList;
@@ -44,7 +41,8 @@ public class ProductController {
     public ResponseEntity<?> save(@ModelAttribute ProductDetailDto productDto) {
         Category category = categoryService.findByName(productDto.getCategoryName());
         Mall mall = mallService.findByName(productDto.getMallName());
-        Product product = new Product(productDto, category, mall);
+        List<DescriptionImage> descriptionImages = productService.saveDescriptionImages(productDto.getDescriptionImages());
+        Product product = new Product(productDto, category, mall, descriptionImages);
         List<Size> sizes = new ArrayList<>();
 
         if(productDto.getType() == 0) {

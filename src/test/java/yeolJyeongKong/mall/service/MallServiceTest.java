@@ -8,10 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import yeolJyeongKong.mall.domain.dto.MallDto;
 import yeolJyeongKong.mall.domain.dto.ProductDetailDto;
 import yeolJyeongKong.mall.domain.entity.Category;
+import yeolJyeongKong.mall.domain.entity.DescriptionImage;
 import yeolJyeongKong.mall.domain.entity.Mall;
 import yeolJyeongKong.mall.domain.entity.Product;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -42,11 +44,13 @@ class MallServiceTest {
         checkMall(mall3, findMall3);
 
         Category category = categoryService.save("top");
+        List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
+        List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
         Product product = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                category, mall1));
+                        "image.jpg", "top",
+                        "testMall", null, null, descImgsStr),
+                category, mall1, descImgs));
         mallService.addProduct("testMall1", product.getId());
         mallService.findProducts("testMall1").forEach(productDto -> {
             assertThat(productDto.getProductId()).isEqualTo(product.getId());
