@@ -42,26 +42,21 @@ public class ProductController {
         Category category = categoryService.findByName(productDto.getCategoryName());
         Mall mall = mallService.findByName(productDto.getMallName());
         List<DescriptionImage> descriptionImages = productService.saveDescriptionImages(productDto.getDescriptionImages());
-        Product product = new Product(productDto, category, mall, descriptionImages);
+        Product product = productService.save(new Product(productDto, category, mall, descriptionImages));
         List<Size> sizes = new ArrayList<>();
 
         if(productDto.getType() == 0) {
             for(TopDto topDto : productDto.getTopSizes()) {
-                Size size = sizeService.saveTop(topDto);
-                size.setProduct(product);
+                Size size = sizeService.saveTop(topDto, product);
                 sizes.add(size);
             }
         } else {
             for(BottomDto bottomDto : productDto.getBottomSizes()) {
-                Size size = sizeService.saveBottom(bottomDto);
-                size.setProduct(product);
+                Size size = sizeService.saveBottom(bottomDto, product);
                 sizes.add(size);
             }
         }
 
-        product.setSizes(sizes);
-
-        productService.save(product);
         return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
     }
 

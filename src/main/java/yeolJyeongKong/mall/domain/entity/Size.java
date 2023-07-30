@@ -37,14 +37,16 @@ public class Size {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Size(TopDto topDto) {
-        this.name = topDto.getName();
-        this.top = new Top(topDto);
+    public Size(String name, Top top, Product product) {
+        this.name = name;
+        this.top = top;
+        this.product = product;
     }
 
-    public Size(BottomDto bottomDto) {
-        this.name = bottomDto.getName();
-        this.bottom = new Bottom(bottomDto);
+    public Size(String name, Bottom bottom, Product product) {
+        this.name = name;
+        this.bottom = bottom;
+        this.product = product;
     }
 
     public void setProduct(Product product) {
