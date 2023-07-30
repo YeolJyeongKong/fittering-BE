@@ -1,5 +1,6 @@
 package yeolJyeongKong.mall.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import yeolJyeongKong.mall.domain.dto.BottomDto;
@@ -20,16 +21,19 @@ public class SizeService {
     private final TopRepository topRepository;
     private final BottomRepository bottomRepository;
 
+    @Transactional
     public Size saveTop(TopDto topDto, Product product) {
         Top top = topRepository.save(new Top(topDto));
         return sizeRepository.save(new Size(topDto.getName(), top, product));
     }
 
+    @Transactional
     public Size saveBottom(BottomDto bottomDto, Product product) {
         Bottom bottom = bottomRepository.save(new Bottom(bottomDto));
         return sizeRepository.save(new Size(bottomDto.getName(), bottom, product));
     }
 
+    @Transactional
     public void setProduct(Size size, Product product) {
         size.setProduct(product);
     }
