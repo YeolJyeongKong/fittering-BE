@@ -262,16 +262,11 @@ class ProductServiceTest {
 
     @Test
     void recentRecommendationTest() {
-        RecentRecommendation recentRecommendation = productService.saveRecentRecommendation(user.getId());
-        List<Long> productIds = new ArrayList<>(){{
-            add(savedProduct.getId());
-            add(product2.getId());
-            add(product3.getId());
-            add(product4.getId());
-            add(product5.getId());
-        }};
-
-        productService.updateRecentRecommendation(recentRecommendation, productIds);
+        productService.saveRecentRecommendation(user.getId(), savedProduct.getId());
+        productService.saveRecentRecommendation(user.getId(), product2.getId());
+        productService.saveRecentRecommendation(user.getId(), product3.getId());
+        productService.saveRecentRecommendation(user.getId(), product4.getId());
+        productService.saveRecentRecommendation(user.getId(), product5.getId());
 
         List<Product> products = productService.productWithRecentRecommendation(user.getId());
         assertThat(products.size()).isEqualTo(5);
@@ -284,16 +279,11 @@ class ProductServiceTest {
 
     @Test
     void userRecommendationTest() {
-        UserRecommendation userRecommendation = productService.saveUserRecommendation(user.getId());
-        List<Long> productIds = new ArrayList<>(){{
-            add(savedProduct.getId());
-            add(product2.getId());
-            add(product3.getId());
-            add(product4.getId());
-            add(product5.getId());
-        }};
-
-        productService.updateUserRecommendation(userRecommendation, productIds);
+        productService.saveUserRecommendation(user.getId(), savedProduct.getId());
+        productService.saveUserRecommendation(user.getId(), product2.getId());
+        productService.saveUserRecommendation(user.getId(), product3.getId());
+        productService.saveUserRecommendation(user.getId(), product4.getId());
+        productService.saveUserRecommendation(user.getId(), product5.getId());
 
         List<Product> products = productService.productWithUserRecommendation(user.getId());
         assertThat(products.size()).isEqualTo(5);

@@ -170,14 +170,8 @@ class UserServiceTest {
         Rank rank = rankService.save(user.getId(), mall.getId());
         Recent recent = userService.saveRecentProduct(user.getId(), product.getId());
 
-        List<Long> productIds = new ArrayList<>(){{
-            add(product.getId());
-        }};
-        RecentRecommendation recentRecommendation = productService.saveRecentRecommendation(user.getId());
-        productService.updateRecentRecommendation(recentRecommendation, productIds);
-
-        UserRecommendation userRecommendation = productService.saveUserRecommendation(user.getId());
-        productService.updateUserRecommendation(userRecommendation, productIds);
+        RecentRecommendation recentRecommendation = productService.saveRecentRecommendation(user.getId(), product.getId());
+        UserRecommendation userRecommendation = productService.saveUserRecommendation(user.getId(), product.getId());
 
         userService.delete(user.getId());
 
