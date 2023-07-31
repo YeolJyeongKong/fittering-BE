@@ -51,7 +51,7 @@ public class UserController {
     @Operation(summary = "마이페이지 수정 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserDto.class)))
     @PostMapping("/user/edit")
-    public ResponseEntity<?> edit(@ModelAttribute UserDto userDto,
+    public ResponseEntity<?> edit(@RequestBody UserDto userDto,
                                   @AuthenticationPrincipal PrincipalDetails principalDetails) {
         userService.infoUpdate(userDto, principalDetails.getUser().getId());
         return new ResponseEntity<>(userDto, HttpStatus.OK);
@@ -85,7 +85,7 @@ public class UserController {
     @Operation(summary = "체형 정보 수정 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MeasurementDto.class)))
     @PostMapping("/user/mysize/edit")
-    public ResponseEntity<?> measurementEdit(@ModelAttribute MeasurementDto measurementDto,
+    public ResponseEntity<?> measurementEdit(@RequestBody MeasurementDto measurementDto,
                                              @AuthenticationPrincipal PrincipalDetails principalDetails) {
         userService.measurementUpdate(measurementDto, principalDetails.getUser().getId());
         return new ResponseEntity<>(measurementDto, HttpStatus.OK);
@@ -131,7 +131,7 @@ public class UserController {
     @Operation(summary = "체형 측정 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MeasurementDto.class))))
     @PostMapping("/user/recommendation/measurement")
-    public ResponseEntity<?> recommendMeasurement(@ModelAttribute ImageDto imageDto,
+    public ResponseEntity<?> recommendMeasurement(@RequestBody ImageDto imageDto,
                                                   @AuthenticationPrincipal PrincipalDetails principalDetails) {
         String image = imageDto.getImage(); //request
         //TODO: API Gateway에 등록된 체형 측정 API에서 체형 측정 결과를 받아오는 로직 필요

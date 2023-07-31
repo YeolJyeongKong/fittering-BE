@@ -38,7 +38,7 @@ public class ProductController {
     @Operation(summary = "상품 등록 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"상품 등록 완료\"")))
     @PostMapping("/product/add")
-    public ResponseEntity<?> save(@ModelAttribute ProductDetailDto productDto) {
+    public ResponseEntity<?> save(@RequestBody ProductDetailDto productDto) {
         Category category = categoryService.findByName(productDto.getCategoryName());
         Mall mall = mallService.findByName(productDto.getMallName());
         List<DescriptionImage> descriptionImages = productService.saveDescriptionImages(productDto.getDescriptionImages());

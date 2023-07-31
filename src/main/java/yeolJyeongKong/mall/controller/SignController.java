@@ -28,7 +28,7 @@ public class SignController {
     @Operation(summary = "로그인 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "{token}")))
     @PostMapping("/login")
-    public ResponseEntity<?> login(@ModelAttribute LoginDto loginDto) {
+    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         User user = userService.login(loginDto);
 
         if(user == null) {
@@ -40,7 +40,7 @@ public class SignController {
     @Operation(summary = "회원가입 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = SignUpDto.class)))
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@ModelAttribute SignUpDto signUpDto) {
+    public ResponseEntity<?> signUp(@RequestBody SignUpDto signUpDto) {
         if (userService.usernameExist(signUpDto.getUsername())) {
             return new ResponseEntity<>("같은 이름이 존재합니다.", HttpStatus.BAD_REQUEST);
         }

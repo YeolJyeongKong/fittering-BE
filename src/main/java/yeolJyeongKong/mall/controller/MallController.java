@@ -12,10 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import yeolJyeongKong.mall.config.PrincipalDetails;
 import yeolJyeongKong.mall.domain.dto.MallDto;
 import yeolJyeongKong.mall.domain.dto.MallPreviewDto;
@@ -38,7 +35,7 @@ public class MallController {
     @Operation(summary = "쇼핑몰 등록 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"쇼핑몰 등록 완료\"")))
     @GetMapping("/malls/add")
-    public ResponseEntity<?> save(@ModelAttribute MallDto mallDto) {
+    public ResponseEntity<?> save(@RequestBody MallDto mallDto) {
         mallService.save(mallDto);
         return new ResponseEntity<>("쇼핑몰 등록 완료", HttpStatus.OK);
     }
