@@ -84,7 +84,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        Long count = queryFactory
+        Long nullableCount = queryFactory
                 .select(product.count())
                 .from(product)
                 .leftJoin(product.category, category)
@@ -96,6 +96,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchOne();
+
+        Long count = nullableCount != null ? nullableCount : 0L;
 
         return PageableExecutionUtils.getPage(content, pageable, () -> count);
     }
@@ -124,7 +126,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        Long count = queryFactory
+        Long nullableCount = queryFactory
                 .select(product.count())
                 .from(product)
                 .leftJoin(product.category, category)
@@ -136,12 +138,14 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetchOne();
 
+        Long count = nullableCount != null ? nullableCount : 0L;
+
         return PageableExecutionUtils.getPage(content, pageable, () -> count);
     }
 
     @Override
     public Long productCountWithCategory(Long categoryId) {
-        return queryFactory
+        Long nullableCount = queryFactory
                 .select(product.count())
                 .from(product)
                 .leftJoin(product.category, category)
@@ -149,11 +153,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         categoryIdEq(categoryId)
                 )
                 .fetchOne();
+
+        return nullableCount != null ? nullableCount : 0L;
     }
 
     @Override
     public Long productCountWithCategoryOfMall(String mallName, Long categoryId) {
-        return queryFactory
+        Long nullableCount = queryFactory
                 .select(product.count())
                 .from(product)
                 .leftJoin(product.category, category)
@@ -163,11 +169,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         mallNameEq(mallName)
                 )
                 .fetchOne();
+
+        return nullableCount != null ? nullableCount : 0L;
     }
 
     @Override
     public TopProductDto topProductDetail(Long productId) {
-        Long favoriteCount = queryFactory
+        Long nullableFavoriteCount = queryFactory
                 .select(favorite.count())
                 .from(favorite)
                 .leftJoin(favorite.product, product)
@@ -175,6 +183,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         productIdEq(productId)
                 )
                 .fetchOne();
+
+        Long favoriteCount = nullableFavoriteCount != null ? nullableFavoriteCount : 0L;
 
         Product productInfo = queryFactory
                 .selectFrom(product)
@@ -221,7 +231,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     @Override
     public BottomProductDto bottomProductDetail(Long productId) {
-        Long favoriteCount = queryFactory
+        Long nullableFavoriteCount = queryFactory
                 .select(favorite.count())
                 .from(favorite)
                 .leftJoin(favorite.product, product)
@@ -229,6 +239,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         productIdEq(productId)
                 )
                 .fetchOne();
+
+        Long favoriteCount = nullableFavoriteCount != null ? nullableFavoriteCount : 0L;
 
         Tuple tuple = queryFactory
                 .select(product.count(), user.gender, user.ageRange)
@@ -292,7 +304,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     @Override
     public Long findFavoriteCount(Long favoriteId) {
-        return queryFactory
+        Long nullableCount = queryFactory
                 .select(product.count())
                 .from(product)
                 .leftJoin(product.favorites, favorite)
@@ -300,11 +312,12 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         favoriteIdEq(favoriteId)
                 )
                 .fetchOne();
+        return nullableCount != null ? nullableCount : 0L;
     }
 
     @Override
     public Long findRecentCount(Long recentId) {
-        return queryFactory
+        Long nullableCount = queryFactory
                 .select(product.count())
                 .from(product)
                 .leftJoin(product.recent, recent)
@@ -312,11 +325,12 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         recentIdEq(recentId)
                 )
                 .fetchOne();
+        return nullableCount != null ? nullableCount : 0L;
     }
 
     @Override
     public Long findRecentRecommendation(Long recentRecommendationId) {
-        return queryFactory
+        Long nullableCount = queryFactory
                 .select(product.count())
                 .from(product)
                 .leftJoin(product.recentRecommendation, recentRecommendation)
@@ -324,11 +338,12 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         recentRecommendationIdEq(recentRecommendationId)
                 )
                 .fetchOne();
+        return nullableCount != null ? nullableCount : 0L;
     }
 
     @Override
     public Long findUserRecommendation(Long userRecommendationId) {
-        return queryFactory
+        Long nullableCount = queryFactory
                 .select(product.count())
                 .from(product)
                 .leftJoin(product.userRecommendation, userRecommendation)
@@ -336,6 +351,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         userRecommendationIdEq(userRecommendationId)
                 )
                 .fetchOne();
+        return nullableCount != null ? nullableCount : 0L;
     }
 
     public BooleanExpression categoryIdEq(Long categoryId) {

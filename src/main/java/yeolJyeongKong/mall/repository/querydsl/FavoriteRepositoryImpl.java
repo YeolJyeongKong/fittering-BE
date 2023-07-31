@@ -63,7 +63,7 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        Long count = queryFactory
+        Long nullableCount = queryFactory
                 .select(favorite.count())
                 .from(favorite)
                 .where(
@@ -71,6 +71,8 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
                         favorite.mall.isNull()
                 )
                 .fetchOne();
+
+        Long count = nullableCount != null ? nullableCount : 0L;
 
         return PageableExecutionUtils.getPage(content, pageable, () -> count);
     }
