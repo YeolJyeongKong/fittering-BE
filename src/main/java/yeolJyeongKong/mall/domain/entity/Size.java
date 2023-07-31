@@ -24,10 +24,12 @@ public class Size {
     @NonNull @Length(max = 10)
     private String name;
 
+    @JsonIgnore
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "top_id")
     private Top top;
 
+    @JsonIgnore
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "bottom_id")
     private Bottom bottom;

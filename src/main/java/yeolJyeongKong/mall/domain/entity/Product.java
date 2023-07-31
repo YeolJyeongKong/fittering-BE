@@ -49,6 +49,7 @@ public class Product {
     @NonNull
     private Integer timeView;
 
+    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
