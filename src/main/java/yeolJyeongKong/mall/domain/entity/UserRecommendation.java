@@ -20,20 +20,16 @@ public class UserRecommendation {
     @Column(name = "user_recommendation_id")
     private Long id;
 
-    @JsonIgnore
-    @OneToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "userRecommendation")
-    private List<Product> products = new ArrayList<>();
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-    public UserRecommendation(User user) {
+    public UserRecommendation(User user, Product product) {
         this.user = user;
-    }
-
-    public void update(List<Product> newProducts) {
-        products.addAll(newProducts);
+        this.product = product;
     }
 }

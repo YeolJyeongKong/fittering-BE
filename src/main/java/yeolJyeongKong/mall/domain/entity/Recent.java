@@ -32,22 +32,18 @@ public class Recent {
     private LocalDateTime timestamp;
 
     @JsonIgnore
-    @OneToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "recent")
-    private List<Product> products = new ArrayList<>();
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     public Recent(User user, Product product) {
         timestamp = LocalDateTime.now();
         this.user = user;
-        products.add(product);
-    }
-
-    public void update(Product product) {
-        product.setRecent(this);
-        products.add(product);
+        this.product = product;
     }
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
 import yeolJyeongKong.mall.domain.dto.QProductPreviewDto;
 import yeolJyeongKong.mall.domain.entity.QMall;
+import yeolJyeongKong.mall.domain.entity.Recent;
 
 import java.util.List;
 
@@ -20,6 +21,18 @@ public class RecentRepositoryImpl implements RecentRepositoryCustom {
 
     public RecentRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
+    }
+
+    @Override
+    public List<Recent> findByUserId(Long userId) {
+        return queryFactory
+                .selectFrom(recent)
+                .leftJoin(recent.user, user)
+                .leftJoin(recent.product, product)
+                .where(
+                        userIdEq(userId)
+                )
+                .fetch();
     }
 
     /**
@@ -39,7 +52,7 @@ public class RecentRepositoryImpl implements RecentRepositoryCustom {
                 ))
                 .from(recent)
                 .leftJoin(recent.user, user)
-                .leftJoin(recent.products, product)
+                .leftJoin(recent.product, product)
                 .leftJoin(product.mall, mall)
                 .where(
                         userIdEq(userId)

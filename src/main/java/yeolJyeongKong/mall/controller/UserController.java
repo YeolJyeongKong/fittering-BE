@@ -181,13 +181,18 @@ public class UserController {
             return productIds;
         }
 
-        RecentRecommendation recentRecommendation = productService.saveRecentRecommendation(userId);
-
         List<ProductPreviewDto> recentProducts = userService.recentProduct(userId); //request
-        //TODO: API Gateway에 등록된 추천 상품 API에서 데이터를 받아오는 로직 추가 필요
+        /**
+         * TODO: 추천 상품 API에서 데이터를 받아오는 로직 추가 필요
+         * - 해당 API에서 가져오는 상품 개수가 10개라고 가정
+         * - 각 recentRecommendation 객체는 userId 1개, productId 1개를 가지므로
+         *   10개의 recentRecommendation 객체 생성
+         */
         productIds = new ArrayList<>(); //response
 
-        productService.updateRecentRecommendation(recentRecommendation, productIds);
+        productIds.forEach(productId -> {
+            productService.saveRecentRecommendation(userId, productId);
+        });
 
         return productIds;
     }
@@ -233,13 +238,18 @@ public class UserController {
             return productIds;
         }
 
-        UserRecommendation userRecommendation = productService.saveUserRecommendation(userId);
-
         MeasurementDto measurement = userService.measurementInfo(userId); //request
-        //TODO: API Gateway에 등록된 비슷한 체형 고객 pick API에서 데이터를 받아오는 로직 추가 필요
+        /**
+         * TODO: 비슷한 체형 고객 pick API에서 데이터를 받아오는 로직 추가 필요
+         * - 해당 API에서 가져오는 상품 개수가 10개라고 가정
+         * - 각 userRecommenation 객체는 userId 1개, productId 1개를 가지므로
+         *   10개의 userRecommendation 객체 생성
+         */
         productIds = new ArrayList<>(); //response
 
-        productService.updateUserRecommendation(userRecommendation, productIds);
+        productIds.forEach(productId -> {
+            productService.saveUserRecommendation(userId, productId);
+        });
 
         return productIds;
     }

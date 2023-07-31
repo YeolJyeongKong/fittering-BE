@@ -107,47 +107,33 @@ public class ProductService {
     }
 
     @Transactional
-    public RecentRecommendation saveRecentRecommendation(Long userId) {
+    public RecentRecommendation saveRecentRecommendation(Long userId, Long productId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
-
-        RecentRecommendation recentRecommendation = new RecentRecommendation(user);
-        return recentRecommendationRepository.save(recentRecommendation);
+        Product product = findById(productId);
+        return recentRecommendationRepository.save(new RecentRecommendation(user, product));
     }
 
     @Transactional
-    public void updateRecentRecommendation(RecentRecommendation recentRecommendation, List<Long> productIds) {
-        List<Product> products = productRepository.findByIds(productIds);
-        recentRecommendation.update(products);
-    }
-
-    @Transactional
-    public UserRecommendation saveUserRecommendation(Long userId) {
+    public UserRecommendation saveUserRecommendation(Long userId, Long productId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
-
-        UserRecommendation userRecommendation = new UserRecommendation(user);
-        return userRecommendationRepository.save(userRecommendation);
+        Product product = findById(productId);
+        return userRecommendationRepository.save(new UserRecommendation(user, product));
     }
 
-    @Transactional
-    public void updateUserRecommendation(UserRecommendation userRecommendation, List<Long> productIds) {
-        List<Product> products = productRepository.findByIds(productIds);
-        userRecommendation.update(products);
-    }
-
-    @Cacheable(value = "ProductWithRecentRecommendation", key = "#userId")
     public List<Product> productWithRecentRecommendation(Long userId) {
-        return recentRecommendationRepository.findByUserId(userId)
-                .map(RecentRecommendation::getProducts)
-                .orElse(new ArrayList<>());
+        List<Product> result = new ArrayList<>();
+        recentRecommendationRepository.findByUserId(userId).forEach(recentRecommendation ->
+                result.add(recentRecommendation.getProduct()));
+        return result;
     }
 
-    @Cacheable(value = "ProductWithUserRecommendation", key = "#userId")
     public List<Product> productWithUserRecommendation(Long userId) {
-        return userRecommendationRepository.findByUserId(userId)
-                .map(UserRecommendation::getProducts)
-                .orElse(new ArrayList<>());
+        List<Product> result = new ArrayList<>();
+        userRecommendationRepository.findByUserId(userId).forEach(userRecommendation ->
+                result.add(userRecommendation.getProduct()));
+        return result;
     }
 
     @Transactional

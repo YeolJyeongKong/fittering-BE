@@ -62,20 +62,17 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<Size> sizes = new ArrayList<>();
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "recent_id")
-    private Recent recent;
+    @OneToMany(mappedBy = "product")
+    private List<Recent> recents = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
     private List<Favorite> favorites = new ArrayList<>();
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_recommendation_id")
-    private UserRecommendation userRecommendation;
+    @OneToMany(mappedBy = "product")
+    private List<UserRecommendation> userRecommendations = new ArrayList<>();
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "recent_recommendation_id")
-    private RecentRecommendation recentRecommendation;
+    @OneToMany(mappedBy = "product")
+    private List<RecentRecommendation> recentRecommendations = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
     private List<DescriptionImage> descriptionImages = new ArrayList<>();
@@ -92,26 +89,6 @@ public class Product {
         this.category = category;
         this.mall = mall;
         this.descriptionImages = descriptionImages;
-    }
-
-    public void setSizes(List<Size> sizes) {
-        this.sizes = sizes;
-    }
-
-    public void setRecent(Recent recent) {
-        this.recent = recent;
-    }
-
-    public void deleteRecent() {
-        recent = null;
-    }
-
-    public void deleteUserRecommendation() {
-        userRecommendation = null;
-    }
-
-    public void deleteRecentRecommendation() {
-        recentRecommendation = null;
     }
 
     public void updateView() {

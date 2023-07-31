@@ -320,7 +320,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         Long nullableCount = queryFactory
                 .select(product.count())
                 .from(product)
-                .leftJoin(product.recent, recent)
+                .leftJoin(product.recents, recent)
                 .where(
                         recentIdEq(recentId)
                 )
@@ -333,7 +333,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         Long nullableCount = queryFactory
                 .select(product.count())
                 .from(product)
-                .leftJoin(product.recentRecommendation, recentRecommendation)
+                .leftJoin(product.recentRecommendations, recentRecommendation)
                 .where(
                         recentRecommendationIdEq(recentRecommendationId)
                 )
@@ -346,7 +346,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         Long nullableCount = queryFactory
                 .select(product.count())
                 .from(product)
-                .leftJoin(product.userRecommendation, userRecommendation)
+                .leftJoin(product.userRecommendations, userRecommendation)
                 .where(
                         userRecommendationIdEq(userRecommendationId)
                 )

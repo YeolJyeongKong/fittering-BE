@@ -1,10 +1,12 @@
 package yeolJyeongKong.mall.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import yeolJyeongKong.mall.domain.entity.RecentRecommendation;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface RecentRecommendationRepository extends JpaRepository<RecentRecommendation, Long> {
-    Optional<RecentRecommendation> findByUserId(Long userId);
+    @EntityGraph(attributePaths = {"product"})
+    List<RecentRecommendation> findByUserId(Long userId);
 }
