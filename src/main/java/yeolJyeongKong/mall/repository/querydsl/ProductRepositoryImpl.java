@@ -364,11 +364,14 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     /**
      * @param gender
-     * null     : 전체
-     * not null : 이외 성별 구분
+     * 'M', 'F' : 남성, 여성
+     * else     : 성별 무관
      */
     public BooleanExpression genderEq(String gender) {
-        return StringUtils.hasText(gender) ? product.gender.eq(gender) : Expressions.asBoolean(true).isTrue();
+        if(gender.equals("M") || gender.equals("F")) {
+            return product.gender.eq(gender);
+        }
+        return Expressions.asBoolean(true).isTrue();
     }
 
     public BooleanExpression productNameCotnains(String productName) {
