@@ -1,5 +1,6 @@
 package yeolJyeongKong.mall.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -78,14 +79,16 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Rank> ranks = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", fetch = LAZY)
-    private Recent recent;
+    @OneToMany(mappedBy = "user", fetch = LAZY)
+    private List<Recent> recents = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", fetch = LAZY)
-    private UserRecommendation userRecommendation;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = LAZY)
+    private List<UserRecommendation> userRecommendations = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", fetch = LAZY)
-    private RecentRecommendation recentRecommendation;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = LAZY)
+    private List<RecentRecommendation> recentRecommendations = new ArrayList<>();
 
     public User(SignUpDto signUpDto, String password, Measurement measurement) {
         email = signUpDto.getEmail();

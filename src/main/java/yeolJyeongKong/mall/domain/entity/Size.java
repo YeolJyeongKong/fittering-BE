@@ -21,13 +21,15 @@ public class Size {
     @Column(name = "size_id")
     private Long id;
 
-    @NonNull @Length(max = 4)
+    @NonNull @Length(max = 10)
     private String name;
 
+    @JsonIgnore
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "top_id")
     private Top top;
 
+    @JsonIgnore
     @OneToOne(fetch = LAZY)
     @JoinColumn(name = "bottom_id")
     private Bottom bottom;
@@ -37,14 +39,16 @@ public class Size {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Size(TopDto topDto) {
-        this.name = topDto.getName();
-        this.top = new Top(topDto);
+    public Size(String name, Top top, Product product) {
+        this.name = name;
+        this.top = top;
+        this.product = product;
     }
 
-    public Size(BottomDto bottomDto) {
-        this.name = bottomDto.getName();
-        this.bottom = new Bottom(bottomDto);
+    public Size(String name, Bottom bottom, Product product) {
+        this.name = name;
+        this.bottom = bottom;
+        this.product = product;
     }
 
     public void setProduct(Product product) {

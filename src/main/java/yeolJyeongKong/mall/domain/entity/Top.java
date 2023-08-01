@@ -1,6 +1,5 @@
 package yeolJyeongKong.mall.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +29,6 @@ public class Top {
     @NonNull
     private Double sleeve;
 
-    @JsonIgnore
     @OneToOne(mappedBy = "top", fetch = LAZY)
     private Size size;
 

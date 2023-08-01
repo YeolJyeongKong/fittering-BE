@@ -4,32 +4,29 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.NonNull;
 
 import static jakarta.persistence.FetchType.LAZY;
-import static lombok.AccessLevel.*;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class UserRecommendation {
+public class DescriptionImage {
 
     @Id @GeneratedValue
-    @Column(name = "user_recommendation_id")
+    @Column(name = "description_images_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @NonNull
+    private String url;
 
+    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public UserRecommendation(User user, Product product) {
-        this.user = user;
-        this.product = product;
+    public DescriptionImage(String url) {
+        this.url = url;
     }
 }

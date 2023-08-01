@@ -16,10 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import yeolJyeongKong.mall.config.PrincipalDetails;
 import yeolJyeongKong.mall.domain.dto.*;
-import yeolJyeongKong.mall.domain.entity.Category;
-import yeolJyeongKong.mall.domain.entity.Mall;
-import yeolJyeongKong.mall.domain.entity.Product;
-import yeolJyeongKong.mall.domain.entity.Size;
+import yeolJyeongKong.mall.domain.entity.*;
 import yeolJyeongKong.mall.service.*;
 
 import java.util.ArrayList;
@@ -41,29 +38,25 @@ public class ProductController {
     @Operation(summary = "상품 등록 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"상품 등록 완료\"")))
     @PostMapping("/product/add")
-    public ResponseEntity<?> save(@ModelAttribute ProductDetailDto productDto) {
+    public ResponseEntity<?> save(@RequestBody ProductDetailDto productDto) {
         Category category = categoryService.findByName(productDto.getCategoryName());
         Mall mall = mallService.findByName(productDto.getMallName());
-        Product product = new Product(productDto, category, mall);
+        List<DescriptionImage> descriptionImages = productService.saveDescriptionImages(productDto.getDescriptionImages());
+        Product product = productService.save(new Product(productDto, category, mall, descriptionImages));
         List<Size> sizes = new ArrayList<>();
 
         if(productDto.getType() == 0) {
             for(TopDto topDto : productDto.getTopSizes()) {
-                Size size = sizeService.saveTop(topDto);
-                size.setProduct(product);
+                Size size = sizeService.saveTop(topDto, product);
                 sizes.add(size);
             }
         } else {
             for(BottomDto bottomDto : productDto.getBottomSizes()) {
-                Size size = sizeService.saveBottom(bottomDto);
-                size.setProduct(product);
+                Size size = sizeService.saveBottom(bottomDto, product);
                 sizes.add(size);
             }
         }
 
-        product.setSizes(sizes);
-
-        productService.save(product);
         return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
     }
 

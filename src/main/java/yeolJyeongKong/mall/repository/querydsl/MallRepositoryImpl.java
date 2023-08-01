@@ -42,7 +42,7 @@ public class MallRepositoryImpl implements MallRepositoryCustom {
 
     @Override
     public Long findFavoriteCount(Long favoriteId) {
-        return queryFactory
+        Long nullableCount = queryFactory
                 .select(mall.count())
                 .from(mall)
                 .leftJoin(mall.favorites, favorite)
@@ -50,6 +50,7 @@ public class MallRepositoryImpl implements MallRepositoryCustom {
                         favoriteIdEq(favoriteId)
                 )
                 .fetchOne();
+        return nullableCount != null ? nullableCount : 0L;
     }
 
     public BooleanExpression favoriteIdEq(Long favoriteId) {

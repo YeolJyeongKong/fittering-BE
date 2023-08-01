@@ -1,6 +1,10 @@
 package yeolJyeongKong.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,26 +26,24 @@ public class Recent {
     @Column(name = "recent_id")
     private Long id;
 
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @NonNull
     private LocalDateTime timestamp;
 
     @JsonIgnore
-    @OneToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "recent")
-    private List<Product> products = new ArrayList<>();
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     public Recent(User user, Product product) {
         timestamp = LocalDateTime.now();
         this.user = user;
-        products.add(product);
-    }
-
-    public void update(Product product) {
-        product.setRecent(this);
-        products.add(product);
+        this.product = product;
     }
 }

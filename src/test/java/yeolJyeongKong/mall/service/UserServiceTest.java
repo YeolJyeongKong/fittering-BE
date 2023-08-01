@@ -61,11 +61,13 @@ class UserServiceTest {
         category = categoryService.save("top");
         mall = mallService.save(new MallDto("testMall", "testMall.com",
                 "image.jpg", "desc", new ArrayList<>()));
+        List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
+        List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
         product = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                category, mall));
+                        "image.jpg", "top",
+                        "testMall", null, null, descImgsStr),
+                category, mall, descImgs));
     }
 
     @Test
@@ -168,14 +170,8 @@ class UserServiceTest {
         Rank rank = rankService.save(user.getId(), mall.getId());
         Recent recent = userService.saveRecentProduct(user.getId(), product.getId());
 
-        List<Long> productIds = new ArrayList<>(){{
-            add(product.getId());
-        }};
-        RecentRecommendation recentRecommendation = productService.saveRecentRecommendation(user.getId());
-        productService.updateRecentRecommendation(recentRecommendation, productIds);
-
-        UserRecommendation userRecommendation = productService.saveUserRecommendation(user.getId());
-        productService.updateUserRecommendation(userRecommendation, productIds);
+        RecentRecommendation recentRecommendation = productService.saveRecentRecommendation(user.getId(), product.getId());
+        UserRecommendation userRecommendation = productService.saveUserRecommendation(user.getId(), product.getId());
 
         userService.delete(user.getId());
 

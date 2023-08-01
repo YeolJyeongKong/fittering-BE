@@ -76,9 +76,14 @@ public class UserService {
 
     @Transactional
     public void measurementUpdate(MeasurementDto measurementDto, Long userId) {
-        Measurement measurement = measurementRepository.findByUserId(userId)
-                .orElseThrow(() -> new NoResultException("measurement dosen't exist"));
-        measurement.update(measurementDto);
+        Optional<Measurement> optionalMeasurement = measurementRepository.findByUserId(userId);
+        if(optionalMeasurement.isEmpty()) {
+            Measurement measurement = measurementRepository.save(new Measurement());
+            measurement.setUser(findById(userId));
+            measurement.update(measurementDto);
+            return;
+        }
+        optionalMeasurement.get().update(measurementDto);
     }
 
     public List<ProductPreviewDto> recentProduct(Long userId) {
@@ -87,19 +92,10 @@ public class UserService {
 
     @Transactional
     public Recent saveRecentProduct(Long userId, Long productId) {
-        Optional<Recent> recent = recentRepository.findByUserId(userId);
         User user = findById(userId);
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResultException("product dosen't exist"));
-
-        if(recent.isEmpty()) {
-            Recent newRecent = recentRepository.save(new Recent(user, product));
-            product.setRecent(newRecent);
-            return newRecent;
-        }
-
-        recent.get().update(product);
-        return recent.get();
+        return recentRepository.save(new Recent(user, product));
     }
 
     public User login(LoginDto loginDto) {
@@ -174,20 +170,21 @@ public class UserService {
         });
         rankRepository.deleteByUserId(userId);
 
-        Recent recent = recentRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new NoResultException("recent dosen't exist"));
-        recent.getProducts().forEach(Product::deleteRecent);
-        recentRepository.deleteById(recent.getId());
+        List<Recent> recents = recentRepository.findByUserId(user.getId());
+        recents.forEach(recent -> {
+            recent.getProduct().getRecents().remove(recent);
+            recentRepository.deleteById(recent.getId());
+        });
 
-        UserRecommendation userRecommendation = userRecommendationRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new NoResultException("user recommendation dosen't exist"));
-        userRecommendation.getProducts().forEach(Product::deleteUserRecommendation);
-        userRecommendationRepository.deleteById(userRecommendation.getId());
+        userRecommendationRepository.findByUserId(user.getId()).forEach(userRecommendation -> {
+            userRecommendation.getProduct().getUserRecommendations().remove(userRecommendation);
+            userRecommendationRepository.deleteById(userRecommendation.getId());
+        });
 
-        RecentRecommendation recentRecommendation = recentRecommendationRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new NoResultException("recent recommendation dosen't exist"));
-        recentRecommendation.getProducts().forEach(Product::deleteRecentRecommendation);
-        recentRecommendationRepository.deleteById(recentRecommendation.getId());
+        recentRecommendationRepository.findByUserId(user.getId()).forEach(recentRecommendation -> {
+            recentRecommendation.getProduct().getRecentRecommendations().remove(recentRecommendation);
+            recentRecommendationRepository.deleteById(recentRecommendation.getId());
+        });
 
         userRepository.delete(user);
     }

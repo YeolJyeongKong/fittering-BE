@@ -72,21 +72,24 @@ class FavoriteServiceTest {
         Mall mall = mallService.save(new MallDto("testMall", "testMall.com",
                 "image.jpg", "desc", new ArrayList<>()));
         User user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
+        List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
+        List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
+
         Product product = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                category, mall));
+                        "image.jpg", "top", "testMall",
+                        null, null, descImgsStr),
+                category, mall, descImgs));
         Product product2 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp2", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                category, mall));
+                        "image.jpg", "top", "testMall",
+                        null, null, descImgsStr),
+                category, mall, descImgs));
         Product product3 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp3", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                category, mall));
+                        "image.jpg", "top", "testMall",
+                        null, null, descImgsStr),
+                category, mall, descImgs));
 
         favoriteService.saveFavoriteProduct(user.getId(), product.getId());
         favoriteService.saveFavoriteProduct(user.getId(), product2.getId());

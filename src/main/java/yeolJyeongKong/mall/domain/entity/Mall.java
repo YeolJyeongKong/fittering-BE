@@ -22,7 +22,7 @@ public class Mall {
     @Column(name = "mall_id")
     private Long id;
 
-    @NonNull @Length(max = 15)
+    @NonNull @Length(max = 30)
     private String name;
 
     @NonNull

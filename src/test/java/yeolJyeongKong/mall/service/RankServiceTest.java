@@ -44,27 +44,29 @@ class RankServiceTest {
                 "image.jpg", "desc", new ArrayList<>()));
         mall2 = mallService.save(new MallDto("testMall2", "testMall.com",
                 "image.jpg", "desc", new ArrayList<>()));
-        savedProduct = productService.save(new Product(
-                new ProductDetailDto(10000, "tp1", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                topCategory, mall));
         user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
+        List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
+        List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
+        savedProduct = productService.save(new Product(
+                new ProductDetailDto(10000, "A 티셔츠", "M", 0,
+                        "image.jpg", "top",
+                        "testMall", null, null, descImgsStr),
+                topCategory, mall, descImgs));
         product2 = productService.save(new Product(
-                new ProductDetailDto(10000, "tp2", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                topCategory, mall));
+                new ProductDetailDto(10000, "A 셔츠", "M", 0,
+                        "image.jpg", "top",
+                        "testMall", null, null, descImgsStr),
+                topCategory, mall, descImgs));
         product3 = productService.save(new Product(
-                new ProductDetailDto(10000, "tp3", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                topCategory, mall));
+                new ProductDetailDto(10000, "B 티셔츠", "M", 0,
+                        "image.jpg", "top",
+                        "testMall", null, null, descImgsStr),
+                topCategory, mall, descImgs));
         product4 = productService.save(new Product(
-                new ProductDetailDto(10000, "tp4", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall2", null, null),
-                topCategory, mall2));
+                new ProductDetailDto(10000, "ABC 스웨터", "M", 0,
+                        "image.jpg", "top",
+                        "testMall2", null, null, descImgsStr),
+                topCategory, mall2, descImgs));
     }
 
     @Test

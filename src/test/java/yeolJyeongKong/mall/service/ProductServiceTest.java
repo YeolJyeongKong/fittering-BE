@@ -31,6 +31,8 @@ class ProductServiceTest {
     private Category topCategory;
     private Category bottomCategory;
     private Mall mall;
+    private List<String> descImgsStr;
+    private List<DescriptionImage> descImgs;
     private Product savedProduct;
     private Product product2;
     private Product product3;
@@ -45,31 +47,33 @@ class ProductServiceTest {
         mall = mallService.save(new MallDto("testMall", "testMall.com",
                 "image.jpg", "desc", new ArrayList<>()));
         user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
+        descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
+        descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
         savedProduct = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                topCategory, mall));
+                        "image.jpg", "top", "testMall",
+                        null, null, descImgsStr),
+                topCategory, mall, descImgs));
         product2 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp2", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                topCategory, mall));
+                        "image.jpg", "top", "testMall",
+                        null, null, descImgsStr),
+                topCategory, mall, descImgs));
         product3 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp3", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                topCategory, mall));
+                        "image.jpg", "top", "testMall",
+                        null, null, descImgsStr),
+                topCategory, mall, descImgs));
         product4 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp4", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                topCategory, mall));
+                        "image.jpg", "top", "testMall",
+                        null, null, descImgsStr),
+                topCategory, mall, descImgs));
         product5 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp5", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                topCategory, mall));
+                        "image.jpg", "top", "testMall",
+                        null, null, descImgsStr),
+                topCategory, mall, descImgs));
     }
 
     @Test
@@ -104,34 +108,34 @@ class ProductServiceTest {
     void multipleProductCountWithCategory() {
         Product topProduct2 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp2", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                topCategory, mall));
+                        "image.jpg", "top",
+                        "testMall", null, null, descImgsStr),
+                topCategory, mall, descImgs));
         Product topProduct3 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp3", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                topCategory, mall));
+                        "image.jpg", "top",
+                        "testMall", null, null, descImgsStr),
+                topCategory, mall, descImgs));
         Product bottomProduct1 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp1", "M", 0,
-                        "image.jpg", "desc", "bottom",
-                        "testMall", null, null),
-                bottomCategory, mall));
+                        "image.jpg", "bottom",
+                        "testMall", null, null, descImgsStr),
+                bottomCategory, mall, descImgs));
         Product bottomProduct2 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp2", "M", 0,
-                        "image.jpg", "desc", "bottom",
-                        "testMall", null, null),
-                bottomCategory, mall));
+                        "image.jpg", "bottom",
+                        "testMall", null, null, descImgsStr),
+                bottomCategory, mall, descImgs));
         Product bottomProduct3 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp3", "M", 0,
-                        "image.jpg", "desc", "bottom",
-                        "testMall", null, null),
-                bottomCategory, mall));
+                        "image.jpg", "bottom",
+                        "testMall", null, null, descImgsStr),
+                bottomCategory, mall, descImgs));
         Product bottomProduct4 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp4", "M", 0,
-                        "image.jpg", "desc", "bottom",
-                        "testMall", null, null),
-                bottomCategory, mall));
+                        "image.jpg", "bottom",
+                        "testMall", null, null, descImgsStr),
+                bottomCategory, mall, descImgs));
 
         List<ProductCategoryDto> findProductCountsOnCategory = productService.multipleProductCountWithCategory();
         assertThat(findProductCountsOnCategory.get(0).getCount()).isEqualTo(7);
@@ -142,37 +146,37 @@ class ProductServiceTest {
     void productCountWithCategoryOfMall() {
         Product topProduct2 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp2", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                topCategory, mall));
+                        "image.jpg", "top",
+                        "testMall", null, null, descImgsStr),
+                topCategory, mall, descImgs));
         Product topProduct3 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp3", "M", 0,
-                        "image.jpg", "desc", "top",
-                        "testMall", null, null),
-                topCategory, mall));
+                        "image.jpg", "top",
+                        "testMall", null, null, descImgsStr),
+                topCategory, mall, descImgs));
 
         Mall mall2 = mallService.save(new MallDto("testMall2", "testMall.com",
                 "image.jpg", "desc", new ArrayList<>()));
         Product bottomProduct1 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp1", "M", 0,
-                        "image.jpg", "desc", "bottom",
-                        "testMall2", null, null),
-                bottomCategory, mall2));
+                        "image.jpg", "bottom",
+                        "testMall2", null, null, descImgsStr),
+                bottomCategory, mall2, descImgs));
         Product bottomProduct2 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp2", "M", 0,
-                        "image.jpg", "desc", "bottom",
-                        "testMall2", null, null),
-                bottomCategory, mall2));
+                        "image.jpg", "bottom",
+                        "testMall2", null, null, descImgsStr),
+                bottomCategory, mall2, descImgs));
         Product bottomProduct3 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp3", "M", 0,
-                        "image.jpg", "desc", "bottom",
-                        "testMall2", null, null),
-                bottomCategory, mall2));
+                        "image.jpg", "bottom",
+                        "testMall2", null, null, descImgsStr),
+                bottomCategory, mall2, descImgs));
         Product bottomProduct4 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp4", "M", 0,
-                        "image.jpg", "desc", "bottom",
-                        "testMall2", null, null),
-                bottomCategory, mall2));
+                        "image.jpg", "bottom",
+                        "testMall2", null, null, descImgsStr),
+                bottomCategory, mall2, descImgs));
 
         List<ProductCategoryDto> findProductCountsOnCategoryOfMall = productService.productCountWithCategoryOfMall(mall.getId());
         assertThat(findProductCountsOnCategoryOfMall.get(0).getCount()).isEqualTo(7);
@@ -231,9 +235,9 @@ class ProductServiceTest {
     void bottomProductDetail() {
         Product bottomProduct = productService.save(new Product(
                 new ProductDetailDto(10000, "bp1", "M", 0,
-                        "image.jpg", "desc", "bottom",
-                        "testMall", null, null),
-                bottomCategory, mall));
+                        "image.jpg", "bottom",
+                        "testMall", null, null, descImgsStr),
+                bottomCategory, mall, descImgs));
 
         BottomProductDto bottomProductDto = productService.bottomProductDetail(bottomProduct.getId());
         assertThat(bottomProductDto.getProductImage()).isEqualTo(bottomProduct.getImage());
@@ -258,16 +262,11 @@ class ProductServiceTest {
 
     @Test
     void recentRecommendationTest() {
-        RecentRecommendation recentRecommendation = productService.saveRecentRecommendation(user.getId());
-        List<Long> productIds = new ArrayList<>(){{
-            add(savedProduct.getId());
-            add(product2.getId());
-            add(product3.getId());
-            add(product4.getId());
-            add(product5.getId());
-        }};
-
-        productService.updateRecentRecommendation(recentRecommendation, productIds);
+        productService.saveRecentRecommendation(user.getId(), savedProduct.getId());
+        productService.saveRecentRecommendation(user.getId(), product2.getId());
+        productService.saveRecentRecommendation(user.getId(), product3.getId());
+        productService.saveRecentRecommendation(user.getId(), product4.getId());
+        productService.saveRecentRecommendation(user.getId(), product5.getId());
 
         List<Product> products = productService.productWithRecentRecommendation(user.getId());
         assertThat(products.size()).isEqualTo(5);
@@ -280,16 +279,11 @@ class ProductServiceTest {
 
     @Test
     void userRecommendationTest() {
-        UserRecommendation userRecommendation = productService.saveUserRecommendation(user.getId());
-        List<Long> productIds = new ArrayList<>(){{
-            add(savedProduct.getId());
-            add(product2.getId());
-            add(product3.getId());
-            add(product4.getId());
-            add(product5.getId());
-        }};
-
-        productService.updateUserRecommendation(userRecommendation, productIds);
+        productService.saveUserRecommendation(user.getId(), savedProduct.getId());
+        productService.saveUserRecommendation(user.getId(), product2.getId());
+        productService.saveUserRecommendation(user.getId(), product3.getId());
+        productService.saveUserRecommendation(user.getId(), product4.getId());
+        productService.saveUserRecommendation(user.getId(), product5.getId());
 
         List<Product> products = productService.productWithUserRecommendation(user.getId());
         assertThat(products.size()).isEqualTo(5);
@@ -309,7 +303,9 @@ class ProductServiceTest {
         assertThat(savedProduct.getView()).isEqualTo(findProduct.getView());
         assertThat(savedProduct.getTimeView()).isEqualTo(findProduct.getTimeView());
         assertThat(savedProduct.getType()).isEqualTo(findProduct.getType());
-        assertThat(savedProduct.getDescriptionImage()).isEqualTo(findProduct.getDescriptionImage());
+        savedProduct.getDescriptionImages().forEach(descImg -> {
+            assertThat(findProduct.getDescriptionImages().contains(descImg)).isTrue();
+        });
     }
 
     private static void compareProduct(Product savedProduct, ProductPreviewDto productPreviewDto) {

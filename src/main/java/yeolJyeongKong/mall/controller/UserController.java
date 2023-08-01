@@ -51,7 +51,7 @@ public class UserController {
     @Operation(summary = "마이페이지 수정 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserDto.class)))
     @PostMapping("/user/edit")
-    public ResponseEntity<?> edit(@ModelAttribute UserDto userDto,
+    public ResponseEntity<?> edit(@RequestBody UserDto userDto,
                                   @AuthenticationPrincipal PrincipalDetails principalDetails) {
         userService.infoUpdate(userDto, principalDetails.getUser().getId());
         return new ResponseEntity<>(userDto, HttpStatus.OK);
@@ -85,7 +85,7 @@ public class UserController {
     @Operation(summary = "체형 정보 수정 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MeasurementDto.class)))
     @PostMapping("/user/mysize/edit")
-    public ResponseEntity<?> measurementEdit(@ModelAttribute MeasurementDto measurementDto,
+    public ResponseEntity<?> measurementEdit(@RequestBody MeasurementDto measurementDto,
                                              @AuthenticationPrincipal PrincipalDetails principalDetails) {
         userService.measurementUpdate(measurementDto, principalDetails.getUser().getId());
         return new ResponseEntity<>(measurementDto, HttpStatus.OK);
@@ -131,7 +131,7 @@ public class UserController {
     @Operation(summary = "체형 측정 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MeasurementDto.class))))
     @PostMapping("/user/recommendation/measurement")
-    public ResponseEntity<?> recommendMeasurement(@ModelAttribute ImageDto imageDto,
+    public ResponseEntity<?> recommendMeasurement(@RequestBody ImageDto imageDto,
                                                   @AuthenticationPrincipal PrincipalDetails principalDetails) {
         String image = imageDto.getImage(); //request
         //TODO: API Gateway에 등록된 체형 측정 API에서 체형 측정 결과를 받아오는 로직 필요
@@ -181,13 +181,18 @@ public class UserController {
             return productIds;
         }
 
-        RecentRecommendation recentRecommendation = productService.saveRecentRecommendation(userId);
-
         List<ProductPreviewDto> recentProducts = userService.recentProduct(userId); //request
-        //TODO: API Gateway에 등록된 추천 상품 API에서 데이터를 받아오는 로직 추가 필요
+        /**
+         * TODO: 추천 상품 API에서 데이터를 받아오는 로직 추가 필요
+         * - 해당 API에서 가져오는 상품 개수가 10개라고 가정
+         * - 각 recentRecommendation 객체는 userId 1개, productId 1개를 가지므로
+         *   10개의 recentRecommendation 객체 생성
+         */
         productIds = new ArrayList<>(); //response
 
-        productService.updateRecentRecommendation(recentRecommendation, productIds);
+        productIds.forEach(productId -> {
+            productService.saveRecentRecommendation(userId, productId);
+        });
 
         return productIds;
     }
@@ -233,13 +238,18 @@ public class UserController {
             return productIds;
         }
 
-        UserRecommendation userRecommendation = productService.saveUserRecommendation(userId);
-
         MeasurementDto measurement = userService.measurementInfo(userId); //request
-        //TODO: API Gateway에 등록된 비슷한 체형 고객 pick API에서 데이터를 받아오는 로직 추가 필요
+        /**
+         * TODO: 비슷한 체형 고객 pick API에서 데이터를 받아오는 로직 추가 필요
+         * - 해당 API에서 가져오는 상품 개수가 10개라고 가정
+         * - 각 userRecommenation 객체는 userId 1개, productId 1개를 가지므로
+         *   10개의 userRecommendation 객체 생성
+         */
         productIds = new ArrayList<>(); //response
 
-        productService.updateUserRecommendation(userRecommendation, productIds);
+        productIds.forEach(productId -> {
+            productService.saveUserRecommendation(userId, productId);
+        });
 
         return productIds;
     }
