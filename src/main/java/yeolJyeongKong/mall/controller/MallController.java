@@ -34,7 +34,7 @@ public class MallController {
 
     @Operation(summary = "쇼핑몰 등록 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"쇼핑몰 등록 완료\"")))
-    @GetMapping("/malls/add")
+    @PostMapping("/malls/add")
     public ResponseEntity<?> save(@RequestBody MallDto mallDto) {
         mallService.save(mallDto);
         return new ResponseEntity<>("쇼핑몰 등록 완료", HttpStatus.OK);
