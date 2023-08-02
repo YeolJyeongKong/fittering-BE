@@ -66,7 +66,7 @@ class UserServiceTest {
         product = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
                         "image.jpg", "top",
-                        "testMall", null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 category, mall, descImgs));
     }
 

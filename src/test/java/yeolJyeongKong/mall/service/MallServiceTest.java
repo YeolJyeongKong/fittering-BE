@@ -49,7 +49,7 @@ class MallServiceTest {
         Product product = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
                         "image.jpg", "top",
-                        "testMall", null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 category, mall1, descImgs));
         mallService.addProduct("testMall1", product.getId());
         mallService.findProducts("testMall1").forEach(productDto -> {

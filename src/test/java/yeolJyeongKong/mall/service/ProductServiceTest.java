@@ -52,27 +52,27 @@ class ProductServiceTest {
         savedProduct = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
                         "image.jpg", "top", "testMall",
-                        null, null, descImgsStr),
+                        null, null, null, null, descImgsStr),
                 topCategory, mall, descImgs));
         product2 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp2", "M", 0,
                         "image.jpg", "top", "testMall",
-                        null, null, descImgsStr),
+                        null, null, null, null, descImgsStr),
                 topCategory, mall, descImgs));
         product3 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp3", "M", 0,
                         "image.jpg", "top", "testMall",
-                        null, null, descImgsStr),
+                        null, null, null, null, descImgsStr),
                 topCategory, mall, descImgs));
         product4 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp4", "M", 0,
                         "image.jpg", "top", "testMall",
-                        null, null, descImgsStr),
+                        null, null, null, null, descImgsStr),
                 topCategory, mall, descImgs));
         product5 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp5", "M", 0,
                         "image.jpg", "top", "testMall",
-                        null, null, descImgsStr),
+                        null, null, null, null, descImgsStr),
                 topCategory, mall, descImgs));
     }
 
@@ -109,32 +109,32 @@ class ProductServiceTest {
         Product topProduct2 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp2", "M", 0,
                         "image.jpg", "top",
-                        "testMall", null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 topCategory, mall, descImgs));
         Product topProduct3 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp3", "M", 0,
                         "image.jpg", "top",
-                        "testMall", null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 topCategory, mall, descImgs));
         Product bottomProduct1 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp1", "M", 0,
                         "image.jpg", "bottom",
-                        "testMall", null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 bottomCategory, mall, descImgs));
         Product bottomProduct2 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp2", "M", 0,
                         "image.jpg", "bottom",
-                        "testMall", null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 bottomCategory, mall, descImgs));
         Product bottomProduct3 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp3", "M", 0,
                         "image.jpg", "bottom",
-                        "testMall", null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 bottomCategory, mall, descImgs));
         Product bottomProduct4 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp4", "M", 0,
                         "image.jpg", "bottom",
-                        "testMall", null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 bottomCategory, mall, descImgs));
 
         List<ProductCategoryDto> findProductCountsOnCategory = productService.multipleProductCountWithCategory();
@@ -147,12 +147,12 @@ class ProductServiceTest {
         Product topProduct2 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp2", "M", 0,
                         "image.jpg", "top",
-                        "testMall", null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 topCategory, mall, descImgs));
         Product topProduct3 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp3", "M", 0,
                         "image.jpg", "top",
-                        "testMall", null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 topCategory, mall, descImgs));
 
         Mall mall2 = mallService.save(new MallDto("testMall2", "testMall.com",
@@ -160,22 +160,22 @@ class ProductServiceTest {
         Product bottomProduct1 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp1", "M", 0,
                         "image.jpg", "bottom",
-                        "testMall2", null, null, descImgsStr),
+                        "testMall2", null, null, null, null, descImgsStr),
                 bottomCategory, mall2, descImgs));
         Product bottomProduct2 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp2", "M", 0,
                         "image.jpg", "bottom",
-                        "testMall2", null, null, descImgsStr),
+                        "testMall2", null, null, null, null, descImgsStr),
                 bottomCategory, mall2, descImgs));
         Product bottomProduct3 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp3", "M", 0,
                         "image.jpg", "bottom",
-                        "testMall2", null, null, descImgsStr),
+                        "testMall2", null, null, null, null, descImgsStr),
                 bottomCategory, mall2, descImgs));
         Product bottomProduct4 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp4", "M", 0,
                         "image.jpg", "bottom",
-                        "testMall2", null, null, descImgsStr),
+                        "testMall2", null, null, null, null, descImgsStr),
                 bottomCategory, mall2, descImgs));
 
         List<ProductCategoryDto> findProductCountsOnCategoryOfMall = productService.productCountWithCategoryOfMall(mall.getId());
@@ -236,7 +236,7 @@ class ProductServiceTest {
         Product bottomProduct = productService.save(new Product(
                 new ProductDetailDto(10000, "bp1", "M", 0,
                         "image.jpg", "bottom",
-                        "testMall", null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 bottomCategory, mall, descImgs));
 
         BottomProductDto bottomProductDto = productService.bottomProductDetail(bottomProduct.getId());

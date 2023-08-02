@@ -78,17 +78,17 @@ class FavoriteServiceTest {
         Product product = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
                         "image.jpg", "top", "testMall",
-                        null, null, descImgsStr),
+                        null, null, null, null, descImgsStr),
                 category, mall, descImgs));
         Product product2 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp2", "M", 0,
                         "image.jpg", "top", "testMall",
-                        null, null, descImgsStr),
+                        null, null, null, null, descImgsStr),
                 category, mall, descImgs));
         Product product3 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp3", "M", 0,
                         "image.jpg", "top", "testMall",
-                        null, null, descImgsStr),
+                        null, null, null, null, descImgsStr),
                 category, mall, descImgs));
 
         favoriteService.saveFavoriteProduct(user.getId(), product.getId());

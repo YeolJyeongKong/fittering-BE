@@ -50,22 +50,22 @@ class RankServiceTest {
         savedProduct = productService.save(new Product(
                 new ProductDetailDto(10000, "A 티셔츠", "M", 0,
                         "image.jpg", "top",
-                        "testMall", null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 topCategory, mall, descImgs));
         product2 = productService.save(new Product(
                 new ProductDetailDto(10000, "A 셔츠", "M", 0,
                         "image.jpg", "top",
-                        "testMall", null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 topCategory, mall, descImgs));
         product3 = productService.save(new Product(
                 new ProductDetailDto(10000, "B 티셔츠", "M", 0,
                         "image.jpg", "top",
-                        "testMall", null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 topCategory, mall, descImgs));
         product4 = productService.save(new Product(
                 new ProductDetailDto(10000, "ABC 스웨터", "M", 0,
                         "image.jpg", "top",
-                        "testMall2", null, null, descImgsStr),
+                        "testMall2", null, null, null, null, descImgsStr),
                 topCategory, mall2, descImgs));
     }
 
