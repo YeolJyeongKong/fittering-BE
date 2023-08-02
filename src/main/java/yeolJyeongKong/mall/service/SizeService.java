@@ -4,13 +4,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import yeolJyeongKong.mall.domain.dto.BottomDto;
+import yeolJyeongKong.mall.domain.dto.DressDto;
 import yeolJyeongKong.mall.domain.dto.OuterDto;
 import yeolJyeongKong.mall.domain.dto.TopDto;
 import yeolJyeongKong.mall.domain.entity.*;
-import yeolJyeongKong.mall.repository.BottomRepository;
-import yeolJyeongKong.mall.repository.OuterRepository;
-import yeolJyeongKong.mall.repository.SizeRepository;
-import yeolJyeongKong.mall.repository.TopRepository;
+import yeolJyeongKong.mall.repository.*;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +16,7 @@ public class SizeService {
 
     private final SizeRepository sizeRepository;
     private final TopRepository topRepository;
+    private final DressRepository dressRepository;
     private final BottomRepository bottomRepository;
     private final OuterRepository outerRepository;
 
@@ -31,6 +30,12 @@ public class SizeService {
     public Size saveTop(TopDto topDto, Product product) {
         Top top = topRepository.save(new Top(topDto));
         return sizeRepository.save(new Size(topDto.getName(), top, product));
+    }
+
+    @Transactional
+    public Size saveDress(DressDto dressDto, Product product) {
+        Dress dress = dressRepository.save(new Dress(dressDto));
+        return sizeRepository.save(new Size(dressDto.getName(), dress, product));
     }
 
     @Transactional

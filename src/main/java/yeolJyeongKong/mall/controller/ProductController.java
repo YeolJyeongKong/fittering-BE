@@ -55,6 +55,11 @@ public class ProductController {
                 Size size = sizeService.saveTop(topDto, product);
                 sizes.add(size);
             }
+        } else if(productDto.getType() == 2) {
+            for(DressDto dressDto : productDto.getDressSizes()) {
+                Size size = sizeService.saveDress(dressDto, product);
+                sizes.add(size);
+            }
         } else {
             for(BottomDto bottomDto : productDto.getBottomSizes()) {
                 Size size = sizeService.saveBottom(bottomDto, product);

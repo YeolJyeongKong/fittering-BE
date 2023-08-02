@@ -35,7 +35,7 @@ class SizeServiceTest {
         Product product = productService.save(new Product(
                 new ProductDetailDto(10000, "A 티셔츠", "M", 0,
                         "image.jpg", "top",
-                        "testMall", null, null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 category, mall, descImgs));
 
         TopDto topDto1 = new TopDto("S", 68.0, 50.0, 53.0, 24.0);
@@ -61,7 +61,7 @@ class SizeServiceTest {
         Product product = productService.save(new Product(
                 new ProductDetailDto(10000, "A 티셔츠", "M", 0,
                         "image.jpg", "top",
-                        "testMall", null, null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 category, mall, descImgs));
 
         BottomDto bottomDto1 = new BottomDto("S", 104.0, 37.5, 51.5, 33.8, 28.0, 26.0);
@@ -87,7 +87,7 @@ class SizeServiceTest {
         Product product = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
                         "image.jpg", "top",
-                        "testMall", null, null, null, descImgsStr),
+                        "testMall", null, null, null, null, descImgsStr),
                 topCategory, mall, descImgs));
 
         BottomDto bottomDto = new BottomDto("S", 104.0, 37.5, 51.5, 33.8, 28.0, 26.0);
