@@ -213,4 +213,18 @@ public class UserService {
             }
         });
     }
+
+    @Transactional
+    public void resetUpdatedAtOfUserRecommendation() {
+        userRepository.findAll().forEach(user -> {
+            userRecommendationRepository.deleteByUserId(user.getId());
+        });
+    }
+
+    @Transactional
+    public void resetUpdatedAtOfRecentRecommendation() {
+        userRepository.findAll().forEach(user -> {
+            recentRecommendationRepository.deleteByUserId(user.getId());
+        });
+    }
 }

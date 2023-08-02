@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +29,15 @@ public class UserRecommendation {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    private LocalDateTime updatedAt;
+
     public UserRecommendation(User user, Product product) {
         this.user = user;
         this.product = product;
+        updatedAt = LocalDateTime.now();
+    }
+
+    public void setUpdatedAt() {
+        updatedAt = LocalDateTime.now();
     }
 }
