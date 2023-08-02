@@ -126,7 +126,7 @@ class UserServiceTest {
     @Test
     void recentProduct() {
         userService.saveRecentProduct(user.getId(), product.getId());
-        List<ProductPreviewDto> products = userService.recentProduct(user.getId());
+        List<ProductPreviewDto> products = userService.recentProductPreview(user.getId());
         compareProduct(product, products.get(0));
     }
 

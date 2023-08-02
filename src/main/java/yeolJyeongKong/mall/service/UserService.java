@@ -4,6 +4,8 @@ import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -86,8 +88,12 @@ public class UserService {
         optionalMeasurement.get().update(measurementDto);
     }
 
-    public List<ProductPreviewDto> recentProduct(Long userId) {
-        return recentRepository.recentProduct(userId);
+    public List<ProductPreviewDto> recentProductPreview(Long userId) {
+        return recentRepository.recentProductPreview(userId);
+    }
+
+    public Page<ProductPreviewDto> recentProduct(Long userId, Pageable pageable) {
+        return recentRepository.recentProduct(userId, pageable);
     }
 
     @Transactional
