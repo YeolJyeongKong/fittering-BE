@@ -90,22 +90,22 @@ public class ProductService {
         return result;
     }
 
-    @Cacheable(value = "OuterProduct", key = "#productId")
+    @Cacheable(value = "ProductDetail", key = "#productId")
     public OuterProductDto outerProductDetail(Long productId) {
         return productRepository.outerProductDetail(productId);
     }
 
-    @Cacheable(value = "TopProduct", key = "#productId")
+    @Cacheable(value = "ProductDetail", key = "#productId")
     public TopProductDto topProductDetail(Long productId) {
         return productRepository.topProductDetail(productId);
     }
 
-    @Cacheable(value = "DressProduct", key = "#productId")
+    @Cacheable(value = "ProductDetail", key = "#productId")
     public DressProductDto dressProductDetail(Long productId) {
         return productRepository.dressProductDetail(productId);
     }
 
-    @Cacheable(value = "BottomProduct", key = "#productId")
+    @Cacheable(value = "ProductDetail", key = "#productId")
     public BottomProductDto bottomProductDetail(Long productId) {
         return productRepository.bottomProductDetail(productId);
     }
