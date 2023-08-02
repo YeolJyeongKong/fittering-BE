@@ -59,8 +59,7 @@ class UserServiceTest {
     void setUp() {
         user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         category = categoryService.save("top");
-        mall = mallService.save(new MallDto("testMall", "testMall.com",
-                "image.jpg", "desc", new ArrayList<>()));
+        mall = mallService.save(new MallDto(1L, "testMall1", "image.jpg", 0, new ArrayList<>()));
         List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
         List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
         product = productService.save(new Product(

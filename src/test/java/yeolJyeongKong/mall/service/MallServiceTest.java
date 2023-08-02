@@ -31,9 +31,9 @@ class MallServiceTest {
     @Test
     @DisplayName("쇼핑몰 테스트")
     void mallTest() {
-        Mall mall1 = mallService.save(new MallDto("testMall1", "testMall.com", "image.jpg", "desc", new ArrayList<>()));
-        Mall mall2 = mallService.save(new MallDto("testMall2", "testMall.com", "image.jpg", "desc", new ArrayList<>()));
-        Mall mall3 = mallService.save(new MallDto("testMall3", "testMall.com", "image.jpg", "desc", new ArrayList<>()));
+        Mall mall1 = mallService.save(new MallDto(1L, "testMall1", "image.jpg", 0, new ArrayList<>()));
+        Mall mall2 = mallService.save(new MallDto(2L, "testMall2", "image.jpg", 0, new ArrayList<>()));
+        Mall mall3 = mallService.save(new MallDto(3L, "testMall3", "image.jpg", 0, new ArrayList<>()));
 
         Mall findMall1 = mallService.findByName("testMall1");
         Mall findMall2 = mallService.findByName("testMall2");

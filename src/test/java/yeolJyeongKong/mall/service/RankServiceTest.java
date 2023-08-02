@@ -40,10 +40,8 @@ class RankServiceTest {
     @BeforeEach
     void setUp() {
         topCategory = categoryService.save("top");
-        mall = mallService.save(new MallDto("testMall", "testMall.com",
-                "image.jpg", "desc", new ArrayList<>()));
-        mall2 = mallService.save(new MallDto("testMall2", "testMall.com",
-                "image.jpg", "desc", new ArrayList<>()));
+        mall = mallService.save(new MallDto(1L, "testMall1", "image.jpg", 0, new ArrayList<>()));
+        mall2 = mallService.save(new MallDto(2L, "testMall2", "image.jpg", 0, new ArrayList<>()));
         user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
         List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
@@ -81,10 +79,10 @@ class RankServiceTest {
 
         List<MallDto> mallDtos = rankService.mallRank(user.getId());
 
+        assertThat(mallDtos.get(0).getId()).isEqualTo(rank1.getMall().getId());
         assertThat(mallDtos.get(0).getName()).isEqualTo(rank1.getMall().getName());
-        assertThat(mallDtos.get(0).getUrl()).isEqualTo(rank1.getMall().getUrl());
         assertThat(mallDtos.get(0).getImage()).isEqualTo(rank1.getMall().getImage());
-        assertThat(mallDtos.get(0).getDescription()).isEqualTo(rank1.getMall().getDescription());
+        assertThat(mallDtos.get(0).getView()).isEqualTo(rank1.getView());
 
         List<MallRankProductDto> productDto = mallDtos.get(0).getProducts();
         assertThat(productDto.get(0).getProductId()).isEqualTo(savedProduct.getId());
@@ -94,10 +92,10 @@ class RankServiceTest {
         assertThat(productDto.get(2).getProductId()).isEqualTo(product3.getId());
         assertThat(productDto.get(2).getProductImage()).isEqualTo(product3.getImage());
 
-        assertThat(mallDtos.get(1).getName()).isEqualTo(rank2.getMall().getName());
-        assertThat(mallDtos.get(1).getUrl()).isEqualTo(rank2.getMall().getUrl());
-        assertThat(mallDtos.get(1).getImage()).isEqualTo(rank2.getMall().getImage());
-        assertThat(mallDtos.get(1).getDescription()).isEqualTo(rank2.getMall().getDescription());
+        assertThat(mallDtos.get(1).getId()).isEqualTo(rank1.getMall().getId());
+        assertThat(mallDtos.get(1).getName()).isEqualTo(rank1.getMall().getName());
+        assertThat(mallDtos.get(1).getImage()).isEqualTo(rank1.getMall().getImage());
+        assertThat(mallDtos.get(1).getView()).isEqualTo(rank1.getView());
 
         productDto = mallDtos.get(1).getProducts();
         assertThat(productDto.get(0).getProductId()).isEqualTo(product4.getId());

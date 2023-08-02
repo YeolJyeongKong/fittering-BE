@@ -28,8 +28,7 @@ class SizeServiceTest {
     @Test
     void saveTop() {
         Category category = categoryService.save("top");
-        Mall mall = mallService.save(new MallDto("testMall", "testMall.com",
-                "image.jpg", "desc", new ArrayList<>()));
+        Mall mall = mallService.save(new MallDto(1L, "testMall1", "image.jpg", 0, new ArrayList<>()));
         List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
         List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
         Product product = productService.save(new Product(
@@ -54,8 +53,7 @@ class SizeServiceTest {
     @Test
     void saveBottom() {
         Category category = categoryService.save("top");
-        Mall mall = mallService.save(new MallDto("testMall", "testMall.com",
-                "image.jpg", "desc", new ArrayList<>()));
+        Mall mall = mallService.save(new MallDto(1L, "testMall1", "image.jpg", 0, new ArrayList<>()));
         List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
         List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
         Product product = productService.save(new Product(
@@ -80,8 +78,7 @@ class SizeServiceTest {
     @Test
     void setProduct() {
         Category topCategory = categoryService.save("top");
-        Mall mall = mallService.save(new MallDto("testMall", "testMall.com",
-                "image.jpg", "desc", new ArrayList<>()));
+        Mall mall = mallService.save(new MallDto(1L, "testMall1", "image.jpg", 0, new ArrayList<>()));
         List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
         List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
         Product product = productService.save(new Product(

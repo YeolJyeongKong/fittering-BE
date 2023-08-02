@@ -10,18 +10,18 @@ import java.util.List;
 @NoArgsConstructor
 public class MallDto {
 
+    private Long id;
     private String name;
-    private String url;
     private String image;
-    private String description;
+    private Integer view;
     private List<MallRankProductDto> products;
 
     @QueryProjection
-    public MallDto(String name, String url, String image, String description, List<MallRankProductDto> products) {
+    public MallDto(Long id, String name, String image, Integer view, List<MallRankProductDto> products) {
+        this.id = id;
         this.name = name;
-        this.url = url;
         this.image = image;
-        this.description = description;
+        this.view = view;
         this.products = products;
     }
 }

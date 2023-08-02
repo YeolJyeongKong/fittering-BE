@@ -20,7 +20,7 @@ public class Rank {
     private Long id;
 
     @NonNull
-    private Long view;
+    private Integer view;
 
     @JsonIgnore
     @ManyToOne(fetch = LAZY)
@@ -35,7 +35,7 @@ public class Rank {
     public Rank(User user, Mall mall) {
         this.user = user;
         this.mall = mall;
-        view = 0L;
+        view = 0;
     }
 
     public void updateView() {

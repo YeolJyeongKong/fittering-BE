@@ -44,8 +44,7 @@ class ProductServiceTest {
     void setUp() {
         topCategory = categoryService.save("top");
         bottomCategory = categoryService.save("bottom");
-        mall = mallService.save(new MallDto("testMall", "testMall.com",
-                "image.jpg", "desc", new ArrayList<>()));
+        mall = mallService.save(new MallDto(1L, "testMall1", "image.jpg", 0, new ArrayList<>()));
         user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
         descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
@@ -155,8 +154,7 @@ class ProductServiceTest {
                         "testMall", null, null, null, null, descImgsStr),
                 topCategory, mall, descImgs));
 
-        Mall mall2 = mallService.save(new MallDto("testMall2", "testMall.com",
-                "image.jpg", "desc", new ArrayList<>()));
+        Mall mall2 = mallService.save(new MallDto(2L, "testMall2", "image.jpg", 0, new ArrayList<>()));
         Product bottomProduct1 = productService.save(new Product(
                 new ProductDetailDto(10000, "bp1", "M", 0,
                         "image.jpg", "bottom",
