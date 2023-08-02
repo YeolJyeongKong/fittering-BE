@@ -21,8 +21,10 @@ import java.util.Optional;
 
 import static yeolJyeongKong.mall.domain.entity.QBottom.bottom;
 import static yeolJyeongKong.mall.domain.entity.QCategory.category;
+import static yeolJyeongKong.mall.domain.entity.QDress.dress;
 import static yeolJyeongKong.mall.domain.entity.QFavorite.favorite;
 import static yeolJyeongKong.mall.domain.entity.QMall.mall;
+import static yeolJyeongKong.mall.domain.entity.QOuter.outer;
 import static yeolJyeongKong.mall.domain.entity.QProduct.product;
 import static yeolJyeongKong.mall.domain.entity.QRecent.recent;
 import static yeolJyeongKong.mall.domain.entity.QRecentRecommendation.recentRecommendation;
@@ -174,6 +176,62 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
+    public OuterProductDto outerProductDetail(Long productId) {
+        Long nullableFavoriteCount = queryFactory
+                .select(favorite.count())
+                .from(favorite)
+                .leftJoin(favorite.product, product)
+                .where(
+                        productIdEq(productId)
+                )
+                .fetchOne();
+
+        Long favoriteCount = nullableFavoriteCount != null ? nullableFavoriteCount : 0L;
+
+        Product productInfo = queryFactory
+                .selectFrom(product)
+                .from(product)
+                .leftJoin(product.mall, mall)
+                .leftJoin(product.category, category)
+                .leftJoin(product.sizes, size)
+                .leftJoin(size.outer, outer)
+                .where(
+                        productIdEq(productId)
+                )
+                .fetchOne();
+
+        List<Size> sizes = productInfo.getSizes();
+        List<OuterDto> outerDtos = new ArrayList<>();
+        for (Size size : sizes) {
+            outerDtos.add(new OuterDto(size));
+        }
+
+        Tuple tuple = queryFactory
+                .select(product.count(), user.gender, user.ageRange)
+                .from(favorite)
+                .leftJoin(favorite.user, user)
+                .leftJoin(favorite.product, product)
+                .where(
+                        productIdEq(productId)
+                )
+                .groupBy(user.gender, user.ageRange)
+                .orderBy(favorite.count().desc())
+                .limit(1)
+                .fetchOne();
+
+        Optional<Tuple> optionalPopular = Optional.ofNullable(tuple);
+
+        if(optionalPopular.isPresent()) {
+            Tuple popular = optionalPopular.get();
+            String gender = popular.get(user.gender);
+            Integer ageRange = popular.get(user.ageRange);
+            return new OuterProductDto(favoriteCount, productInfo, gender, ageRange, outerDtos);
+        }
+
+        return new OuterProductDto(favoriteCount, productInfo, "", null, outerDtos);
+    }
+
+    @Override
     public TopProductDto topProductDetail(Long productId) {
         Long nullableFavoriteCount = queryFactory
                 .select(favorite.count())
@@ -227,6 +285,62 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         }
 
         return new TopProductDto(favoriteCount, productInfo, "", null, topDtos);
+    }
+
+    @Override
+    public DressProductDto dressProductDetail(Long productId) {
+        Long nullableFavoriteCount = queryFactory
+                .select(favorite.count())
+                .from(favorite)
+                .leftJoin(favorite.product, product)
+                .where(
+                        productIdEq(productId)
+                )
+                .fetchOne();
+
+        Long favoriteCount = nullableFavoriteCount != null ? nullableFavoriteCount : 0L;
+
+        Product productInfo = queryFactory
+                .selectFrom(product)
+                .from(product)
+                .leftJoin(product.mall, mall)
+                .leftJoin(product.category, category)
+                .leftJoin(product.sizes, size)
+                .leftJoin(size.dress, dress)
+                .where(
+                        productIdEq(productId)
+                )
+                .fetchOne();
+
+        List<Size> sizes = productInfo.getSizes();
+        List<DressDto> dressDtos = new ArrayList<>();
+        for (Size size : sizes) {
+            dressDtos.add(new DressDto(size));
+        }
+
+        Tuple tuple = queryFactory
+                .select(product.count(), user.gender, user.ageRange)
+                .from(favorite)
+                .leftJoin(favorite.user, user)
+                .leftJoin(favorite.product, product)
+                .where(
+                        productIdEq(productId)
+                )
+                .groupBy(user.gender, user.ageRange)
+                .orderBy(favorite.count().desc())
+                .limit(1)
+                .fetchOne();
+
+        Optional<Tuple> optionalPopular = Optional.ofNullable(tuple);
+
+        if(optionalPopular.isPresent()) {
+            Tuple popular = optionalPopular.get();
+            String gender = popular.get(user.gender);
+            Integer ageRange = popular.get(user.ageRange);
+            return new DressProductDto(favoriteCount, productInfo, gender, ageRange, dressDtos);
+        }
+
+        return new DressProductDto(favoriteCount, productInfo, "", null, dressDtos);
     }
 
     @Override

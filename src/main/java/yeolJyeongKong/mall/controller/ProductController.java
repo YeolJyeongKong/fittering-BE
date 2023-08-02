@@ -113,9 +113,10 @@ public class ProductController {
 
     /**
      * product.type
-     * 0 : 상의(Top)
-     * 1 : 하의(Bottom)
-     * ...
+     * 0 : 아우터(Outer)
+     * 1 : 상의(Top)
+     * 2 : 원피스(Dress)
+     * 3 : 하의(Bottom)
      */
     @Operation(summary = "상품 상세 조회 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = {
@@ -131,11 +132,21 @@ public class ProductController {
         Product product = productService.findById(productId);
 
         if(product.getType().equals(0)) {
+            OuterProductDto outerProduct = productService.outerProductDetail(productId);
+            return new ResponseEntity<>(outerProduct, HttpStatus.OK);
+        }
+
+        if(product.getType().equals(1)) {
             TopProductDto topProduct = productService.topProductDetail(productId);
             return new ResponseEntity<>(topProduct, HttpStatus.OK);
         }
 
-        if(product.getType().equals(1)) {
+        if(product.getType().equals(2)) {
+            DressProductDto dressProduct = productService.dressProductDetail(productId);
+            return new ResponseEntity<>(dressProduct, HttpStatus.OK);
+        }
+
+        if(product.getType().equals(3)) {
             BottomProductDto bottomProduct = productService.bottomProductDetail(productId);
             return new ResponseEntity<>(bottomProduct, HttpStatus.OK);
         }
