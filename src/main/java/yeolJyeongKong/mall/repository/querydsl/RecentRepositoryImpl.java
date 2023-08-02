@@ -109,6 +109,16 @@ public class RecentRepositoryImpl implements RecentRepositoryCustom {
         return PageableExecutionUtils.getPage(content, pageable, () -> count);
     }
 
+    @Override
+    public void initializeRecents(Long userId) {
+        queryFactory
+                .delete(recent)
+                .where(
+                        userIdEq(userId)
+                )
+                .execute();
+    }
+
     public BooleanExpression userIdEq(Long userId) {
         return userId != null ? user.id.eq(userId) : null;
     }

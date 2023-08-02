@@ -13,6 +13,8 @@ import yeolJyeongKong.mall.domain.dto.*;
 import yeolJyeongKong.mall.domain.entity.*;
 import yeolJyeongKong.mall.repository.*;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -193,5 +195,22 @@ public class UserService {
         });
 
         userRepository.delete(user);
+    }
+
+    @Transactional
+    public void updateRecentlastInializedAt() {
+        userRepository.findAll().forEach(user -> {
+            if (user.getRecentlastInializedAt() == null) {
+                user.updateRecentlastInializedAt();
+                return;
+            }
+
+            LocalDateTime initializeAt = user.getRecentlastInializedAt();
+            LocalDateTime now = LocalDateTime.now();
+            if (ChronoUnit.WEEKS.between(initializeAt, now) >= 1) {
+                user.updateRecentlastInializedAt();
+                recentRepository.initializeRecents(user.getId());
+            }
+        });
     }
 }

@@ -11,4 +11,5 @@ public interface RecentRepositoryCustom {
     List<Recent> findByUserId(Long userId);
     List<ProductPreviewDto> recentProductPreview(Long userId);
     Page<ProductPreviewDto> recentProduct(Long userId, Pageable pageable);
+    void initializeRecents(Long userId);
 }

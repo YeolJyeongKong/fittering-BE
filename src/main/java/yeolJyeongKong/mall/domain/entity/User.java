@@ -48,6 +48,7 @@ public class User {
     @NonNull
     private Integer day;
 
+    private LocalDateTime recentlastInializedAt;
     private LocalDateTime passwordToken;
 
     /**
@@ -154,5 +155,9 @@ public class User {
 
         passwordToken = now;
         return true;
+    }
+
+    public void updateRecentlastInializedAt() {
+        recentlastInializedAt = LocalDateTime.now();
     }
 }
