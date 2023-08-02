@@ -26,6 +26,11 @@ public class Size {
 
     @JsonIgnore
     @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "outer_id")
+    private Outer outer;
+
+    @JsonIgnore
+    @OneToOne(fetch = LAZY)
     @JoinColumn(name = "top_id")
     private Top top;
 
@@ -38,6 +43,12 @@ public class Size {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    public Size(String name, Outer outer, Product product) {
+        this.name = name;
+        this.outer = outer;
+        this.product = product;
+    }
 
     public Size(String name, Top top, Product product) {
         this.name = name;
