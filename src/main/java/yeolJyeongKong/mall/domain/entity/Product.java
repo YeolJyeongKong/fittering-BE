@@ -33,9 +33,10 @@ public class Product {
     private String gender;
 
     /**
-     * 0 : 상의(Top)
-     * 1 : 하의(Bottom)
-     * ...
+     * 0 : 아우터(Outer)
+     * 1 : 상의(Top)
+     * 2 : 원피스(Dress)
+     * 3 : 하의(Bottom)
      */
     @NonNull
     private Integer type;
