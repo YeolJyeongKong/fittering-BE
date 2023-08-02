@@ -46,6 +46,11 @@ public class ProductController {
         List<Size> sizes = new ArrayList<>();
 
         if(productDto.getType() == 0) {
+            for(OuterDto outerDto : productDto.getOuterSizes()) {
+                Size size = sizeService.saveOuter(outerDto, product);
+                sizes.add(size);
+            }
+        } else if(productDto.getType() == 1) {
             for(TopDto topDto : productDto.getTopSizes()) {
                 Size size = sizeService.saveTop(topDto, product);
                 sizes.add(size);
