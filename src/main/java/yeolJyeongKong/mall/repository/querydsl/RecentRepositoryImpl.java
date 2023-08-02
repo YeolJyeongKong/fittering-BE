@@ -36,8 +36,8 @@ public class RecentRepositoryImpl implements RecentRepositoryCustom {
     }
 
     /**
-     * 8개 노출
-     * 16개 될 때마다 오래된 순으로 삭제 진행 필요
+     * 6개 노출
+     * 일주일에 한 번 초기화
      */
     @Override
     public List<ProductPreviewDto> recentProduct(Long userId) {
@@ -58,7 +58,7 @@ public class RecentRepositoryImpl implements RecentRepositoryCustom {
                         userIdEq(userId)
                 )
                 .orderBy(recent.timestamp.desc())
-                .limit(8)
+                .limit(6)
                 .fetch();
     }
 
