@@ -58,7 +58,8 @@ public class RankService {
                 productDtos.add(new MallRankProductDto(product.getId(), product.getImage()));
             }
 
-            result.add(new MallDto(mall.getId(), mall.getName(), mall.getImage(), mall.getRank().getView(), productDtos));
+            result.add(new MallDto(mall.getId(), mall.getName(), mall.getUrl(), mall.getImage(),
+                    mall.getDescription(), mall.getRank().getView(), productDtos));
         }
 
         return result;
@@ -69,7 +70,7 @@ public class RankService {
     }
 
     @Transactional
-    public void updateView(Long userId, Long productId) {
+    public void updateViewOnProduct(Long userId, Long productId) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResultException("product doesn't exist"));
         Optional<Rank> optionalRank = rankRepository.findByUserIdAndMallId(userId, product.getMall().getId());
@@ -81,6 +82,25 @@ public class RankService {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new NoResultException("user doesn't exist"));
             Mall mall = mallRepository.findById(product.getMall().getId())
+                    .orElseThrow(() -> new NoResultException("mall doesn't exist"));
+
+            rank = rankRepository.save(new Rank(user, mall));
+        }
+
+        rank.updateView();
+    }
+
+    @Transactional
+    public void updateViewOnMall(Long userId, Long mallId) {
+        Optional<Rank> optionalRank = rankRepository.findByUserIdAndMallId(userId, mallId);
+        Rank rank = null;
+
+        if(optionalRank.isPresent()) {
+            rank = optionalRank.get();
+        } else {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new NoResultException("user doesn't exist"));
+            Mall mall = mallRepository.findById(mallId)
                     .orElseThrow(() -> new NoResultException("mall doesn't exist"));
 
             rank = rankRepository.save(new Rank(user, mall));

@@ -40,8 +40,8 @@ class RankServiceTest {
     @BeforeEach
     void setUp() {
         topCategory = categoryService.save("top");
-        mall = mallService.save(new MallDto(1L, "testMall1", "image.jpg", 0, new ArrayList<>()));
-        mall2 = mallService.save(new MallDto(2L, "testMall2", "image.jpg", 0, new ArrayList<>()));
+        mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
+        mall2 = mallService.save(new MallDto(2L, "testMall2", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
         user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
         List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
@@ -101,8 +101,8 @@ class RankServiceTest {
         assertThat(productDto.get(0).getProductId()).isEqualTo(product4.getId());
         assertThat(productDto.get(0).getProductImage()).isEqualTo(product4.getImage());
 
-        rankService.updateView(user.getId(), savedProduct.getId());
-        rankService.updateView(user.getId(), product4.getId());
+        rankService.updateViewOnProduct(user.getId(), savedProduct.getId());
+        rankService.updateViewOnProduct(user.getId(), product4.getId());
 
         rank1 = rankService.findById(rank1.getId());
         rank2 = rankService.findById(rank2.getId());

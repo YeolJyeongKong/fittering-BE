@@ -127,7 +127,7 @@ public class ProductController {
     public ResponseEntity<?> productDetail(@PathVariable("productId") Long productId,
                                            @AuthenticationPrincipal PrincipalDetails principalDetails) {
         productService.updateView(productId); //상품 조회수
-        rankService.updateView(principalDetails.getUser().getId(), productId); //유저가 조회한 상품의 쇼핑몰 조회수
+        rankService.updateViewOnProduct(principalDetails.getUser().getId(), productId); //유저가 조회한 상품의 쇼핑몰 조회수
         userService.saveRecentProduct(principalDetails.getUser().getId(), productId); //최근 본 상품 업데이트
         Product product = productService.findById(productId);
 

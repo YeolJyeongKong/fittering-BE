@@ -40,6 +40,16 @@ public class MallController {
         return new ResponseEntity<>("쇼핑몰 등록 완료", HttpStatus.OK);
     }
 
+    @Operation(summary = "쇼핑몰 조회 메소드")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MallDto.class))))
+    @GetMapping("/malls/{mallId}")
+    public ResponseEntity<?> mallRank(@PathVariable("mallId") Long mallId,
+                                      @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        MallDto mallDto = new MallDto(mallService.findById(mallId));
+        rankService.updateViewOnMall(principalDetails.getUser().getId(), mallId);
+        return new ResponseEntity<>(mallDto, HttpStatus.OK);
+    }
+
     @Operation(summary = "쇼핑몰 랭킹 조회 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MallDto.class))))
     @GetMapping("/malls/rank")
