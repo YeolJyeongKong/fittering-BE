@@ -1,4 +1,4 @@
-package yeolJyeongKong.mall.config;
+package yeolJyeongKong.mall.config.auth;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

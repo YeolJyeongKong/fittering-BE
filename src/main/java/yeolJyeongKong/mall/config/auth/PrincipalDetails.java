@@ -1,11 +1,11 @@
-package yeolJyeongKong.mall.config;
+package yeolJyeongKong.mall.config.auth;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import yeolJyeongKong.mall.config.auth.Oauth2UserInfo;
+import yeolJyeongKong.mall.config.auth.domain.Oauth2UserInfo;
 import yeolJyeongKong.mall.domain.entity.User;
 
 import java.util.Collection;

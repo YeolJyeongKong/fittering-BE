@@ -1,16 +1,15 @@
-package yeolJyeongKong.mall.config;
+package yeolJyeongKong.mall.config.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import yeolJyeongKong.mall.config.auth.GoogleUserInfo;
-import yeolJyeongKong.mall.config.auth.KakaoUserInfo;
-import yeolJyeongKong.mall.config.auth.Oauth2UserInfo;
+import yeolJyeongKong.mall.config.auth.domain.GoogleUserInfo;
+import yeolJyeongKong.mall.config.auth.domain.KakaoUserInfo;
+import yeolJyeongKong.mall.config.auth.domain.Oauth2UserInfo;
 import yeolJyeongKong.mall.domain.entity.Measurement;
 import yeolJyeongKong.mall.domain.entity.User;
 import yeolJyeongKong.mall.repository.MeasurementRepository;

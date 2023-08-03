@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import yeolJyeongKong.mall.config.PrincipalDetails;
+import yeolJyeongKong.mall.config.auth.PrincipalDetails;
 import yeolJyeongKong.mall.domain.dto.*;
 import yeolJyeongKong.mall.domain.entity.*;
 import yeolJyeongKong.mall.service.*;

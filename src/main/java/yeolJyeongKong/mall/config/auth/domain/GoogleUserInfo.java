@@ -1,4 +1,4 @@
-package yeolJyeongKong.mall.config.auth;
+package yeolJyeongKong.mall.config.auth.domain;
 
 import java.util.Map;
 
