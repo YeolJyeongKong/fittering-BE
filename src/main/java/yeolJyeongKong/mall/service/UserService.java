@@ -114,7 +114,7 @@ public class UserService {
     }
 
     public boolean usernameExist(String username) {
-        return userRepository.usernameCount(username) != 0L;
+        return userRepository.existsByUsername(username);
     }
 
     public boolean emailExist(String email) {
