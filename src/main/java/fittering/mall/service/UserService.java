@@ -24,6 +24,7 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class UserService {
 
+    private static final int TEMP_PASSWORD_LENGTH = 10;
     private final UserRepository userRepository;
     private final MeasurementRepository measurementRepository;
     private final RecentRepository recentRepository;
@@ -81,7 +82,7 @@ public class UserService {
     @Transactional
     public void measurementUpdate(MeasurementDto measurementDto, Long userId) {
         Optional<Measurement> optionalMeasurement = measurementRepository.findByUserId(userId);
-        if(optionalMeasurement.isEmpty()) {
+        if (optionalMeasurement.isEmpty()) {
             Measurement measurement = measurementRepository.save(new Measurement());
             measurement.setUser(findById(userId));
             measurement.update(measurementDto);
@@ -128,7 +129,7 @@ public class UserService {
 
         String newPassword = "";
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < TEMP_PASSWORD_LENGTH; i++) {
             int idx = (int) (charSet.length * Math.random());
             newPassword += charSet[idx];
         }
