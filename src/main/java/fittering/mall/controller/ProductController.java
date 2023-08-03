@@ -49,33 +49,33 @@ public class ProductController {
         List<Size> sizes = new ArrayList<>();
 
         if (productDto.getType().equals(OUTER)) {
-            for(OuterDto outerDto : productDto.getOuterSizes()) {
+            productDto.getOuterSizes().forEach(outerDto -> {
                 Size size = sizeService.saveOuter(outerDto, product);
                 sizes.add(size);
-            }
+            });
             return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
         }
 
         if (productDto.getType().equals(TOP)) {
-            for(TopDto topDto : productDto.getTopSizes()) {
+            productDto.getTopSizes().forEach(topDto -> {
                 Size size = sizeService.saveTop(topDto, product);
                 sizes.add(size);
-            }
+            });
             return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
         }
 
         if(productDto.getType().equals(DRESS)) {
-            for(DressDto dressDto : productDto.getDressSizes()) {
+            productDto.getDressSizes().forEach(dressDto -> {
                 Size size = sizeService.saveDress(dressDto, product);
                 sizes.add(size);
-            }
+            });
             return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
         }
 
-        for(BottomDto bottomDto : productDto.getBottomSizes()) {
+        productDto.getBottomSizes().forEach(bottomDto -> {
             Size size = sizeService.saveBottom(bottomDto, product);
             sizes.add(size);
-        }
+        });
         return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
     }
 
