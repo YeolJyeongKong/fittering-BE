@@ -1,6 +1,5 @@
 package yeolJyeongKong.mall.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,28 +9,31 @@ import org.hibernate.validator.constraints.Length;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class Category {
+public class SubCategory {
 
     @Id @GeneratedValue
-    @Column(name = "category_id")
+    @Column(name = "sub_category_id")
     private Long id;
 
-    @NonNull @Length(max = 10)
+    @NonNull
+    @Length(max = 10)
     private String name;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "category")
-    private List<SubCategory> subCategories = new ArrayList<>();
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "subCategory")
     private List<Product> products = new ArrayList<>();
 
-    public Category(String name) {
+    public SubCategory(Category category, String name) {
+        this.category = category;
         this.name = name;
     }
 }

@@ -57,6 +57,11 @@ public class Product {
 
     @JsonIgnore
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "sub_category_id")
+    private SubCategory subCategory;
+
+    @JsonIgnore
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "mall_id")
     private Mall mall;
 
@@ -78,7 +83,7 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<DescriptionImage> descriptionImages = new ArrayList<>();
 
-    public Product(ProductDetailDto productDto, Category category,
+    public Product(ProductDetailDto productDto, Category category, SubCategory subCategory,
                    Mall mall, List<DescriptionImage> descriptionImages) {
         price = productDto.getPrice();
         name = productDto.getName();
@@ -88,6 +93,7 @@ public class Product {
         view = 0;
         timeView = 0;
         this.category = category;
+        this.subCategory = subCategory;
         this.mall = mall;
         this.descriptionImages = descriptionImages;
     }
