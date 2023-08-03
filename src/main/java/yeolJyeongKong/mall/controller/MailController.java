@@ -18,7 +18,7 @@ import yeolJyeongKong.mall.service.UserService;
 @Tag(name = "메일", description = "비밀번호 찾기 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class MailController {
 
     private final UserService userService;

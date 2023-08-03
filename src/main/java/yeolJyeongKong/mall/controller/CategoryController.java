@@ -15,7 +15,7 @@ import yeolJyeongKong.mall.service.CategoryService;
 @Tag(name = "카테고리", description = "카테고리 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class CategoryController {
 
     private final CategoryService categoryService;

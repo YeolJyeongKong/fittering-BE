@@ -19,7 +19,7 @@ import yeolJyeongKong.mall.service.UserService;
 @Tag(name = "로그인/회원가입", description = "로그인/회원가입 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class SignController {
 
     private final UserService userService;

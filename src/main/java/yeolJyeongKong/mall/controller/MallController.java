@@ -25,7 +25,7 @@ import java.util.List;
 @Tag(name = "쇼핑몰", description = "쇼핑몰 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class MallController {
 
     private final MallService mallService;

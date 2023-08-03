@@ -20,7 +20,7 @@ import yeolJyeongKong.mall.service.SearchService;
 @Tag(name = "검색", description = "검색 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 public class SearchController {
 
     private final SearchService searchService;
