@@ -39,8 +39,7 @@ public class FavoriteService {
         List<Favorite> favoriteMalls = favoriteRepository.userFavoriteMall(userId);
         List<MallDto> result = new ArrayList<>();
 
-        for (Favorite favorite : favoriteMalls) {
-
+        favoriteMalls.forEach(favorite -> {
             Mall mall = favorite.getMall();
             List<Product> products = mall.getProducts();
             List<MallRankProductDto> productDtos = new ArrayList<>();
@@ -55,7 +54,7 @@ public class FavoriteService {
 
             result.add(new MallDto(mall.getId(), mall.getName(), mall.getUrl(), mall.getImage(),
                     mall.getDescription(), 0, productDtos));
-        }
+        });
 
         return result;
     }
@@ -64,7 +63,6 @@ public class FavoriteService {
     public Favorite saveFavoriteMall(Long userId, Long mallId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
-
         Mall mall = mallRepository.findById(mallId)
                 .orElseThrow(() -> new NoResultException("mall doesn't exist"));
 
@@ -85,7 +83,6 @@ public class FavoriteService {
     public Favorite saveFavoriteProduct(Long userId, Long productId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
-
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResultException("product doesn't exist"));
 

@@ -158,18 +158,18 @@ public class UserService {
 
         user.getRoles().clear();
 
-        for (Favorite favorite : user.getFavorites()) {
+        user.getFavorites().forEach(favorite -> {
             if (favorite.getProduct() != null) {
                 Product product = productRepository.findById(favorite.getProduct().getId()).get();
                 product.getFavorites().remove(favorite);
-                continue;
+                return;
             }
 
             Mall mall = mallRepository.findById(favorite.getMall().getId()).get();
             mall.getFavorites().remove(favorite);
-        }
-        favoriteRepository.deleteByUserId(userId);
+        });
 
+        favoriteRepository.deleteByUserId(userId);
         measurementRepository.deleteByUserId(userId);
 
         user.getRanks().forEach(rank -> {

@@ -44,7 +44,6 @@ public class SignController {
         if (userService.usernameExist(signUpDto.getUsername())) {
             return new ResponseEntity<>("같은 이름이 존재합니다.", HttpStatus.BAD_REQUEST);
         }
-
         if (userService.emailExist(signUpDto.getEmail())) {
             return new ResponseEntity<>("같은 이메일이 존재합니다.", HttpStatus.BAD_REQUEST);
         }

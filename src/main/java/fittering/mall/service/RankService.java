@@ -46,14 +46,13 @@ public class RankService {
         List<Mall> malls = rankRepository.mallRank(userId);
         List<MallDto> result = new ArrayList<>();
 
-        for (Mall mall : malls) {
-
+        malls.forEach(mall -> {
             List<Product> products = mall.getProducts();
             List<MallRankProductDto> productDtos = new ArrayList<>();
 
             int productCount = 0;
             for (Product productProxy : products) {
-                if(productCount++ == MAX_PRODUCT_COUNT) break;
+                if (productCount++ == MAX_PRODUCT_COUNT) break;
                 Product product = productRepository.findById(productProxy.getId())
                         .orElseThrow(() -> new NoResultException("product doesn't exist"));
                 productDtos.add(new MallRankProductDto(product.getId(), product.getImage()));
@@ -61,7 +60,7 @@ public class RankService {
 
             result.add(new MallDto(mall.getId(), mall.getName(), mall.getUrl(), mall.getImage(),
                     mall.getDescription(), mall.getRank().getView(), productDtos));
-        }
+        });
 
         return result;
     }

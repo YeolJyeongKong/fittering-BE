@@ -35,6 +35,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private static final int INDEX_ASC = 0;
     private static final int VIEW_DESC = 1;
     private static final int PRICE_ASC = 2;
+    private static final int MOST_POPULAR_TARGET_COUNT = 1;
     private JPAQueryFactory queryFactory;
 
     public ProductRepositoryImpl(EntityManager em) {
@@ -274,11 +275,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 )
                 .fetchOne();
 
-        List<Size> sizes = productInfo.getSizes();
         List<OuterDto> outerDtos = new ArrayList<>();
-        for (Size size : sizes) {
-            outerDtos.add(new OuterDto(size));
-        }
+        productInfo.getSizes().forEach(size -> outerDtos.add(new OuterDto(size)));
 
         Tuple tuple = queryFactory
                 .select(product.count(), user.gender, user.ageRange)
@@ -290,12 +288,12 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 )
                 .groupBy(user.gender, user.ageRange)
                 .orderBy(favorite.count().desc())
-                .limit(1)
+                .limit(MOST_POPULAR_TARGET_COUNT)
                 .fetchOne();
 
         Optional<Tuple> optionalPopular = Optional.ofNullable(tuple);
 
-        if(optionalPopular.isPresent()) {
+        if (optionalPopular.isPresent()) {
             Tuple popular = optionalPopular.get();
             String gender = popular.get(user.gender);
             Integer ageRange = popular.get(user.ageRange);
@@ -330,11 +328,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 )
                 .fetchOne();
 
-        List<Size> sizes = productInfo.getSizes();
         List<TopDto> topDtos = new ArrayList<>();
-        for (Size size : sizes) {
-            topDtos.add(new TopDto(size));
-        }
+        productInfo.getSizes().forEach(size -> topDtos.add(new TopDto(size)));
 
         Tuple tuple = queryFactory
                 .select(product.count(), user.gender, user.ageRange)
@@ -346,12 +341,12 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 )
                 .groupBy(user.gender, user.ageRange)
                 .orderBy(favorite.count().desc())
-                .limit(1)
+                .limit(MOST_POPULAR_TARGET_COUNT)
                 .fetchOne();
 
         Optional<Tuple> optionalPopular = Optional.ofNullable(tuple);
 
-        if(optionalPopular.isPresent()) {
+        if (optionalPopular.isPresent()) {
             Tuple popular = optionalPopular.get();
             String gender = popular.get(user.gender);
             Integer ageRange = popular.get(user.ageRange);
@@ -386,11 +381,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 )
                 .fetchOne();
 
-        List<Size> sizes = productInfo.getSizes();
         List<DressDto> dressDtos = new ArrayList<>();
-        for (Size size : sizes) {
-            dressDtos.add(new DressDto(size));
-        }
+        productInfo.getSizes().forEach(size -> dressDtos.add(new DressDto(size)));
 
         Tuple tuple = queryFactory
                 .select(product.count(), user.gender, user.ageRange)
@@ -402,12 +394,12 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 )
                 .groupBy(user.gender, user.ageRange)
                 .orderBy(favorite.count().desc())
-                .limit(1)
+                .limit(MOST_POPULAR_TARGET_COUNT)
                 .fetchOne();
 
         Optional<Tuple> optionalPopular = Optional.ofNullable(tuple);
 
-        if(optionalPopular.isPresent()) {
+        if (optionalPopular.isPresent()) {
             Tuple popular = optionalPopular.get();
             String gender = popular.get(user.gender);
             Integer ageRange = popular.get(user.ageRange);
@@ -440,7 +432,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 )
                 .groupBy(user.gender, user.ageRange)
                 .orderBy(favorite.count().desc())
-                .limit(1)
+                .limit(MOST_POPULAR_TARGET_COUNT)
                 .fetchOne();
 
         Product productInfo = queryFactory
@@ -455,15 +447,12 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 )
                 .fetchOne();
 
-        List<Size> sizes = productInfo.getSizes();
         List<BottomDto> bottomDtos = new ArrayList<>();
-        for (Size size : sizes) {
-            bottomDtos.add(new BottomDto(size));
-        }
+        productInfo.getSizes().forEach(size -> bottomDtos.add(new BottomDto(size)));
 
         Optional<Tuple> optionalPopular = Optional.ofNullable(tuple);
 
-        if(optionalPopular.isPresent()) {
+        if (optionalPopular.isPresent()) {
             Tuple popular = optionalPopular.get();
             String gender = popular.get(user.gender);
             Integer ageRange = popular.get(user.ageRange);
