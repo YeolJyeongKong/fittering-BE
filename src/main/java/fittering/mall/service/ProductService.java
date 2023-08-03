@@ -18,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
 
+    private static final int MAX_PREVIEW_PRODUCT_COUNT = 4;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
@@ -102,7 +103,7 @@ public class ProductService {
         List<ProductPreviewDto> result = new ArrayList<>();
 
         for (int i = 0; i < productIds.size(); i++) {
-            if (preview && i >= 4) break;
+            if (preview && i >= MAX_PREVIEW_PRODUCT_COUNT) break;
             Long productId = productIds.get(i);
             result.add(productRepository.productById(productId));
         }
