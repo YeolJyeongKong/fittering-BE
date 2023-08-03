@@ -78,9 +78,6 @@ public class MallController {
         return new ResponseEntity<>(mallDtos, HttpStatus.OK);
     }
 
-    /**
-     * user flow에 맞게 추후 수정
-     */
     @Operation(summary = "즐겨찾기 쇼핑몰 상세 조회 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MallDto.class)))
     @GetMapping("/malls/favorite_malls")
