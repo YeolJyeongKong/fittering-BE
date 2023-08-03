@@ -37,7 +37,7 @@ public class ProductController {
 
     @Operation(summary = "상품 등록 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"상품 등록 완료\"")))
-    @PostMapping("/product/add")
+    @PostMapping("/product")
     public ResponseEntity<?> save(@RequestBody ProductDetailDto productDto) {
         Category category = categoryService.findByName(productDto.getCategoryName());
         SubCategory subCategory = categoryService.findByNameOfSubCategory(productDto.getSubCategoryName());

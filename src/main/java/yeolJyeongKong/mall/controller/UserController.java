@@ -40,7 +40,7 @@ public class UserController {
 
     @Operation(summary = "마이페이지 조회 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserDto.class)))
-    @GetMapping("/user/edit")
+    @GetMapping("/user/mypage")
     public ResponseEntity<?> edit(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         UserDto userDto = userService.info(principalDetails.getUser().getId());
         return new ResponseEntity<>(userDto, HttpStatus.OK);
@@ -48,7 +48,7 @@ public class UserController {
 
     @Operation(summary = "마이페이지 수정 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserDto.class)))
-    @PostMapping("/user/edit")
+    @PostMapping("/user/mypage")
     public ResponseEntity<?> edit(@RequestBody UserDto userDto,
                                   @AuthenticationPrincipal PrincipalDetails principalDetails) {
         userService.infoUpdate(userDto, principalDetails.getUser().getId());
@@ -74,7 +74,7 @@ public class UserController {
 
     @Operation(summary = "체형 정보 조회 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MeasurementDto.class)))
-    @GetMapping("/user/mysize/edit")
+    @GetMapping("/user/mysize")
     public ResponseEntity<?> measurementEdit(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         MeasurementDto measurementDto = userService.measurementInfo(principalDetails.getUser().getId());
         return new ResponseEntity<>(measurementDto, HttpStatus.OK);
@@ -82,7 +82,7 @@ public class UserController {
 
     @Operation(summary = "체형 정보 수정 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MeasurementDto.class)))
-    @PostMapping("/user/mysize/edit")
+    @PostMapping("/user/mysize")
     public ResponseEntity<?> measurementEdit(@RequestBody MeasurementDto measurementDto,
                                              @AuthenticationPrincipal PrincipalDetails principalDetails) {
         userService.measurementUpdate(measurementDto, principalDetails.getUser().getId());
