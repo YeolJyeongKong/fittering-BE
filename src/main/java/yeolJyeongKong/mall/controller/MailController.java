@@ -37,7 +37,7 @@ public class MailController {
         return new ResponseEntity<>("이메일을 사용하는 유저가 존재합니다.", HttpStatus.OK);
     }
 
-    @Operation(summary = "카테고리 등록 메소드")
+    @Operation(summary = "임시 패스워드 발급 메소드")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"비밀번호 발급이 완료되었습니다.\""))),
             @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"비밀번호 찾기는 1시간에 한 번 가능합니다.\"")))
