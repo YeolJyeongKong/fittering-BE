@@ -28,6 +28,7 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class MallController {
 
+    private static final int MOBILE_MALL_RANK_SIZE = 3;
     private final MallService mallService;
     private final RankService rankService;
     private final FavoriteService favoriteService;
@@ -74,7 +75,7 @@ public class MallController {
     public ResponseEntity<?> mallRankPreviewMobile(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                                    Pageable pageable) {
         List<MallPreviewDto> mallDtos = rankService.mallRankPreview(principalDetails.getUser().getId(),
-                                                                    pageable, 3);
+                                                                    pageable, MOBILE_MALL_RANK_SIZE);
         return new ResponseEntity<>(mallDtos, HttpStatus.OK);
     }
 
