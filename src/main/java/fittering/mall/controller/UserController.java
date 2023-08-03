@@ -181,7 +181,7 @@ public class UserController {
         List<Long> productIds = new ArrayList<>();
         List<Product> recommendedProducts = productService.productWithRecentRecommendation(userId);
 
-        if(recommendedProducts.size() > 0) {
+        if(!recommendedProducts.isEmpty()) {
             for (Product recommendedProduct : recommendedProducts) {
                 productIds.add(recommendedProduct.getId());
             }
@@ -238,7 +238,7 @@ public class UserController {
         List<Long> productIds = new ArrayList<>();
         List<Product> recommendedProducts = productService.productWithUserRecommendation(userId);
 
-        if(recommendedProducts.size() > 0) {
+        if(!recommendedProducts.isEmpty()) {
             for (Product recommendedProduct : recommendedProducts) {
                 productIds.add(recommendedProduct.getId());
             }
