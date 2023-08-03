@@ -29,13 +29,12 @@ public class CustomUserDetailService implements UserDetailsService {
         //이메일 체크
         Optional<User> optionalUser = userRepository.findByEmail(email);
 
-        if(optionalUser.isPresent()) {
+        if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             grantedAuthorities.add(new SimpleGrantedAuthority("USER"));
             return new PrincipalDetails(user);
-        } else {
-            // DB에 정보가 존재하지 않으므로 exception 호출
-            throw new UsernameNotFoundException("user doesn't exist, email : " + email);
         }
+        // DB에 정보가 존재하지 않으므로 exception 호출
+        throw new UsernameNotFoundException("user doesn't exist, email : " + email);
     }
 }

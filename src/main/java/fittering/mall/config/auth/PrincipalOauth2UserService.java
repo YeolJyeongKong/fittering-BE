@@ -29,14 +29,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        Oauth2UserInfo oAuth2UserInfo = null;
         String provider = userRequest.getClientRegistration().getRegistrationId();
-
-        if (provider.equals("google")) {
-            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
-        } else if (provider.equals("kakao")) {
-            oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
-        }
+        Oauth2UserInfo oAuth2UserInfo = getOauth2UserInfo(provider, oAuth2User);
 
         String providerId = oAuth2UserInfo.getProviderId();
         String loginId = provider + "_" + providerId;
@@ -49,10 +43,20 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             Measurement measurement = measurementRepository.save(new Measurement());
             user = userRepository.save(new User(email, provider, providerId, measurement));
             measurement.setUser(user);
-        } else {
-            user = optionalUser.get();
+            return new PrincipalDetails(user, oAuth2UserInfo);
         }
 
+        user = optionalUser.get();
         return new PrincipalDetails(user, oAuth2UserInfo);
+    }
+
+    public Oauth2UserInfo getOauth2UserInfo(String provider, OAuth2User oAuth2User) {
+        if (provider.equals("google")) {
+            return new GoogleUserInfo(oAuth2User.getAttributes());
+        }
+        if (provider.equals("kakao")) {
+            return new KakaoUserInfo(oAuth2User.getAttributes());
+        }
+        return null;
     }
 }

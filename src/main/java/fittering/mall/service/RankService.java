@@ -77,16 +77,17 @@ public class RankService {
         Optional<Rank> optionalRank = rankRepository.findByUserIdAndMallId(userId, product.getMall().getId());
         Rank rank = null;
 
-        if(optionalRank.isPresent()) {
+        if (optionalRank.isPresent()) {
             rank = optionalRank.get();
-        } else {
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new NoResultException("user doesn't exist"));
-            Mall mall = mallRepository.findById(product.getMall().getId())
-                    .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-
-            rank = rankRepository.save(new Rank(user, mall));
+            rank.updateView();
+            return;
         }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoResultException("user doesn't exist"));
+        Mall mall = mallRepository.findById(product.getMall().getId())
+                .orElseThrow(() -> new NoResultException("mall doesn't exist"));
+        rank = rankRepository.save(new Rank(user, mall));
 
         rank.updateView();
     }
@@ -98,14 +99,16 @@ public class RankService {
 
         if(optionalRank.isPresent()) {
             rank = optionalRank.get();
-        } else {
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new NoResultException("user doesn't exist"));
-            Mall mall = mallRepository.findById(mallId)
-                    .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-
-            rank = rankRepository.save(new Rank(user, mall));
+            rank.updateView();
+            return;
         }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoResultException("user doesn't exist"));
+        Mall mall = mallRepository.findById(mallId)
+                .orElseThrow(() -> new NoResultException("mall doesn't exist"));
+
+        rank = rankRepository.save(new Rank(user, mall));
 
         rank.updateView();
     }

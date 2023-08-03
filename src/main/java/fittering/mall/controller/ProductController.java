@@ -48,28 +48,34 @@ public class ProductController {
         Product product = productService.save(new Product(productDto, category, subCategory, mall, descriptionImages));
         List<Size> sizes = new ArrayList<>();
 
-        if(productDto.getType().equals(OUTER)) {
+        if (productDto.getType().equals(OUTER)) {
             for(OuterDto outerDto : productDto.getOuterSizes()) {
                 Size size = sizeService.saveOuter(outerDto, product);
                 sizes.add(size);
             }
-        } else if(productDto.getType().equals(TOP)) {
+            return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
+        }
+
+        if (productDto.getType().equals(TOP)) {
             for(TopDto topDto : productDto.getTopSizes()) {
                 Size size = sizeService.saveTop(topDto, product);
                 sizes.add(size);
             }
-        } else if(productDto.getType().equals(DRESS)) {
+            return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
+        }
+
+        if(productDto.getType().equals(DRESS)) {
             for(DressDto dressDto : productDto.getDressSizes()) {
                 Size size = sizeService.saveDress(dressDto, product);
                 sizes.add(size);
             }
-        } else {
-            for(BottomDto bottomDto : productDto.getBottomSizes()) {
-                Size size = sizeService.saveBottom(bottomDto, product);
-                sizes.add(size);
-            }
+            return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
         }
 
+        for(BottomDto bottomDto : productDto.getBottomSizes()) {
+            Size size = sizeService.saveBottom(bottomDto, product);
+            sizes.add(size);
+        }
         return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
     }
 
