@@ -22,6 +22,8 @@ import fittering.mall.service.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static fittering.mall.domain.entity.Product.*;
+
 @Tag(name = "상품", description = "상품 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
@@ -46,17 +48,17 @@ public class ProductController {
         Product product = productService.save(new Product(productDto, category, subCategory, mall, descriptionImages));
         List<Size> sizes = new ArrayList<>();
 
-        if(productDto.getType() == 0) {
+        if(productDto.getType().equals(OUTER)) {
             for(OuterDto outerDto : productDto.getOuterSizes()) {
                 Size size = sizeService.saveOuter(outerDto, product);
                 sizes.add(size);
             }
-        } else if(productDto.getType() == 1) {
+        } else if(productDto.getType().equals(TOP)) {
             for(TopDto topDto : productDto.getTopSizes()) {
                 Size size = sizeService.saveTop(topDto, product);
                 sizes.add(size);
             }
-        } else if(productDto.getType() == 2) {
+        } else if(productDto.getType().equals(DRESS)) {
             for(DressDto dressDto : productDto.getDressSizes()) {
                 Size size = sizeService.saveDress(dressDto, product);
                 sizes.add(size);
@@ -157,22 +159,22 @@ public class ProductController {
         userService.saveRecentProduct(principalDetails.getUser().getId(), productId); //최근 본 상품 업데이트
         Product product = productService.findById(productId);
 
-        if(product.getType().equals(0)) {
+        if(product.getType().equals(OUTER)) {
             OuterProductDto outerProduct = productService.outerProductDetail(productId);
             return new ResponseEntity<>(outerProduct, HttpStatus.OK);
         }
 
-        if(product.getType().equals(1)) {
+        if(product.getType().equals(TOP)) {
             TopProductDto topProduct = productService.topProductDetail(productId);
             return new ResponseEntity<>(topProduct, HttpStatus.OK);
         }
 
-        if(product.getType().equals(2)) {
+        if(product.getType().equals(DRESS)) {
             DressProductDto dressProduct = productService.dressProductDetail(productId);
             return new ResponseEntity<>(dressProduct, HttpStatus.OK);
         }
 
-        if(product.getType().equals(3)) {
+        if(product.getType().equals(BOTTOM)) {
             BottomProductDto bottomProduct = productService.bottomProductDetail(productId);
             return new ResponseEntity<>(bottomProduct, HttpStatus.OK);
         }

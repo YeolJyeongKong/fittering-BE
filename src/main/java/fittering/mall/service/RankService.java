@@ -22,6 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RankService {
 
+    private static final int MAX_PRODUCT_COUNT = 5;
     private final UserRepository userRepository;
     private final MallRepository mallRepository;
     private final RankRepository rankRepository;
@@ -52,7 +53,7 @@ public class RankService {
 
             int productCount = 0;
             for (Product productProxy : products) {
-                if(productCount++ == 5) break;
+                if(productCount++ == MAX_PRODUCT_COUNT) break;
                 Product product = productRepository.findById(productProxy.getId())
                         .orElseThrow(() -> new NoResultException("product doesn't exist"));
                 productDtos.add(new MallRankProductDto(product.getId(), product.getImage()));

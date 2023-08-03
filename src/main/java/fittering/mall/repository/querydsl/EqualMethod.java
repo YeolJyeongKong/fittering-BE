@@ -16,6 +16,9 @@ import static fittering.mall.domain.entity.QUserRecommendation.userRecommendatio
 
 public class EqualMethod {
 
+    private static final String MALE = "M";
+    private static final String FEMALE = "F";
+
     public static BooleanExpression userIdEq(Long userId) {
         return userId != null ? user.id.eq(userId) : null;
     }
@@ -67,7 +70,7 @@ public class EqualMethod {
      * else     : 성별 무관
      */
     public static BooleanExpression genderEq(String gender) {
-        if(gender.equals("M") || gender.equals("F")) {
+        if(gender.equals(MALE) || gender.equals(FEMALE)) {
             return product.gender.eq(gender);
         }
         return Expressions.asBoolean(true).isTrue();

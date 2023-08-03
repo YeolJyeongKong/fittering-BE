@@ -27,6 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FavoriteService {
 
+    private static final int MAX_PRODUCT_COUNT = 5;
     private final FavoriteRepository favoriteRepository;
     private final MallRepository mallRepository;
     private final ProductRepository productRepository;
@@ -46,7 +47,7 @@ public class FavoriteService {
 
             int productCount = 0;
             for (Product productProxy : products) {
-                if(productCount++ == 5) break;
+                if(productCount++ == MAX_PRODUCT_COUNT) break;
                 Product product = productRepository.findById(productProxy.getId())
                         .orElseThrow(() -> new NoResultException("product dosen't exist"));
                 productDtos.add(new MallRankProductDto(product.getId(), product.getImage()));

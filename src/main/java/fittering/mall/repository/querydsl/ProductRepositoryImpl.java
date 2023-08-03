@@ -32,6 +32,9 @@ import static fittering.mall.repository.querydsl.EqualMethod.*;
 
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
+    private static final int INDEX_ASC = 0;
+    private static final int VIEW_DESC = 1;
+    private static final int PRICE_ASC = 2;
     private JPAQueryFactory queryFactory;
 
     public ProductRepositoryImpl(EntityManager em) {
@@ -540,13 +543,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     public OrderSpecifier<? extends Number> filter(Long filterId) {
-        if(filterId == 0) {
+        if(filterId == INDEX_ASC) {
             return product.id.asc();
         }
-        if(filterId == 1) {
+        if(filterId == VIEW_DESC) {
             return product.view.desc();
         }
-        if(filterId == 2) {
+        if(filterId == PRICE_ASC) {
             return product.price.asc();
         }
         return product.price.desc();

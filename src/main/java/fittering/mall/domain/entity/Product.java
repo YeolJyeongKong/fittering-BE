@@ -41,6 +41,11 @@ public class Product {
     @NonNull
     private Integer type;
 
+    @Transient public static final int OUTER = 0;
+    @Transient public static final int TOP = 1;
+    @Transient public static final int DRESS = 2;
+    @Transient public static final int BOTTOM = 3;
+
     @NonNull
     private String image;
 
