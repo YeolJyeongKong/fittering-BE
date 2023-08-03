@@ -49,33 +49,21 @@ public class ProductController {
         List<Size> sizes = new ArrayList<>();
 
         if (productDto.getType().equals(OUTER)) {
-            productDto.getOuterSizes().forEach(outerDto -> {
-                Size size = sizeService.saveOuter(outerDto, product);
-                sizes.add(size);
-            });
+            getSizesOfOuter(productDto, product, sizes);
             return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
         }
 
         if (productDto.getType().equals(TOP)) {
-            productDto.getTopSizes().forEach(topDto -> {
-                Size size = sizeService.saveTop(topDto, product);
-                sizes.add(size);
-            });
+            getSizesOfTop(productDto, product, sizes);
             return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
         }
 
         if(productDto.getType().equals(DRESS)) {
-            productDto.getDressSizes().forEach(dressDto -> {
-                Size size = sizeService.saveDress(dressDto, product);
-                sizes.add(size);
-            });
+            getSizesOfDress(productDto, product, sizes);
             return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
         }
 
-        productDto.getBottomSizes().forEach(bottomDto -> {
-            Size size = sizeService.saveBottom(bottomDto, product);
-            sizes.add(size);
-        });
+        getSizesOfBottom(productDto, product, sizes);
         return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
     }
 
@@ -186,5 +174,33 @@ public class ProductController {
         }
 
         return new ResponseEntity<>("정의된 타입 없음", HttpStatus.BAD_REQUEST);
+    }
+
+    private void getSizesOfOuter(ProductDetailDto productDto, Product product, List<Size> sizes) {
+        productDto.getOuterSizes().forEach(outerDto -> {
+            Size size = sizeService.saveOuter(outerDto, product);
+            sizes.add(size);
+        });
+    }
+
+    private void getSizesOfTop(ProductDetailDto productDto, Product product, List<Size> sizes) {
+        productDto.getTopSizes().forEach(topDto -> {
+            Size size = sizeService.saveTop(topDto, product);
+            sizes.add(size);
+        });
+    }
+
+    private void getSizesOfDress(ProductDetailDto productDto, Product product, List<Size> sizes) {
+        productDto.getDressSizes().forEach(dressDto -> {
+            Size size = sizeService.saveDress(dressDto, product);
+            sizes.add(size);
+        });
+    }
+
+    private void getSizesOfBottom(ProductDetailDto productDto, Product product, List<Size> sizes) {
+        productDto.getBottomSizes().forEach(bottomDto -> {
+            Size size = sizeService.saveBottom(bottomDto, product);
+            sizes.add(size);
+        });
     }
 }

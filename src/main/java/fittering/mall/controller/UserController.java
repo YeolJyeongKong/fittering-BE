@@ -182,9 +182,7 @@ public class UserController {
         List<Product> recommendedProducts = productService.productWithRecentRecommendation(userId);
 
         if(!recommendedProducts.isEmpty()) {
-            for (Product recommendedProduct : recommendedProducts) {
-                productIds.add(recommendedProduct.getId());
-            }
+            getRecommendedProductIds(productIds, recommendedProducts);
             return productIds;
         }
 
@@ -239,9 +237,7 @@ public class UserController {
         List<Product> recommendedProducts = productService.productWithUserRecommendation(userId);
 
         if(!recommendedProducts.isEmpty()) {
-            for (Product recommendedProduct : recommendedProducts) {
-                productIds.add(recommendedProduct.getId());
-            }
+            getRecommendedProductIds(productIds, recommendedProducts);
             return productIds;
         }
 
@@ -277,5 +273,11 @@ public class UserController {
                                                 @AuthenticationPrincipal PrincipalDetails principalDetails) {
         favoriteService.deleteFavoriteMall(principalDetails.getUser().getId(), mallId);
         return new ResponseEntity<>("즐겨찾기 삭제 완료", HttpStatus.OK);
+    }
+
+    private static void getRecommendedProductIds(List<Long> productIds, List<Product> recommendedProducts) {
+        for (Product recommendedProduct : recommendedProducts) {
+            productIds.add(recommendedProduct.getId());
+        }
     }
 }
