@@ -16,8 +16,11 @@ public class ProductDetailDto {
     private Integer type;
     private String image;
     private String categoryName;
+    private String subCategoryName;
     private String mallName;
+    private List<OuterDto> outerSizes;
     private List<TopDto> topSizes;
+    private List<DressDto> dressSizes;
     private List<BottomDto> bottomSizes;
     private List<String> descriptionImages;
 }

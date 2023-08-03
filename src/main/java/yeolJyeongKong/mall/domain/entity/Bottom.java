@@ -24,10 +24,7 @@ public class Bottom {
     @NonNull
     private Double waist;
 
-    @NonNull
     private Double thigh;
-
-    @NonNull
     private Double rise;
 
     @NonNull

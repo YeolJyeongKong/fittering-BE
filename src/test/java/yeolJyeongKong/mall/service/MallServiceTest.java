@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import yeolJyeongKong.mall.domain.dto.MallDto;
 import yeolJyeongKong.mall.domain.dto.ProductDetailDto;
-import yeolJyeongKong.mall.domain.entity.Category;
-import yeolJyeongKong.mall.domain.entity.DescriptionImage;
-import yeolJyeongKong.mall.domain.entity.Mall;
-import yeolJyeongKong.mall.domain.entity.Product;
+import yeolJyeongKong.mall.domain.entity.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +28,9 @@ class MallServiceTest {
     @Test
     @DisplayName("쇼핑몰 테스트")
     void mallTest() {
-        Mall mall1 = mallService.save(new MallDto("testMall1", "testMall.com", "image.jpg", "desc", new ArrayList<>()));
-        Mall mall2 = mallService.save(new MallDto("testMall2", "testMall.com", "image.jpg", "desc", new ArrayList<>()));
-        Mall mall3 = mallService.save(new MallDto("testMall3", "testMall.com", "image.jpg", "desc", new ArrayList<>()));
+        Mall mall1 = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
+        Mall mall2 = mallService.save(new MallDto(2L, "testMall2", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
+        Mall mall3 = mallService.save(new MallDto(3L, "testMall3", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
 
         Mall findMall1 = mallService.findByName("testMall1");
         Mall findMall2 = mallService.findByName("testMall2");
@@ -44,13 +41,15 @@ class MallServiceTest {
         checkMall(mall3, findMall3);
 
         Category category = categoryService.save("top");
+        SubCategory subCategory = categoryService.saveSubCategory("top", "shirt");
+
         List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
         List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
         Product product = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
-                        "image.jpg", "top",
-                        "testMall", null, null, descImgsStr),
-                category, mall1, descImgs));
+                        "image.jpg", "top", "shirt",
+                        "testMall", null, null, null, null, descImgsStr),
+                category, subCategory, mall1, descImgs));
         mallService.addProduct("testMall1", product.getId());
         mallService.findProducts("testMall1").forEach(productDto -> {
             assertThat(productDto.getProductId()).isEqualTo(product.getId());

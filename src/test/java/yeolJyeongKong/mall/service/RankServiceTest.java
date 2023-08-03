@@ -29,6 +29,7 @@ class RankServiceTest {
     UserService userService;
 
     private Category topCategory;
+    private SubCategory topSubCategory;
     private Mall mall;
     private Mall mall2;
     private Product savedProduct;
@@ -40,33 +41,32 @@ class RankServiceTest {
     @BeforeEach
     void setUp() {
         topCategory = categoryService.save("top");
-        mall = mallService.save(new MallDto("testMall", "testMall.com",
-                "image.jpg", "desc", new ArrayList<>()));
-        mall2 = mallService.save(new MallDto("testMall2", "testMall.com",
-                "image.jpg", "desc", new ArrayList<>()));
+        topSubCategory = categoryService.saveSubCategory("top", "shirt");
+        mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
+        mall2 = mallService.save(new MallDto(2L, "testMall2", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
         user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
         List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
         savedProduct = productService.save(new Product(
                 new ProductDetailDto(10000, "A 티셔츠", "M", 0,
-                        "image.jpg", "top",
-                        "testMall", null, null, descImgsStr),
-                topCategory, mall, descImgs));
+                        "image.jpg", "top", "shirt",
+                        "testMall", null, null, null, null, descImgsStr),
+                topCategory, topSubCategory, mall, descImgs));
         product2 = productService.save(new Product(
                 new ProductDetailDto(10000, "A 셔츠", "M", 0,
-                        "image.jpg", "top",
-                        "testMall", null, null, descImgsStr),
-                topCategory, mall, descImgs));
+                        "image.jpg", "top", "shirt",
+                        "testMall", null, null, null, null, descImgsStr),
+                topCategory, topSubCategory, mall, descImgs));
         product3 = productService.save(new Product(
                 new ProductDetailDto(10000, "B 티셔츠", "M", 0,
-                        "image.jpg", "top",
-                        "testMall", null, null, descImgsStr),
-                topCategory, mall, descImgs));
+                        "image.jpg", "top", "shirt",
+                        "testMall", null, null, null, null, descImgsStr),
+                topCategory, topSubCategory, mall, descImgs));
         product4 = productService.save(new Product(
                 new ProductDetailDto(10000, "ABC 스웨터", "M", 0,
-                        "image.jpg", "top",
-                        "testMall2", null, null, descImgsStr),
-                topCategory, mall2, descImgs));
+                        "image.jpg", "top", "shirt",
+                        "testMall2", null, null, null, null, descImgsStr),
+                topCategory, topSubCategory, mall2, descImgs));
     }
 
     @Test
@@ -81,10 +81,10 @@ class RankServiceTest {
 
         List<MallDto> mallDtos = rankService.mallRank(user.getId());
 
+        assertThat(mallDtos.get(0).getId()).isEqualTo(rank1.getMall().getId());
         assertThat(mallDtos.get(0).getName()).isEqualTo(rank1.getMall().getName());
-        assertThat(mallDtos.get(0).getUrl()).isEqualTo(rank1.getMall().getUrl());
         assertThat(mallDtos.get(0).getImage()).isEqualTo(rank1.getMall().getImage());
-        assertThat(mallDtos.get(0).getDescription()).isEqualTo(rank1.getMall().getDescription());
+        assertThat(mallDtos.get(0).getView()).isEqualTo(rank1.getView());
 
         List<MallRankProductDto> productDto = mallDtos.get(0).getProducts();
         assertThat(productDto.get(0).getProductId()).isEqualTo(savedProduct.getId());
@@ -94,17 +94,17 @@ class RankServiceTest {
         assertThat(productDto.get(2).getProductId()).isEqualTo(product3.getId());
         assertThat(productDto.get(2).getProductImage()).isEqualTo(product3.getImage());
 
-        assertThat(mallDtos.get(1).getName()).isEqualTo(rank2.getMall().getName());
-        assertThat(mallDtos.get(1).getUrl()).isEqualTo(rank2.getMall().getUrl());
-        assertThat(mallDtos.get(1).getImage()).isEqualTo(rank2.getMall().getImage());
-        assertThat(mallDtos.get(1).getDescription()).isEqualTo(rank2.getMall().getDescription());
+        assertThat(mallDtos.get(1).getId()).isEqualTo(rank1.getMall().getId());
+        assertThat(mallDtos.get(1).getName()).isEqualTo(rank1.getMall().getName());
+        assertThat(mallDtos.get(1).getImage()).isEqualTo(rank1.getMall().getImage());
+        assertThat(mallDtos.get(1).getView()).isEqualTo(rank1.getView());
 
         productDto = mallDtos.get(1).getProducts();
         assertThat(productDto.get(0).getProductId()).isEqualTo(product4.getId());
         assertThat(productDto.get(0).getProductImage()).isEqualTo(product4.getImage());
 
-        rankService.updateView(user.getId(), savedProduct.getId());
-        rankService.updateView(user.getId(), product4.getId());
+        rankService.updateViewOnProduct(user.getId(), savedProduct.getId());
+        rankService.updateViewOnProduct(user.getId(), product4.getId());
 
         rank1 = rankService.findById(rank1.getId());
         rank2 = rankService.findById(rank2.getId());

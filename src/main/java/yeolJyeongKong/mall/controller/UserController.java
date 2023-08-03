@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import yeolJyeongKong.mall.config.PrincipalDetails;
 import yeolJyeongKong.mall.domain.dto.*;
 import yeolJyeongKong.mall.domain.entity.Product;
-import yeolJyeongKong.mall.domain.entity.RecentRecommendation;
-import yeolJyeongKong.mall.domain.entity.UserRecommendation;
 import yeolJyeongKong.mall.service.FavoriteService;
 import yeolJyeongKong.mall.service.ProductService;
 import yeolJyeongKong.mall.service.RankService;
@@ -120,23 +118,32 @@ public class UserController {
         return new ResponseEntity<>("유저 즐겨찾기 상품 삭제 완료", HttpStatus.OK);
     }
 
-    @Operation(summary = "유저 최근 본 상품 조회 메소드")
+    @Operation(summary = "유저 최근 본 상품 조회 메소드 (미리보기)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
-    @GetMapping("/user/recent")
-    public ResponseEntity<?> recentProduct(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        List<ProductPreviewDto> products = userService.recentProduct(principalDetails.getUser().getId());
+    @GetMapping("/user/recent/preview")
+    public ResponseEntity<?> recentProductPreview(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        List<ProductPreviewDto> products = userService.recentProductPreview(principalDetails.getUser().getId());
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @Operation(summary = "체형 측정 메소드")
+    @Operation(summary = "유저 최근 본 상품 조회 메소드")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @GetMapping("/user/recent")
+    public ResponseEntity<?> recentProduct(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                           Pageable pageable) {
+        Page<ProductPreviewDto> products = userService.recentProduct(principalDetails.getUser().getId(), pageable);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @Operation(summary = "체형 스마트 분석 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MeasurementDto.class))))
     @PostMapping("/user/recommendation/measurement")
-    public ResponseEntity<?> recommendMeasurement(@RequestBody ImageDto imageDto,
+    public ResponseEntity<?> recommendMeasurement(@RequestBody SmartMeasurementDto smartMeasurementDto,
                                                   @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        String image = imageDto.getImage(); //request
-        //TODO: API Gateway에 등록된 체형 측정 API에서 체형 측정 결과를 받아오는 로직 필요
+        //request: smartMeasurementDto
+        //실루엣 이미지(정면/측면), 키, 몸무게, 성별
+        //TODO: 체형 측정 API에서 체형 측정 결과를 받아오는 로직 필요
         MeasurementDto measurementDto = null; //response
-        userService.measurementUpdate(measurementDto, principalDetails.getUser().getId());
         return new ResponseEntity<>(measurementDto, HttpStatus.OK);
     }
 
@@ -181,7 +188,7 @@ public class UserController {
             return productIds;
         }
 
-        List<ProductPreviewDto> recentProducts = userService.recentProduct(userId); //request
+        List<ProductPreviewDto> recentProducts = userService.recentProductPreview(userId); //request
         /**
          * TODO: 추천 상품 API에서 데이터를 받아오는 로직 추가 필요
          * - 해당 API에서 가져오는 상품 개수가 10개라고 가정

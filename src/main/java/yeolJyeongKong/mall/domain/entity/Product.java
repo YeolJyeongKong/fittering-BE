@@ -33,9 +33,10 @@ public class Product {
     private String gender;
 
     /**
-     * 0 : 상의(Top)
-     * 1 : 하의(Bottom)
-     * ...
+     * 0 : 아우터(Outer)
+     * 1 : 상의(Top)
+     * 2 : 원피스(Dress)
+     * 3 : 하의(Bottom)
      */
     @NonNull
     private Integer type;
@@ -53,6 +54,11 @@ public class Product {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @JsonIgnore
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "sub_category_id")
+    private SubCategory subCategory;
 
     @JsonIgnore
     @ManyToOne(fetch = LAZY)
@@ -77,7 +83,7 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<DescriptionImage> descriptionImages = new ArrayList<>();
 
-    public Product(ProductDetailDto productDto, Category category,
+    public Product(ProductDetailDto productDto, Category category, SubCategory subCategory,
                    Mall mall, List<DescriptionImage> descriptionImages) {
         price = productDto.getPrice();
         name = productDto.getName();
@@ -87,6 +93,7 @@ public class Product {
         view = 0;
         timeView = 0;
         this.category = category;
+        this.subCategory = subCategory;
         this.mall = mall;
         this.descriptionImages = descriptionImages;
     }

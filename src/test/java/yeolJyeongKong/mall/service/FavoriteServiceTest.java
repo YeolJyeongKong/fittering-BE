@@ -37,9 +37,9 @@ class FavoriteServiceTest {
     @DisplayName("유저 즐겨찾기 쇼핑몰 테스트")
     void favoriteMallTest() {
         User user = userService.save(new SignUpDto("tes", "password", "test@test.com", "M", 1, 2, 3));
-        Mall mall1 = mallService.save(new MallDto("testMall1", "testMall.com", "image.jpg", "desc", new ArrayList<>()));
-        Mall mall2 = mallService.save(new MallDto("testMall2", "testMall.com", "image.jpg", "desc", new ArrayList<>()));
-        Mall mall3 = mallService.save(new MallDto("testMall3", "testMall.com", "image.jpg", "desc", new ArrayList<>()));
+        Mall mall1 = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
+        Mall mall2 = mallService.save(new MallDto(2L, "testMall2", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
+        Mall mall3 = mallService.save(new MallDto(3L, "testMall3", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
 
         Favorite savedFavorite1 = favoriteService.saveFavoriteMall(user.getId(), mall1.getId());
         Favorite savedFavorite2 = favoriteService.saveFavoriteMall(user.getId(), mall2.getId());
@@ -69,27 +69,27 @@ class FavoriteServiceTest {
     @DisplayName("유저 좋아요 상품 테스트")
     void favoriteProductTest() {
         Category category = categoryService.save("top");
-        Mall mall = mallService.save(new MallDto("testMall", "testMall.com",
-                "image.jpg", "desc", new ArrayList<>()));
+        SubCategory subCategory = categoryService.saveSubCategory("top", "shirt");
+        Mall mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
         User user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
         List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
 
         Product product = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
-                        "image.jpg", "top", "testMall",
-                        null, null, descImgsStr),
-                category, mall, descImgs));
+                        "image.jpg", "top", "shirt", "testMall",
+                        null, null, null, null, descImgsStr),
+                category, subCategory, mall, descImgs));
         Product product2 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp2", "M", 0,
-                        "image.jpg", "top", "testMall",
-                        null, null, descImgsStr),
-                category, mall, descImgs));
+                        "image.jpg", "top", "shirt", "testMall",
+                        null, null, null, null, descImgsStr),
+                category, subCategory, mall, descImgs));
         Product product3 = productService.save(new Product(
                 new ProductDetailDto(10000, "tp3", "M", 0,
-                        "image.jpg", "top", "testMall",
-                        null, null, descImgsStr),
-                category, mall, descImgs));
+                        "image.jpg", "top", "shirt", "testMall",
+                        null, null, null, null, descImgsStr),
+                category, subCategory, mall, descImgs));
 
         favoriteService.saveFavoriteProduct(user.getId(), product.getId());
         favoriteService.saveFavoriteProduct(user.getId(), product2.getId());
@@ -110,15 +110,16 @@ class FavoriteServiceTest {
     }
 
     private static void checkMallDto(MallDto savedMallDto, MallDto findMallDto) {
+        assertThat(savedMallDto.getId()).isEqualTo(findMallDto.getId());
         assertThat(savedMallDto.getName()).isEqualTo(findMallDto.getName());
-        assertThat(savedMallDto.getUrl()).isEqualTo(findMallDto.getUrl());
         assertThat(savedMallDto.getImage()).isEqualTo(findMallDto.getImage());
-        assertThat(savedMallDto.getDescription()).isEqualTo(findMallDto.getDescription());
+        assertThat(savedMallDto.getView()).isEqualTo(findMallDto.getView());
     }
 
     private static MallDto createMallDto(Favorite favorite) {
         Mall mall = favorite.getMall();
-        return new MallDto(mall.getName(), mall.getUrl(), mall.getImage(), mall.getDescription(), new ArrayList<>());
+        return new MallDto(mall.getId(), mall.getName(), mall.getUrl(), mall.getImage(),
+                mall.getDescription(), 0, new ArrayList<>());
     }
 
     private static void compareProduct(Product savedProduct, ProductPreviewDto productPreviewDto) {

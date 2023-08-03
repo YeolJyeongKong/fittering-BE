@@ -52,6 +52,7 @@ class UserServiceTest {
 
     private User user;
     private Category category;
+    private SubCategory subCategory;
     private Mall mall;
     private Product product;
 
@@ -59,15 +60,15 @@ class UserServiceTest {
     void setUp() {
         user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         category = categoryService.save("top");
-        mall = mallService.save(new MallDto("testMall", "testMall.com",
-                "image.jpg", "desc", new ArrayList<>()));
+        subCategory = categoryService.saveSubCategory("top", "shirt");
+        mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
         List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
         List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
         product = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
-                        "image.jpg", "top",
-                        "testMall", null, null, descImgsStr),
-                category, mall, descImgs));
+                        "image.jpg", "top", "shirt",
+                        "testMall", null, null, null, null, descImgsStr),
+                category, subCategory, mall, descImgs));
     }
 
     @Test
@@ -126,7 +127,7 @@ class UserServiceTest {
     @Test
     void recentProduct() {
         userService.saveRecentProduct(user.getId(), product.getId());
-        List<ProductPreviewDto> products = userService.recentProduct(user.getId());
+        List<ProductPreviewDto> products = userService.recentProductPreview(user.getId());
         compareProduct(product, products.get(0));
     }
 

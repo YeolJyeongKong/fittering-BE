@@ -4,6 +4,8 @@ import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +13,8 @@ import yeolJyeongKong.mall.domain.dto.*;
 import yeolJyeongKong.mall.domain.entity.*;
 import yeolJyeongKong.mall.repository.*;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,8 +90,12 @@ public class UserService {
         optionalMeasurement.get().update(measurementDto);
     }
 
-    public List<ProductPreviewDto> recentProduct(Long userId) {
-        return recentRepository.recentProduct(userId);
+    public List<ProductPreviewDto> recentProductPreview(Long userId) {
+        return recentRepository.recentProductPreview(userId);
+    }
+
+    public Page<ProductPreviewDto> recentProduct(Long userId, Pageable pageable) {
+        return recentRepository.recentProduct(userId, pageable);
     }
 
     @Transactional
@@ -187,5 +195,36 @@ public class UserService {
         });
 
         userRepository.delete(user);
+    }
+
+    @Transactional
+    public void updateRecentlastInializedAt() {
+        userRepository.findAll().forEach(user -> {
+            if (user.getRecentlastInializedAt() == null) {
+                user.updateRecentlastInializedAt();
+                return;
+            }
+
+            LocalDateTime initializeAt = user.getRecentlastInializedAt();
+            LocalDateTime now = LocalDateTime.now();
+            if (ChronoUnit.WEEKS.between(initializeAt, now) >= 1) {
+                user.updateRecentlastInializedAt();
+                recentRepository.initializeRecents(user.getId());
+            }
+        });
+    }
+
+    @Transactional
+    public void resetUpdatedAtOfUserRecommendation() {
+        userRepository.findAll().forEach(user -> {
+            userRecommendationRepository.deleteByUserId(user.getId());
+        });
+    }
+
+    @Transactional
+    public void resetUpdatedAtOfRecentRecommendation() {
+        userRepository.findAll().forEach(user -> {
+            recentRecommendationRepository.deleteByUserId(user.getId());
+        });
     }
 }

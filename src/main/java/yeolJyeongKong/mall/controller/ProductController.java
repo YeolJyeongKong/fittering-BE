@@ -40,14 +40,25 @@ public class ProductController {
     @PostMapping("/product/add")
     public ResponseEntity<?> save(@RequestBody ProductDetailDto productDto) {
         Category category = categoryService.findByName(productDto.getCategoryName());
+        SubCategory subCategory = categoryService.findByNameOfSubCategory(productDto.getSubCategoryName());
         Mall mall = mallService.findByName(productDto.getMallName());
         List<DescriptionImage> descriptionImages = productService.saveDescriptionImages(productDto.getDescriptionImages());
-        Product product = productService.save(new Product(productDto, category, mall, descriptionImages));
+        Product product = productService.save(new Product(productDto, category, subCategory, mall, descriptionImages));
         List<Size> sizes = new ArrayList<>();
 
         if(productDto.getType() == 0) {
+            for(OuterDto outerDto : productDto.getOuterSizes()) {
+                Size size = sizeService.saveOuter(outerDto, product);
+                sizes.add(size);
+            }
+        } else if(productDto.getType() == 1) {
             for(TopDto topDto : productDto.getTopSizes()) {
                 Size size = sizeService.saveTop(topDto, product);
+                sizes.add(size);
+            }
+        } else if(productDto.getType() == 2) {
+            for(DressDto dressDto : productDto.getDressSizes()) {
+                Size size = sizeService.saveDress(dressDto, product);
                 sizes.add(size);
             }
         } else {
@@ -60,7 +71,7 @@ public class ProductController {
         return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
     }
 
-    @Operation(summary = "카테고리별 상품 조회 메소드")
+    @Operation(summary = "카테고리별 상품 조회 메소드 (대분류)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/category/{categoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithCategory(@PathVariable("categoryId") Long categoryId,
@@ -68,6 +79,17 @@ public class ProductController {
                                                  @PathVariable("filterId") Long filterId,
                                                  Pageable pageable) {
         Page<ProductPreviewDto> products = productService.productWithCategory(categoryId, gender, filterId, pageable);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @Operation(summary = "카테고리별 상품 조회 메소드 (소분류)")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @GetMapping("/category/sub/{subCategoryId}/{gender}/{filterId}")
+    public ResponseEntity<?> productWithSubCategory(@PathVariable("subCategoryId") Long subCategoryId,
+                                                    @PathVariable("gender") String gender,
+                                                    @PathVariable("filterId") Long filterId,
+                                                    Pageable pageable) {
+        Page<ProductPreviewDto> products = productService.productWithSubCategory(subCategoryId, gender, filterId, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -79,7 +101,7 @@ public class ProductController {
         return new ResponseEntity<>(categoryWithProductCounts, HttpStatus.OK);
     }
 
-    @Operation(summary = "쇼핑몰 내 카테고리별 상품 조회 메소드")
+    @Operation(summary = "쇼핑몰 카테고리별 상품 조회 메소드 (대분류)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/malls/{mallId}/{categoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithCategoryOfMall(@PathVariable("mallId") Long mallId,
@@ -89,6 +111,20 @@ public class ProductController {
                                                        Pageable pageable) {
         Page<ProductPreviewDto> products = productService.productWithCategoryOfMall(
                 mallId, categoryId, gender, filterId, pageable
+        );
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @Operation(summary = "쇼핑몰 카테고리별 상품 조회 메소드 (소분류)")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @GetMapping("/malls/{mallId}/{subCategoryId}/{gender}/{filterId}")
+    public ResponseEntity<?> productWithSubCategoryOfMall(@PathVariable("mallId") Long mallId,
+                                                          @PathVariable("subCategoryId") Long subCategoryId,
+                                                          @PathVariable("gender") String gender,
+                                                          @PathVariable("filterId") Long filterId,
+                                                          Pageable pageable) {
+        Page<ProductPreviewDto> products = productService.productWithSubCategoryOfMall(
+                mallId, subCategoryId, gender, filterId, pageable
         );
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
@@ -103,9 +139,10 @@ public class ProductController {
 
     /**
      * product.type
-     * 0 : 상의(Top)
-     * 1 : 하의(Bottom)
-     * ...
+     * 0 : 아우터(Outer)
+     * 1 : 상의(Top)
+     * 2 : 원피스(Dress)
+     * 3 : 하의(Bottom)
      */
     @Operation(summary = "상품 상세 조회 메소드")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = {
@@ -116,16 +153,26 @@ public class ProductController {
     public ResponseEntity<?> productDetail(@PathVariable("productId") Long productId,
                                            @AuthenticationPrincipal PrincipalDetails principalDetails) {
         productService.updateView(productId); //상품 조회수
-        rankService.updateView(principalDetails.getUser().getId(), productId); //유저가 조회한 상품의 쇼핑몰 조회수
+        rankService.updateViewOnProduct(principalDetails.getUser().getId(), productId); //유저가 조회한 상품의 쇼핑몰 조회수
         userService.saveRecentProduct(principalDetails.getUser().getId(), productId); //최근 본 상품 업데이트
         Product product = productService.findById(productId);
 
         if(product.getType().equals(0)) {
+            OuterProductDto outerProduct = productService.outerProductDetail(productId);
+            return new ResponseEntity<>(outerProduct, HttpStatus.OK);
+        }
+
+        if(product.getType().equals(1)) {
             TopProductDto topProduct = productService.topProductDetail(productId);
             return new ResponseEntity<>(topProduct, HttpStatus.OK);
         }
 
-        if(product.getType().equals(1)) {
+        if(product.getType().equals(2)) {
+            DressProductDto dressProduct = productService.dressProductDetail(productId);
+            return new ResponseEntity<>(dressProduct, HttpStatus.OK);
+        }
+
+        if(product.getType().equals(3)) {
             BottomProductDto bottomProduct = productService.bottomProductDetail(productId);
             return new ResponseEntity<>(bottomProduct, HttpStatus.OK);
         }
