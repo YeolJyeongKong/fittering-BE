@@ -32,7 +32,7 @@ public class MallController {
     private final RankService rankService;
     private final FavoriteService favoriteService;
 
-    @Operation(summary = "쇼핑몰 등록 메소드")
+    @Operation(summary = "쇼핑몰 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"쇼핑몰 등록 완료\"")))
     @PostMapping("/malls")
     public ResponseEntity<?> save(@RequestBody MallDto mallDto) {
@@ -40,7 +40,7 @@ public class MallController {
         return new ResponseEntity<>("쇼핑몰 등록 완료", HttpStatus.OK);
     }
 
-    @Operation(summary = "쇼핑몰 조회 메소드")
+    @Operation(summary = "쇼핑몰 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MallDto.class))))
     @GetMapping("/malls/{mallId}")
     public ResponseEntity<?> mallRank(@PathVariable("mallId") Long mallId,
@@ -50,7 +50,7 @@ public class MallController {
         return new ResponseEntity<>(mallDto, HttpStatus.OK);
     }
 
-    @Operation(summary = "쇼핑몰 랭킹 조회 메소드")
+    @Operation(summary = "쇼핑몰 랭킹 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MallDto.class))))
     @GetMapping("/malls/rank")
     public ResponseEntity<?> mallRank(@AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -58,7 +58,7 @@ public class MallController {
         return new ResponseEntity<>(mallDtos, HttpStatus.OK);
     }
 
-    @Operation(summary = "쇼핑몰 랭킹 조회 메소드 (미리보기)")
+    @Operation(summary = "쇼핑몰 랭킹 조회 (미리보기)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MallPreviewDto.class)))
     @GetMapping("/malls/rank/preview")
     public ResponseEntity<?> mallRankPreview(@AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -68,7 +68,7 @@ public class MallController {
         return new ResponseEntity<>(mallDtos, HttpStatus.OK);
     }
 
-    @Operation(summary = "모바일 환경 쇼핑몰 랭킹 조회 메소드 (미리보기)")
+    @Operation(summary = "모바일 환경 쇼핑몰 랭킹 조회 (미리보기)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MallPreviewDto.class)))
     @GetMapping("/malls/rank/preview/mobile")
     public ResponseEntity<?> mallRankPreviewMobile(@AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -78,7 +78,7 @@ public class MallController {
         return new ResponseEntity<>(mallDtos, HttpStatus.OK);
     }
 
-    @Operation(summary = "즐겨찾기 쇼핑몰 상세 조회 메소드")
+    @Operation(summary = "즐겨찾기 쇼핑몰 상세 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MallDto.class)))
     @GetMapping("/malls/favorite_malls")
     public ResponseEntity<?> favoriteMall(@AuthenticationPrincipal PrincipalDetails principalDetails) {

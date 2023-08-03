@@ -35,7 +35,7 @@ public class ProductController {
     private final SizeService sizeService;
     private final RankService rankService;
 
-    @Operation(summary = "상품 등록 메소드")
+    @Operation(summary = "상품 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"상품 등록 완료\"")))
     @PostMapping("/product")
     public ResponseEntity<?> save(@RequestBody ProductDetailDto productDto) {
@@ -71,7 +71,7 @@ public class ProductController {
         return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
     }
 
-    @Operation(summary = "카테고리별 상품 조회 메소드 (대분류)")
+    @Operation(summary = "카테고리별 상품 조회 (대분류)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/category/{categoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithCategory(@PathVariable("categoryId") Long categoryId,
@@ -82,7 +82,7 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @Operation(summary = "카테고리별 상품 조회 메소드 (소분류)")
+    @Operation(summary = "카테고리별 상품 조회 (소분류)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/category/sub/{subCategoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithSubCategory(@PathVariable("subCategoryId") Long subCategoryId,
@@ -93,7 +93,7 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @Operation(summary = "카테고리별 상품 개수 조회 메소드")
+    @Operation(summary = "카테고리별 상품 개수 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductCategoryDto.class))))
     @GetMapping("/category/count")
     public ResponseEntity<?> multipleProductCountWithCategory() {
@@ -101,7 +101,7 @@ public class ProductController {
         return new ResponseEntity<>(categoryWithProductCounts, HttpStatus.OK);
     }
 
-    @Operation(summary = "쇼핑몰 카테고리별 상품 조회 메소드 (대분류)")
+    @Operation(summary = "쇼핑몰 카테고리별 상품 조회 (대분류)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/malls/{mallId}/{categoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithCategoryOfMall(@PathVariable("mallId") Long mallId,
@@ -115,7 +115,7 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @Operation(summary = "쇼핑몰 카테고리별 상품 조회 메소드 (소분류)")
+    @Operation(summary = "쇼핑몰 카테고리별 상품 조회 (소분류)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/malls/{mallId}/{subCategoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithSubCategoryOfMall(@PathVariable("mallId") Long mallId,
@@ -129,7 +129,7 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @Operation(summary = "쇼핑몰 내 카테고리별 상품 개수 조회 메소드")
+    @Operation(summary = "쇼핑몰 내 카테고리별 상품 개수 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductCategoryDto.class))))
     @GetMapping("/malls/{mallId}/category/count")
     public ResponseEntity<?> productCountWithCategoryOfMall(@PathVariable("mallId") Long mallId) {
@@ -144,7 +144,7 @@ public class ProductController {
      * 2 : 원피스(Dress)
      * 3 : 하의(Bottom)
      */
-    @Operation(summary = "상품 상세 조회 메소드")
+    @Operation(summary = "상품 상세 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = {
             @Content(schema = @Schema(implementation = TopProductDto.class)),
             @Content(schema = @Schema(implementation = BottomProductDto.class))

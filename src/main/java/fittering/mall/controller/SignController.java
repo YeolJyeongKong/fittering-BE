@@ -25,7 +25,7 @@ public class SignController {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Operation(summary = "로그인 메소드")
+    @Operation(summary = "로그인")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "{token}")))
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
@@ -37,7 +37,7 @@ public class SignController {
         return new ResponseEntity<>(jwtTokenProvider.createToken(user.getEmail(), user.getRoles()), HttpStatus.OK);
     }
 
-    @Operation(summary = "회원가입 메소드")
+    @Operation(summary = "회원가입")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = SignUpDto.class)))
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody SignUpDto signUpDto) {

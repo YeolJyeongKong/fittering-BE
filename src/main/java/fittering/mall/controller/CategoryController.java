@@ -20,7 +20,7 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @Operation(summary = "카테고리 등록 메소드")
+    @Operation(summary = "카테고리 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"카테고리 등록 완료\"")))
     @PostMapping("/category/{categoryName}")
     public ResponseEntity<?> save(@PathVariable("categoryName") String categoryName) {
@@ -28,7 +28,7 @@ public class CategoryController {
         return new ResponseEntity<>("카테고리 등록 완료", HttpStatus.OK);
     }
 
-    @Operation(summary = "세부 카테고리 등록 메소드")
+    @Operation(summary = "세부 카테고리 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"카테고리 등록 완료\"")))
     @PostMapping("/category/sub/{categoryName}/{subCategoryName}")
     public ResponseEntity<?> saveSubCategory(@PathVariable("categoryName") String categoryName,

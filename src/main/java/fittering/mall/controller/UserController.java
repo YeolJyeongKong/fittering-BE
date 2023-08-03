@@ -38,7 +38,7 @@ public class UserController {
     private final FavoriteService favoriteService;
     private final RankService rankService;
 
-    @Operation(summary = "마이페이지 조회 메소드")
+    @Operation(summary = "마이페이지 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserDto.class)))
     @GetMapping("/user/mypage")
     public ResponseEntity<?> edit(@AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -46,7 +46,7 @@ public class UserController {
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
-    @Operation(summary = "마이페이지 수정 메소드")
+    @Operation(summary = "마이페이지 수정")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserDto.class)))
     @PostMapping("/user/mypage")
     public ResponseEntity<?> edit(@RequestBody UserDto userDto,
@@ -55,7 +55,7 @@ public class UserController {
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
-    @Operation(summary = "비밀번호 수정 메소드")
+    @Operation(summary = "비밀번호 수정")
     @ApiResponses (value = {
             @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"비밀번호 변경 성공\""))),
             @ApiResponse(responseCode = "401", description = "FAIL", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"현재 비밀번호 인증 실패\"")))
@@ -72,7 +72,7 @@ public class UserController {
         return new ResponseEntity<>("현재 비밀번호 인증 실패", HttpStatus.UNAUTHORIZED);
     }
 
-    @Operation(summary = "체형 정보 조회 메소드")
+    @Operation(summary = "체형 정보 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MeasurementDto.class)))
     @GetMapping("/user/mysize")
     public ResponseEntity<?> measurementEdit(@AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -80,7 +80,7 @@ public class UserController {
         return new ResponseEntity<>(measurementDto, HttpStatus.OK);
     }
 
-    @Operation(summary = "체형 정보 수정 메소드")
+    @Operation(summary = "체형 정보 수정")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MeasurementDto.class)))
     @PostMapping("/user/mysize")
     public ResponseEntity<?> measurementEdit(@RequestBody MeasurementDto measurementDto,
@@ -89,7 +89,7 @@ public class UserController {
         return new ResponseEntity<>(measurementDto, HttpStatus.OK);
     }
 
-    @Operation(summary = "유저 즐겨찾기 상품 조회 메소드")
+    @Operation(summary = "유저 즐겨찾기 상품 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/user/favorite_goods")
     public ResponseEntity<?> favoriteProduct(@AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -100,7 +100,7 @@ public class UserController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @Operation(summary = "유저 즐겨찾기 상품 등록 메소드")
+    @Operation(summary = "유저 즐겨찾기 상품 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"유저 즐겨찾기 상품 등록 완료\"")))
     @PostMapping("/user/favorite_goods/{productId}")
     public ResponseEntity<?> saveFavoriteProduct(@PathVariable("productId") Long productId,
@@ -109,7 +109,7 @@ public class UserController {
         return new ResponseEntity<>("유저 즐겨찾기 상품 등록 완료", HttpStatus.OK);
     }
 
-    @Operation(summary = "유저 즐겨찾기 상품 삭제 메소드")
+    @Operation(summary = "유저 즐겨찾기 상품 삭제")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"유저 즐겨찾기 상품 삭제 완료\"")))
     @DeleteMapping("/user/favorite_goods/{productId}")
     public ResponseEntity<?> deleteFavoriteProduct(@PathVariable("productId") Long productId,
@@ -118,7 +118,7 @@ public class UserController {
         return new ResponseEntity<>("유저 즐겨찾기 상품 삭제 완료", HttpStatus.OK);
     }
 
-    @Operation(summary = "유저 최근 본 상품 조회 메소드 (미리보기)")
+    @Operation(summary = "유저 최근 본 상품 조회 (미리보기)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/user/recent/preview")
     public ResponseEntity<?> recentProductPreview(@AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -126,7 +126,7 @@ public class UserController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @Operation(summary = "유저 최근 본 상품 조회 메소드")
+    @Operation(summary = "유저 최근 본 상품 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/user/recent")
     public ResponseEntity<?> recentProduct(@AuthenticationPrincipal PrincipalDetails principalDetails,
@@ -135,7 +135,7 @@ public class UserController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @Operation(summary = "체형 스마트 분석 메소드")
+    @Operation(summary = "체형 스마트 분석")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MeasurementDto.class))))
     @PostMapping("/user/recommendation/measurement")
     public ResponseEntity<?> recommendMeasurement(@RequestBody SmartMeasurementDto smartMeasurementDto,
@@ -158,7 +158,7 @@ public class UserController {
      * > 일정 주기를 두고 "초기화" == ML 학습 주기를 기준
      *   으로 하기로 했는데 재학습을 하지 않는다는 말이 있어서 일단 보류
      */
-    @Operation(summary = "추천 상품 조회 메소드 (미리보기)")
+    @Operation(summary = "추천 상품 조회 (미리보기)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/user/recommendation/preview")
     public ResponseEntity<?> recommendProductPreview(@AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -167,7 +167,7 @@ public class UserController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @Operation(summary = "추천 상품 조회 메소드")
+    @Operation(summary = "추천 상품 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/user/recommendation")
     public ResponseEntity<?> recommendProduct(@AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -215,7 +215,7 @@ public class UserController {
      * > 일정 주기를 두고 "초기화" == ML 학습 주기를 기준
      *   으로 하기로 했는데 재학습을 하지 않는다는 말이 있어서 일단 보류
      */
-    @Operation(summary = "비슷한 체형 고객 pick 조회 메소드 (미리보기)")
+    @Operation(summary = "비슷한 체형 고객 pick 조회 (미리보기)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/user/recommendation/pick/preview")
     public ResponseEntity<?> recommendProductPreviewOnPick(@AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -224,7 +224,7 @@ public class UserController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @Operation(summary = "비슷한 체형 고객 pick 조회 메소드")
+    @Operation(summary = "비슷한 체형 고객 pick 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
     @GetMapping("/user/recommendation/pick")
     public ResponseEntity<?> recommendProductOnPick(@AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -261,7 +261,7 @@ public class UserController {
         return productIds;
     }
 
-    @Operation(summary = "유저 즐겨찾기 쇼핑몰 등록 메소드")
+    @Operation(summary = "유저 즐겨찾기 쇼핑몰 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"즐겨찾기 등록 완료\"")))
     @PostMapping("/favorite/{mallId}")
     public ResponseEntity<?> setFavoriteMall(@PathVariable("mallId") Long mallId,
@@ -270,7 +270,7 @@ public class UserController {
         return new ResponseEntity<>("즐겨찾기 등록 완료", HttpStatus.OK);
     }
 
-    @Operation(summary = "유저 즐겨찾기 쇼핑몰 삭제 메소드")
+    @Operation(summary = "유저 즐겨찾기 쇼핑몰 삭제")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"즐겨찾기 삭제 완료\"")))
     @DeleteMapping("/favorite/{mallId}")
     public ResponseEntity<?> deleteFavoriteMall(@PathVariable("mallId") Long mallId,

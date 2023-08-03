@@ -25,7 +25,7 @@ public class SearchController {
 
     private final SearchService searchService;
 
-    @Operation(summary = "검색 메소드")
+    @Operation(summary = "검색")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ProductPreviewDto.class)))
     @GetMapping("/search/{keyword}/{gender}/{filterId}")
     public ResponseEntity<?> search(@PathVariable("keyword") String keyword,
