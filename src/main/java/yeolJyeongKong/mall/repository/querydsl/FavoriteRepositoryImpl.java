@@ -1,6 +1,5 @@
 package yeolJyeongKong.mall.repository.querydsl;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
@@ -16,6 +15,7 @@ import static yeolJyeongKong.mall.domain.entity.QFavorite.favorite;
 import static yeolJyeongKong.mall.domain.entity.QMall.mall;
 import static yeolJyeongKong.mall.domain.entity.QProduct.product;
 import static yeolJyeongKong.mall.domain.entity.QUser.user;
+import static yeolJyeongKong.mall.repository.querydsl.EqualMethod.userIdEq;
 
 public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
 
@@ -91,9 +91,5 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
                 .delete(favorite)
                 .where(favorite.user.id.eq(userId).and(favorite.product.id.eq(productId)))
                 .execute();
-    }
-
-    public BooleanExpression userIdEq(Long userId) {
-        return userId != null ? user.id.eq(userId) : null;
     }
 }

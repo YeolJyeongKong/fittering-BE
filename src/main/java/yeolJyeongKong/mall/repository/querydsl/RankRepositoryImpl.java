@@ -1,6 +1,5 @@
 package yeolJyeongKong.mall.repository.querydsl;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +11,7 @@ import java.util.List;
 import static yeolJyeongKong.mall.domain.entity.QMall.mall;
 import static yeolJyeongKong.mall.domain.entity.QRank.rank;
 import static yeolJyeongKong.mall.domain.entity.QUser.user;
+import static yeolJyeongKong.mall.repository.querydsl.EqualMethod.userIdEq;
 
 public class RankRepositoryImpl implements RankRepositoryCustom {
 
@@ -52,9 +52,5 @@ public class RankRepositoryImpl implements RankRepositoryCustom {
                 )
                 .orderBy(rank.view.desc())
                 .fetch();
-    }
-
-    public BooleanExpression userIdEq(Long userId) {
-        return userId != null ? user.id.eq(userId) : null;
     }
 }

@@ -1,9 +1,7 @@
 package yeolJyeongKong.mall.repository.querydsl;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import org.springframework.util.StringUtils;
 import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
 import yeolJyeongKong.mall.domain.dto.QProductPreviewDto;
 
@@ -12,6 +10,8 @@ import java.util.List;
 import static yeolJyeongKong.mall.domain.entity.QFavorite.favorite;
 import static yeolJyeongKong.mall.domain.entity.QMall.mall;
 import static yeolJyeongKong.mall.domain.entity.QProduct.product;
+import static yeolJyeongKong.mall.repository.querydsl.EqualMethod.favoriteIdEq;
+import static yeolJyeongKong.mall.repository.querydsl.EqualMethod.mallNameEq;
 
 public class MallRepositoryImpl implements MallRepositoryCustom {
 
@@ -51,13 +51,5 @@ public class MallRepositoryImpl implements MallRepositoryCustom {
                 )
                 .fetchOne();
         return nullableCount != null ? nullableCount : 0L;
-    }
-
-    public BooleanExpression favoriteIdEq(Long favoriteId) {
-        return favoriteId != null ? favorite.id.eq(favoriteId) : null;
-    }
-
-    public BooleanExpression mallNameEq(String mallName) {
-        return StringUtils.hasText(mallName) ? mall.name.eq(mallName) : null;
     }
 }

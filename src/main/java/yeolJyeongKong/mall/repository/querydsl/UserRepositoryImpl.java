@@ -1,12 +1,12 @@
 package yeolJyeongKong.mall.repository.querydsl;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import yeolJyeongKong.mall.domain.dto.*;
 
 import static yeolJyeongKong.mall.domain.entity.QMeasurement.measurement;
 import static yeolJyeongKong.mall.domain.entity.QUser.user;
+import static yeolJyeongKong.mall.repository.querydsl.EqualMethod.userIdEq;
 
 public class UserRepositoryImpl implements UserRepositoryCustom {
 
@@ -54,9 +54,5 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                         userIdEq(userId)
                 )
                 .fetchOne();
-    }
-
-    public BooleanExpression userIdEq(Long userId) {
-        return userId != null ? user.id.eq(userId) : null;
     }
 }

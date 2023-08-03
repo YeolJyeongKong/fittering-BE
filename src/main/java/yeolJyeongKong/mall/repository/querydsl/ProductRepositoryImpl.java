@@ -2,16 +2,11 @@ package yeolJyeongKong.mall.repository.querydsl;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import org.hibernate.metamodel.model.domain.TupleType;
-import org.hibernate.sql.results.internal.TupleImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.util.StringUtils;
 import yeolJyeongKong.mall.domain.dto.*;
 import yeolJyeongKong.mall.domain.entity.*;
 
@@ -33,6 +28,7 @@ import static yeolJyeongKong.mall.domain.entity.QSubCategory.subCategory;
 import static yeolJyeongKong.mall.domain.entity.QTop.top;
 import static yeolJyeongKong.mall.domain.entity.QUser.user;
 import static yeolJyeongKong.mall.domain.entity.QUserRecommendation.userRecommendation;
+import static yeolJyeongKong.mall.repository.querydsl.EqualMethod.*;
 
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
@@ -165,7 +161,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .leftJoin(product.category, category)
                 .leftJoin(product.mall, mall)
                 .where(
-                        productNameCotnains(productName),
+                        productNameContains(productName),
                         genderEq(gender)
                 )
                 .orderBy(filter(filterId))
@@ -178,7 +174,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .from(product)
                 .leftJoin(product.category, category)
                 .where(
-                        productNameCotnains(productName),
+                        productNameContains(productName),
                         genderEq(gender)
                 )
                 .offset(pageable.getOffset())
@@ -541,67 +537,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 )
                 .fetchOne();
         return nullableCount != null ? nullableCount : 0L;
-    }
-
-    public BooleanExpression categoryIdEq(Long categoryId) {
-        return categoryId != null ? category.id.eq(categoryId) : null;
-    }
-
-    public BooleanExpression subCategoryIdEq(Long subCategoryId) {
-        return subCategoryId != null ? subCategory.id.eq(subCategoryId) : null;
-    }
-
-    public BooleanExpression userIdEq(Long userId) {
-        return userId != null ? user.id.eq(userId) : null;
-    }
-
-    /**
-     * @param gender
-     * 'M', 'F' : 남성, 여성
-     * else     : 성별 무관
-     */
-    public BooleanExpression genderEq(String gender) {
-        if(gender.equals("M") || gender.equals("F")) {
-            return product.gender.eq(gender);
-        }
-        return Expressions.asBoolean(true).isTrue();
-    }
-
-    public BooleanExpression productNameCotnains(String productName) {
-        return StringUtils.hasText(productName) ? product.name.contains(productName) : null;
-    }
-
-    public BooleanExpression mallNameEq(String mallName) {
-        return StringUtils.hasText(mallName) ? mall.name.eq(mallName) : null;
-    }
-
-    /**
-     * @param mallId
-     * null     : 전체
-     * not null : 쇼핑몰 구분
-     */
-    public BooleanExpression mallIdEq(Long mallId) {
-        return mallId != null ? mall.id.eq(mallId) : Expressions.asBoolean(true).isTrue();
-    }
-
-    public BooleanExpression productIdEq(Long productId) {
-        return productId != null ? product.id.eq(productId) : null;
-    }
-
-    public BooleanExpression favoriteIdEq(Long favoriteId) {
-        return favoriteId != null ? favorite.id.eq(favoriteId) : null;
-    }
-
-    public BooleanExpression recentIdEq(Long recentId) {
-        return recentId != null ? recent.id.eq(recentId) : null;
-    }
-
-    public BooleanExpression recentRecommendationIdEq(Long recentRecommendationId) {
-        return recentRecommendationId != null ? recentRecommendation.id.eq(recentRecommendationId) : null;
-    }
-
-    public BooleanExpression userRecommendationIdEq(Long userRecommendationId) {
-        return userRecommendationId != null ? userRecommendation.id.eq(userRecommendationId) : null;
     }
 
     public OrderSpecifier<? extends Number> filter(Long filterId) {

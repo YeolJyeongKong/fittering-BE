@@ -1,6 +1,5 @@
 package yeolJyeongKong.mall.repository.querydsl;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
@@ -8,16 +7,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import yeolJyeongKong.mall.domain.dto.ProductPreviewDto;
 import yeolJyeongKong.mall.domain.dto.QProductPreviewDto;
-import yeolJyeongKong.mall.domain.entity.QMall;
 import yeolJyeongKong.mall.domain.entity.Recent;
 
 import java.util.List;
 
-import static yeolJyeongKong.mall.domain.entity.QCategory.category;
 import static yeolJyeongKong.mall.domain.entity.QMall.mall;
 import static yeolJyeongKong.mall.domain.entity.QProduct.product;
 import static yeolJyeongKong.mall.domain.entity.QRecent.recent;
 import static yeolJyeongKong.mall.domain.entity.QUser.user;
+import static yeolJyeongKong.mall.repository.querydsl.EqualMethod.userIdEq;
 
 public class RecentRepositoryImpl implements RecentRepositoryCustom {
 
@@ -117,9 +115,5 @@ public class RecentRepositoryImpl implements RecentRepositoryCustom {
                         userIdEq(userId)
                 )
                 .execute();
-    }
-
-    public BooleanExpression userIdEq(Long userId) {
-        return userId != null ? user.id.eq(userId) : null;
     }
 }
