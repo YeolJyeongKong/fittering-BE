@@ -29,10 +29,7 @@ public class Dress {
     private Double waist;
     private Double armHall;
     private Double hip;
-
-    @NonNull
     private Double sleeve;
-
     private Double sleeveWidth;
     private Double bottomWidth;
 
