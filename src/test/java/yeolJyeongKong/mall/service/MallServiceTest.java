@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import yeolJyeongKong.mall.domain.dto.MallDto;
 import yeolJyeongKong.mall.domain.dto.ProductDetailDto;
-import yeolJyeongKong.mall.domain.entity.Category;
-import yeolJyeongKong.mall.domain.entity.DescriptionImage;
-import yeolJyeongKong.mall.domain.entity.Mall;
-import yeolJyeongKong.mall.domain.entity.Product;
+import yeolJyeongKong.mall.domain.entity.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +41,15 @@ class MallServiceTest {
         checkMall(mall3, findMall3);
 
         Category category = categoryService.save("top");
+        SubCategory subCategory = categoryService.saveSubCategory("top", "shirt");
+
         List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
         List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
         Product product = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
-                        "image.jpg", "top",
+                        "image.jpg", "top", "shirt",
                         "testMall", null, null, null, null, descImgsStr),
-                category, mall1, descImgs));
+                category, subCategory, mall1, descImgs));
         mallService.addProduct("testMall1", product.getId());
         mallService.findProducts("testMall1").forEach(productDto -> {
             assertThat(productDto.getProductId()).isEqualTo(product.getId());

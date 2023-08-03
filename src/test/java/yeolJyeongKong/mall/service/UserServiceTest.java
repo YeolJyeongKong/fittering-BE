@@ -52,6 +52,7 @@ class UserServiceTest {
 
     private User user;
     private Category category;
+    private SubCategory subCategory;
     private Mall mall;
     private Product product;
 
@@ -59,14 +60,15 @@ class UserServiceTest {
     void setUp() {
         user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         category = categoryService.save("top");
+        subCategory = categoryService.saveSubCategory("top", "shirt");
         mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
         List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
         List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
         product = productService.save(new Product(
                 new ProductDetailDto(10000, "tp1", "M", 0,
-                        "image.jpg", "top",
+                        "image.jpg", "top", "shirt",
                         "testMall", null, null, null, null, descImgsStr),
-                category, mall, descImgs));
+                category, subCategory, mall, descImgs));
     }
 
     @Test

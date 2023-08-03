@@ -27,4 +27,13 @@ public class CategoryController {
         categoryService.save(categoryName);
         return new ResponseEntity<>("카테고리 등록 완료", HttpStatus.OK);
     }
+
+    @Operation(summary = "세부 카테고리 등록 메소드")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"카테고리 등록 완료\"")))
+    @PostMapping("/category/sub/add/{categoryName}/{subCategoryName}")
+    public ResponseEntity<?> saveSubCategory(@PathVariable("categoryName") String categoryName,
+                                             @PathVariable("subCategoryName") String subCategoryName) {
+        categoryService.saveSubCategory(categoryName, subCategoryName);
+        return new ResponseEntity<>("카테고리 등록 완료", HttpStatus.OK);
+    }
 }

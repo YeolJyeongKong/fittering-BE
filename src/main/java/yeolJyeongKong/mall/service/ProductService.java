@@ -25,6 +25,7 @@ public class ProductService {
     private final RecentRecommendationRepository recentRecommendationRepository;
     private final UserRecommendationRepository userRecommendationRepository;
     private final DescriptionImageRepository descriptionImageRepository;
+    private final SubCategoryRepository subCategoryRepository;
 
     @Transactional
     public Product save(Product product) {
@@ -42,22 +43,37 @@ public class ProductService {
         return new RestPage<>(productRepository.productWithCategory(null, categoryId, gender, filterId, pageable));
     }
 
+    @Cacheable(value = "Product", key = "'1_' + #subCategoryId + '_' + #gender + '_' + #filterId + '_' + #pageable.pageNumber")
+    public RestPage<ProductPreviewDto> productWithSubCategory(Long subCategoryId, String gender, Long filterId, Pageable pageable) {
+        return new RestPage<>(productRepository.productWithSubCategory(null, subCategoryId, gender, filterId, pageable));
+    }
+
     @Cacheable(value = "MallProduct", key = "#mallId + '_' + #categoryId + '_' + #gender + '_' + #filterId +  '_' + #pageable.pageNumber")
     public RestPage<ProductPreviewDto> productWithCategoryOfMall(Long mallId, Long categoryId, String gender,
                                                              Long filterId, Pageable pageable) {
         return new RestPage<>(productRepository.productWithCategory(mallId, categoryId, gender, filterId, pageable));
     }
 
+    @Cacheable(value = "MallProduct", key = "'sub_' + #mallId + '_' + #subCategoryId + '_' + #gender + '_' + #filterId +  '_' + #pageable.pageNumber")
+    public RestPage<ProductPreviewDto> productWithSubCategoryOfMall(Long mallId, Long subCategoryId, String gender,
+                                                                 Long filterId, Pageable pageable) {
+        return new RestPage<>(productRepository.productWithSubCategory(mallId, subCategoryId, gender, filterId, pageable));
+    }
+
     @Cacheable(value = "Product", key = "'count'")
     public List<ProductCategoryDto> multipleProductCountWithCategory() {
 
-        List<Category> categories = categoryRepository.findAll();
         List<ProductCategoryDto> result = new ArrayList<>();
 
-        for (Category category : categories) {
+        categoryRepository.findAll().forEach(category -> {
             result.add(new ProductCategoryDto(category.getName(),
                     productRepository.productCountWithCategory(category.getId())));
-        }
+        });
+
+        subCategoryRepository.findAll().forEach(subCategory -> {
+            result.add(new ProductCategoryDto(subCategory.getName(),
+                    productRepository.productCountWithSubCategory(subCategory.getId())));
+        });
 
         return result;
     }
@@ -66,13 +82,17 @@ public class ProductService {
     public List<ProductCategoryDto> productCountWithCategoryOfMall(Long mallId) {
         Mall mall = mallRepository.findById(mallId)
                 .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-        List<Category> categories = categoryRepository.findAll();
         List<ProductCategoryDto> result = new ArrayList<>();
 
-        for (Category category : categories) {
+        categoryRepository.findAll().forEach(category -> {
             result.add(new ProductCategoryDto(category.getName(),
                     productRepository.productCountWithCategoryOfMall(mall.getName(), category.getId())));
-        }
+        });
+
+        subCategoryRepository.findAll().forEach(subCategory -> {
+            result.add(new ProductCategoryDto(subCategory.getName(),
+                    productRepository.productCountWithSubCategoryOfMall(mall.getName(), subCategory.getId())));
+        });
 
         return result;
     }

@@ -29,6 +29,7 @@ import static yeolJyeongKong.mall.domain.entity.QProduct.product;
 import static yeolJyeongKong.mall.domain.entity.QRecent.recent;
 import static yeolJyeongKong.mall.domain.entity.QRecentRecommendation.recentRecommendation;
 import static yeolJyeongKong.mall.domain.entity.QSize.size;
+import static yeolJyeongKong.mall.domain.entity.QSubCategory.subCategory;
 import static yeolJyeongKong.mall.domain.entity.QTop.top;
 import static yeolJyeongKong.mall.domain.entity.QUser.user;
 import static yeolJyeongKong.mall.domain.entity.QUserRecommendation.userRecommendation;
@@ -105,6 +106,50 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
+    public Page<ProductPreviewDto> productWithSubCategory(Long mallId, Long subCategoryId, String gender,
+                                                          Long filterId, Pageable pageable) {
+
+        List<ProductPreviewDto> content = queryFactory
+                .select(new QProductPreviewDto(
+                        product.id.as("productId"),
+                        product.image.as("productImage"),
+                        product.name.as("productName"),
+                        product.price,
+                        mall.name.as("mallName"),
+                        mall.url.as("mallUrl")
+                ))
+                .from(product)
+                .leftJoin(product.subCategory, subCategory)
+                .leftJoin(product.mall, mall)
+                .where(
+                        subCategoryIdEq(subCategoryId),
+                        genderEq(gender),
+                        mallIdEq(mallId)
+                )
+                .orderBy(filter(filterId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long nullableCount = queryFactory
+                .select(product.count())
+                .from(product)
+                .leftJoin(product.subCategory, subCategory)
+                .where(
+                        subCategoryIdEq(subCategoryId),
+                        genderEq(gender),
+                        mallIdEq(mallId)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchOne();
+
+        Long count = nullableCount != null ? nullableCount : 0L;
+
+        return PageableExecutionUtils.getPage(content, pageable, () -> count);
+    }
+
+    @Override
     public Page<ProductPreviewDto> searchProduct(String productName, String gender, Long filterId, Pageable pageable) {
 
         List<ProductPreviewDto> content = queryFactory
@@ -160,6 +205,20 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
+    public Long productCountWithSubCategory(Long subCategoryId) {
+        Long nullableCount = queryFactory
+                .select(product.count())
+                .from(product)
+                .leftJoin(product.subCategory, subCategory)
+                .where(
+                        subCategoryIdEq(subCategoryId)
+                )
+                .fetchOne();
+
+        return nullableCount != null ? nullableCount : 0L;
+    }
+
+    @Override
     public Long productCountWithCategoryOfMall(String mallName, Long categoryId) {
         Long nullableCount = queryFactory
                 .select(product.count())
@@ -168,6 +227,22 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .leftJoin(product.mall, mall)
                 .where(
                         categoryIdEq(categoryId),
+                        mallNameEq(mallName)
+                )
+                .fetchOne();
+
+        return nullableCount != null ? nullableCount : 0L;
+    }
+
+    @Override
+    public Long productCountWithSubCategoryOfMall(String mallName, Long subCategoryId) {
+        Long nullableCount = queryFactory
+                .select(product.count())
+                .from(product)
+                .leftJoin(product.subCategory, subCategory)
+                .leftJoin(product.mall, mall)
+                .where(
+                        subCategoryIdEq(subCategoryId),
                         mallNameEq(mallName)
                 )
                 .fetchOne();
@@ -470,6 +545,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     public BooleanExpression categoryIdEq(Long categoryId) {
         return categoryId != null ? category.id.eq(categoryId) : null;
+    }
+
+    public BooleanExpression subCategoryIdEq(Long subCategoryId) {
+        return subCategoryId != null ? subCategory.id.eq(subCategoryId) : null;
     }
 
     public BooleanExpression userIdEq(Long userId) {
