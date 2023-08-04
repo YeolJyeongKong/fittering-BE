@@ -42,14 +42,21 @@ class MallServiceTest {
 
         Category category = categoryService.save("top");
         SubCategory subCategory = categoryService.saveSubCategory("top", "shirt");
+        List<String> descImgsStr = List.of("descImage.jpg");
+        Product product = productService.save(Product.builder()
+                .price(10000)
+                .name("tp1")
+                .gender("M")
+                .type(0)
+                .image("image.jpg")
+                .view(0)
+                .timeView(0)
+                .category(category)
+                .subCategory(subCategory)
+                .mall(mall1)
+                .build());
+        List<DescriptionImage> descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
 
-        List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
-        List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
-        Product product = productService.save(new Product(
-                new ProductDetailDto(10000, "tp1", "M", 0,
-                        "image.jpg", "top", "shirt",
-                        "testMall", null, null, null, null, descImgsStr),
-                category, subCategory, mall1, descImgs));
         mallService.addProduct("testMall1", product.getId());
         mallService.findProducts("testMall1").forEach(productDto -> {
             assertThat(productDto.getProductId()).isEqualTo(product.getId());

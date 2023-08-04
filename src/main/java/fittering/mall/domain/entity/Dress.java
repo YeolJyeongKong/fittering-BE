@@ -1,10 +1,10 @@
 package fittering.mall.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import fittering.mall.domain.dto.DressDto;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
@@ -36,15 +36,17 @@ public class Dress {
     @OneToOne(mappedBy = "dress", fetch = LAZY)
     private Size size;
 
-    public Dress(DressDto dressDto) {
-        this.full = dressDto.getFull();
-        this.shoulder = dressDto.getShoulder();
-        this.chest = dressDto.getChest();
-        this.waist = dressDto.getWaist();
-        this.armHall = dressDto.getArmHall();
-        this.hip = dressDto.getHip();
-        this.sleeve = dressDto.getSleeve();
-        this.sleeveWidth = dressDto.getSleeveWidth();
-        this.bottomWidth = dressDto.getBottomWidth();
+    @Builder
+    public Dress(Double full, Double shoulder, Double chest, Double waist, Double armHall,
+                 Double hip, Double sleeve, Double sleeveWidth, Double bottomWidth) {
+        this.full = full;
+        this.shoulder = shoulder;
+        this.chest = chest;
+        this.waist = waist;
+        this.armHall = armHall;
+        this.hip = hip;
+        this.sleeve = sleeve;
+        this.sleeveWidth = sleeveWidth;
+        this.bottomWidth = bottomWidth;
     }
 }

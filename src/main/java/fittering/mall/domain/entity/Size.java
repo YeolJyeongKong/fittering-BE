@@ -2,17 +2,15 @@ package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import static jakarta.persistence.FetchType.*;
-import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = PROTECTED)
+@Builder
+@AllArgsConstructor
 public class Size {
 
     @Id @GeneratedValue
@@ -47,31 +45,6 @@ public class Size {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Size(String name, Outer outer, Product product) {
-        this.name = name;
-        this.outer = outer;
-        this.product = product;
-    }
-
-    public Size(String name, Top top, Product product) {
-        this.name = name;
-        this.top = top;
-        this.product = product;
-    }
-
-    public Size(String name, Dress dress, Product product) {
-        this.name = name;
-        this.dress = dress;
-        this.product = product;
-    }
-
-    public Size(String name, Bottom bottom, Product product) {
-        this.name = name;
-        this.bottom = bottom;
-        this.product = product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
+    protected Size() {
     }
 }

@@ -1,6 +1,7 @@
 package fittering.mall.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -32,6 +33,7 @@ public class SubCategory {
     @OneToMany(mappedBy = "subCategory")
     private List<Product> products = new ArrayList<>();
 
+    @Builder
     public SubCategory(Category category, String name) {
         this.category = category;
         this.name = name;

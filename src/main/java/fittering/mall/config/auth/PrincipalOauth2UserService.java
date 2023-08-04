@@ -15,6 +15,8 @@ import fittering.mall.domain.entity.User;
 import fittering.mall.repository.MeasurementRepository;
 import fittering.mall.repository.UserRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -41,7 +43,15 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         if (optionalUser.isEmpty()) {
             Measurement measurement = measurementRepository.save(new Measurement());
-            user = userRepository.save(new User(email, provider, providerId, measurement));
+            user = userRepository.save(User.builder()
+                                        .username(email.substring(0, email.indexOf('@')))
+                                        .email(email)
+                                        .provider(provider)
+                                        .providerId(providerId)
+                                        .providerLoginId(provider + "_" + providerId)
+                                        .measurement(measurement)
+                                        .roles(new ArrayList<>(List.of("USER")))
+                                        .build());
             return new PrincipalDetails(user, oAuth2UserInfo);
         }
 

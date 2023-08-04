@@ -1,6 +1,7 @@
 package fittering.mall.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,13 +29,10 @@ public class UserRecommendation {
 
     private LocalDateTime updatedAt;
 
-    public UserRecommendation(User user, Product product) {
+    @Builder
+    public UserRecommendation(User user, Product product, LocalDateTime updatedAt) {
         this.user = user;
         this.product = product;
-        updatedAt = LocalDateTime.now();
-    }
-
-    public void setUpdatedAt() {
-        updatedAt = LocalDateTime.now();
+        this.updatedAt = updatedAt;
     }
 }

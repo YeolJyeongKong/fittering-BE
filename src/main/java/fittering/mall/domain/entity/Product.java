@@ -2,21 +2,18 @@ package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
-import fittering.mall.domain.dto.ProductDetailDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
-import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = PROTECTED)
+@Builder
+@AllArgsConstructor
 public class Product {
 
     @Id @GeneratedValue
@@ -70,37 +67,31 @@ public class Product {
     @JoinColumn(name = "mall_id")
     private Mall mall;
 
+    @Builder.Default
     @OneToMany(mappedBy = "product")
     private List<Size> sizes = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "product")
     private List<Recent> recents = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "product")
     private List<Favorite> favorites = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "product")
     private List<UserRecommendation> userRecommendations = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "product")
     private List<RecentRecommendation> recentRecommendations = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "product")
     private List<DescriptionImage> descriptionImages = new ArrayList<>();
 
-    public Product(ProductDetailDto productDto, Category category, SubCategory subCategory,
-                   Mall mall, List<DescriptionImage> descriptionImages) {
-        price = productDto.getPrice();
-        name = productDto.getName();
-        gender = productDto.getGender();
-        type = productDto.getType();
-        image = productDto.getImage();
-        view = 0;
-        timeView = 0;
-        this.category = category;
-        this.subCategory = subCategory;
-        this.mall = mall;
-        this.descriptionImages = descriptionImages;
+    protected Product() {
     }
 
     public void updateView() {

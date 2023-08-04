@@ -1,10 +1,10 @@
 package fittering.mall.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import fittering.mall.domain.dto.OuterDto;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
@@ -15,8 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 public class Outer {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     @Column(name = "outer_id")
     private Long id;
 
@@ -34,10 +33,11 @@ public class Outer {
     @OneToOne(mappedBy = "outer", fetch = LAZY)
     private Size size;
 
-    public Outer(OuterDto outerDto) {
-        this.full = outerDto.getFull();
-        this.shoulder = outerDto.getShoulder();
-        this.chest = outerDto.getChest();
-        this.sleeve = outerDto.getSleeve();
+    @Builder
+    public Outer(Double full, Double shoulder, Double chest, Double sleeve) {
+        this.full = full;
+        this.shoulder = shoulder;
+        this.chest = chest;
+        this.sleeve = sleeve;
     }
 }

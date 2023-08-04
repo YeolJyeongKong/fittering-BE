@@ -2,6 +2,7 @@ package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -32,10 +33,11 @@ public class Rank {
     @JoinColumn(name = "mall_id")
     private Mall mall;
 
-    public Rank(User user, Mall mall) {
+    @Builder
+    public Rank(User user, Mall mall, Integer view) {
         this.user = user;
         this.mall = mall;
-        view = 0;
+        this.view = view;
     }
 
     public void updateView() {

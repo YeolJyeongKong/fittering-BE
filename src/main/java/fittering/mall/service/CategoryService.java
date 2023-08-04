@@ -16,12 +16,17 @@ public class CategoryService {
     private final SubCategoryRepository subCategoryRepository;
 
     public Category save(String categoryName) {
-        return categoryRepository.save(new Category(categoryName));
+        return categoryRepository.save(Category.builder()
+                                        .name(categoryName)
+                                        .build());
     }
 
     public SubCategory saveSubCategory(String categoryName, String subCategoryName) {
         Category category = findByName(categoryName);
-        return subCategoryRepository.save(new SubCategory(category, subCategoryName));
+        return subCategoryRepository.save(SubCategory.builder()
+                                            .category(category)
+                                            .name(subCategoryName)
+                                            .build());
     }
 
     public Category findByName(String categoryName) {

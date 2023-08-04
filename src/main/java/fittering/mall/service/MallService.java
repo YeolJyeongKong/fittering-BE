@@ -21,7 +21,12 @@ public class MallService {
     private final ProductRepository productRepository;
 
     public Mall save(MallDto mallDto) {
-        return mallRepository.save(new Mall(mallDto));
+        return mallRepository.save(Mall.builder()
+                                    .name(mallDto.getName())
+                                    .url(mallDto.getUrl())
+                                    .image(mallDto.getImage())
+                                    .description(mallDto.getDescription())
+                                    .build());
     }
 
     public Mall findById(Long mallId) {

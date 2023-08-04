@@ -34,7 +34,11 @@ public class RankService {
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
         Mall mall = mallRepository.findById(mallId)
                 .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-        return rankRepository.save(new Rank(user, mall));
+        return rankRepository.save(Rank.builder()
+                                    .user(user)
+                                    .mall(mall)
+                                    .view(0)
+                                    .build());
     }
 
     public Rank findById(Long rankId) {
@@ -86,8 +90,11 @@ public class RankService {
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
         Mall mall = mallRepository.findById(product.getMall().getId())
                 .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-        rank = rankRepository.save(new Rank(user, mall));
-
+        rank = rankRepository.save(Rank.builder()
+                                    .user(user)
+                                    .mall(mall)
+                                    .view(0)
+                                    .build());
         rank.updateView();
     }
 
@@ -106,9 +113,11 @@ public class RankService {
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
         Mall mall = mallRepository.findById(mallId)
                 .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-
-        rank = rankRepository.save(new Rank(user, mall));
-
+        rank = rankRepository.save(Rank.builder()
+                                    .user(user)
+                                    .mall(mall)
+                                    .view(0)
+                                    .build());
         rank.updateView();
     }
 }

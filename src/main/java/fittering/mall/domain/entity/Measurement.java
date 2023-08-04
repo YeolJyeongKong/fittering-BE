@@ -2,15 +2,17 @@ package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import fittering.mall.domain.dto.MeasurementDto;
 
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Measurement {
 
     @Id @GeneratedValue
@@ -30,6 +32,9 @@ public class Measurement {
     @JsonIgnore
     @OneToOne(mappedBy = "measurement", fetch = LAZY)
     private User user;
+
+    public Measurement() {
+    }
 
     public void update(MeasurementDto measurementDto) {
         height = measurementDto.getHeight();

@@ -2,11 +2,11 @@ package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
-import fittering.mall.domain.dto.SignUpDto;
 import fittering.mall.domain.dto.UserDto;
 
 import java.time.Duration;
@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.*;
-import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = PROTECTED)
+@Builder
+@AllArgsConstructor
 public class User {
 
     @Id @GeneratedValue
@@ -63,6 +63,7 @@ public class User {
     private Integer ageRange;
 
     @NonNull
+    @Builder.Default
     @ElementCollection(fetch = EAGER)
     private List<String> roles = new ArrayList<>();
 
@@ -70,6 +71,7 @@ public class User {
     private String providerId;
     private String providerLoginId; //{provider}_{providerId}
 
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<Favorite> favorites = new ArrayList<>();
 
@@ -77,41 +79,25 @@ public class User {
     @JoinColumn(name = "measurement_id")
     private Measurement measurement;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<Rank> ranks = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", fetch = LAZY)
     private List<Recent> recents = new ArrayList<>();
 
+    @Builder.Default
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = LAZY)
     private List<UserRecommendation> userRecommendations = new ArrayList<>();
 
+    @Builder.Default
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = LAZY)
     private List<RecentRecommendation> recentRecommendations = new ArrayList<>();
 
-    public User(SignUpDto signUpDto, String password, Measurement measurement) {
-        email = signUpDto.getEmail();
-        username = signUpDto.getUsername();
-        gender = signUpDto.getGender();
-        year = signUpDto.getYear();
-        month = signUpDto.getMonth();
-        day = signUpDto.getDay();
-        ageRange = getAgeRange(year, month, day);
-        this.password = password;
-        this.measurement = measurement;
-        roles.add("USER");
-    }
-
-    public User(String email, String provider, String providerId, Measurement measurement) {
-        username = email.substring(0, email.indexOf('@'));
-        providerLoginId = provider + "_" + providerId;
-        this.email = email;
-        this.provider = provider;
-        this.providerId = providerId;
-        this.measurement = measurement;
-        roles.add("USER");
+    protected User() {
     }
 
     public void update(UserDto userDto) {
@@ -126,7 +112,7 @@ public class User {
         this.password = password;
     }
 
-    private Integer getAgeRange(Integer year, Integer month, Integer day) {
+    public static Integer getAgeRange(Integer year, Integer month, Integer day) {
         LocalDate birthDate = LocalDate.of(year, month, day);
         LocalDate currentDate = LocalDate.now();
 

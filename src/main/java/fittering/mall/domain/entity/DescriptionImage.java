@@ -2,6 +2,7 @@ package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -26,7 +27,9 @@ public class DescriptionImage {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public DescriptionImage(String url) {
+    @Builder
+    public DescriptionImage(String url, Product product) {
         this.url = url;
+        this.product = product;
     }
 }

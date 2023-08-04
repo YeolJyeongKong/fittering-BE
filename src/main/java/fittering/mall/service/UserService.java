@@ -15,6 +15,7 @@ import fittering.mall.repository.*;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +40,18 @@ public class UserService {
     @Transactional
     public User save(SignUpDto signUpDto) {
         Measurement measurement = measurementRepository.save(new Measurement());
-        User user = new User(signUpDto, passwordEncoder.encode(signUpDto.getPassword()), measurement);
+        User user = User.builder()
+                        .email(signUpDto.getEmail())
+                        .username(signUpDto.getUsername())
+                        .gender(signUpDto.getGender())
+                        .year(signUpDto.getYear())
+                        .month(signUpDto.getMonth())
+                        .day(signUpDto.getDay())
+                        .ageRange(User.getAgeRange(signUpDto.getYear(), signUpDto.getMonth(), signUpDto.getDay()))
+                        .password(passwordEncoder.encode(signUpDto.getPassword()))
+                        .measurement(measurement)
+                        .roles(new ArrayList<>(List.of("USER")))
+                        .build();
         return userRepository.save(user);
     }
 
@@ -98,7 +110,11 @@ public class UserService {
         User user = findById(userId);
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResultException("product dosen't exist"));
-        return recentRepository.save(new Recent(user, product));
+        return recentRepository.save(Recent.builder()
+                                        .timestamp(LocalDateTime.now())
+                                        .user(user)
+                                        .product(product)
+                                        .build());
     }
 
     public User login(LoginDto loginDto) {

@@ -1,11 +1,11 @@
 package fittering.mall.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
-import fittering.mall.domain.dto.MallDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,11 +42,12 @@ public class Mall {
     @OneToMany(mappedBy = "mall")
     private List<Favorite> favorites = new ArrayList<>();
 
-    public Mall(MallDto mallDto) {
-        this.name = mallDto.getName();
-        this.url = mallDto.getUrl();
-        this.image = mallDto.getImage();
-        this.description = mallDto.getDescription();
+    @Builder
+    public Mall(String name, String url, String image, String description) {
+        this.name = name;
+        this.url = url;
+        this.image = image;
+        this.description = description;
     }
 
     public void deleteRank() {

@@ -65,8 +65,10 @@ public class FavoriteService {
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
         Mall mall = mallRepository.findById(mallId)
                 .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-
-        return favoriteRepository.save(new Favorite(user, mall));
+        return favoriteRepository.save(Favorite.builder()
+                                        .user(user)
+                                        .mall(mall)
+                                        .build());
     }
 
     @CacheEvict(value = "UserFavoriteMall", key = "#userId")
@@ -85,8 +87,10 @@ public class FavoriteService {
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResultException("product doesn't exist"));
-
-        return favoriteRepository.save(new Favorite(user, product));
+        return favoriteRepository.save(Favorite.builder()
+                                        .user(user)
+                                        .product(product)
+                                        .build());
     }
 
     @Transactional

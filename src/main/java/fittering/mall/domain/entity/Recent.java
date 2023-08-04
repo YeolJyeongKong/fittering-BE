@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -39,8 +40,9 @@ public class Recent {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Recent(User user, Product product) {
-        timestamp = LocalDateTime.now();
+    @Builder
+    public Recent(LocalDateTime timestamp, User user, Product product) {
+        this.timestamp = timestamp;
         this.user = user;
         this.product = product;
     }

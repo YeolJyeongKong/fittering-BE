@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import fittering.mall.domain.dto.MailDto;
+import fittering.mall.domain.dto.service.MailDto;
 
 @Slf4j
 @Service
@@ -23,12 +23,22 @@ public class MailService {
     private String fromAddress;
 
     public MailDto createMail(String tmpPassword, String to) {
-        return new MailDto(fromAddress, to, title, message + tmpPassword);
+        return MailDto.builder()
+                    .from(fromAddress)
+                    .to(to)
+                    .title(title)
+                    .message(message + tmpPassword)
+                    .build();
     }
 
     public void sendMail(MailDto mailDto) {
-        SimpleMailMessage mailMessage = new CustomMailMessage(mailDto.getTo(), mailDto.getTitle(),
-                mailDto.getMessage(), mailDto.getFrom(), mailDto.getFrom());
+        SimpleMailMessage mailMessage = CustomMailMessage.builder()
+                                                    .to(mailDto.getTo())
+                                                    .title(mailDto.getTitle())
+                                                    .msg(mailDto.getMessage())
+                                                    .from(mailDto.getFrom())
+                                                    .replyTo(mailDto.getFrom())
+                                                    .build();
         mailSender.send(mailMessage);
     }
 }

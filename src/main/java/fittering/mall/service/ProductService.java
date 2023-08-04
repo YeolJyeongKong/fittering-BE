@@ -11,6 +11,7 @@ import fittering.mall.domain.dto.*;
 import fittering.mall.domain.entity.*;
 import fittering.mall.repository.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,7 +143,10 @@ public class ProductService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
         Product product = findById(productId);
-        return recentRecommendationRepository.save(new RecentRecommendation(user, product));
+        return recentRecommendationRepository.save(RecentRecommendation.builder()
+                                                    .user(user)
+                                                    .product(product)
+                                                    .build());
     }
 
     @Transactional
@@ -150,7 +154,11 @@ public class ProductService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
         Product product = findById(productId);
-        return userRecommendationRepository.save(new UserRecommendation(user, product));
+        return userRecommendationRepository.save(UserRecommendation.builder()
+                                                    .user(user)
+                                                    .product(product)
+                                                    .updatedAt(LocalDateTime.now())
+                                                    .build());
     }
 
     public List<Product> productWithRecentRecommendation(Long userId) {
@@ -168,10 +176,13 @@ public class ProductService {
     }
 
     @Transactional
-    public List<DescriptionImage> saveDescriptionImages(List<String> descriptionImages) {
+    public List<DescriptionImage> saveDescriptionImages(List<String> descriptionImages, Product product) {
         List<DescriptionImage> result = new ArrayList<>();
         descriptionImages.forEach(descriptionImageUrl -> {
-            DescriptionImage descriptionImage = new DescriptionImage(descriptionImageUrl);
+            DescriptionImage descriptionImage = DescriptionImage.builder()
+                                                    .url(descriptionImageUrl)
+                                                    .product(product)
+                                                    .build();
             result.add(descriptionImageRepository.save(descriptionImage));
         });
         return result;

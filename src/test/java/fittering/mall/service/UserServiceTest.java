@@ -62,13 +62,20 @@ class UserServiceTest {
         category = categoryService.save("top");
         subCategory = categoryService.saveSubCategory("top", "shirt");
         mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
-        List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
-        List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
-        product = productService.save(new Product(
-                new ProductDetailDto(10000, "tp1", "M", 0,
-                        "image.jpg", "top", "shirt",
-                        "testMall", null, null, null, null, descImgsStr),
-                category, subCategory, mall, descImgs));
+        List<String> descImgsStr = List.of("descImage.jpg");
+        product = productService.save(Product.builder()
+                .price(10000)
+                .name("tp1")
+                .gender("M")
+                .type(0)
+                .image("image.jpg")
+                .view(0)
+                .timeView(0)
+                .category(category)
+                .subCategory(subCategory)
+                .mall(mall)
+                .build());
+        List<DescriptionImage> descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
     }
 
     @Test

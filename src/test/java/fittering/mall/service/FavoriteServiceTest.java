@@ -72,24 +72,48 @@ class FavoriteServiceTest {
         SubCategory subCategory = categoryService.saveSubCategory("top", "shirt");
         Mall mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
         User user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
-        List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
-        List<DescriptionImage> descImgs = new ArrayList<>(){{ add(new DescriptionImage(descImgsStr.get(0))); }};
+        List<String> descImgsStr = List.of("descImage.jpg");
 
-        Product product = productService.save(new Product(
-                new ProductDetailDto(10000, "tp1", "M", 0,
-                        "image.jpg", "top", "shirt", "testMall",
-                        null, null, null, null, descImgsStr),
-                category, subCategory, mall, descImgs));
-        Product product2 = productService.save(new Product(
-                new ProductDetailDto(10000, "tp2", "M", 0,
-                        "image.jpg", "top", "shirt", "testMall",
-                        null, null, null, null, descImgsStr),
-                category, subCategory, mall, descImgs));
-        Product product3 = productService.save(new Product(
-                new ProductDetailDto(10000, "tp3", "M", 0,
-                        "image.jpg", "top", "shirt", "testMall",
-                        null, null, null, null, descImgsStr),
-                category, subCategory, mall, descImgs));
+        Product product = productService.save(Product.builder()
+                                                .price(10000)
+                                                .name("tp1")
+                                                .gender("M")
+                                                .type(0)
+                                                .image("image.jpg")
+                                                .view(0)
+                                                .timeView(0)
+                                                .category(category)
+                                                .subCategory(subCategory)
+                                                .mall(mall)
+                                                .build());
+        Product product2 = productService.save(Product.builder()
+                                                .price(10000)
+                                                .name("tp2")
+                                                .gender("M")
+                                                .type(0)
+                                                .image("image.jpg")
+                                                .view(0)
+                                                .timeView(0)
+                                                .category(category)
+                                                .subCategory(subCategory)
+                                                .mall(mall)
+                                                .build());
+        Product product3 = productService.save(Product.builder()
+                                                .price(10000)
+                                                .name("tp3")
+                                                .gender("M")
+                                                .type(0)
+                                                .image("image.jpg")
+                                                .view(0)
+                                                .timeView(0)
+                                                .category(category)
+                                                .subCategory(subCategory)
+                                                .mall(mall)
+                                                .build());
+
+        List<DescriptionImage> descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
+        List<DescriptionImage> descImgs2 = List.of(new DescriptionImage(descImgsStr.get(0), product2));
+        List<DescriptionImage> descImgs3 = List.of(new DescriptionImage(descImgsStr.get(0), product3));
 
         favoriteService.saveFavoriteProduct(user.getId(), product.getId());
         favoriteService.saveFavoriteProduct(user.getId(), product2.getId());

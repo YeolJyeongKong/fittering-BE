@@ -1,10 +1,10 @@
 package fittering.mall.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import fittering.mall.domain.dto.TopDto;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
@@ -32,10 +32,11 @@ public class Top {
     @OneToOne(mappedBy = "top", fetch = LAZY)
     private Size size;
 
-    public Top(TopDto topDto) {
-        this.full = topDto.getFull();
-        this.shoulder = topDto.getShoulder();
-        this.chest = topDto.getChest();
-        this.sleeve = topDto.getSleeve();
+    @Builder
+    public Top(Double full, Double shoulder, Double chest, Double sleeve) {
+        this.full = full;
+        this.shoulder = shoulder;
+        this.chest = chest;
+        this.sleeve = sleeve;
     }
 }

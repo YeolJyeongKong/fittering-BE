@@ -22,25 +22,68 @@ public class SizeService {
 
     @Transactional
     public Size saveOuter(OuterDto outerDto, Product product) {
-        Outer outer = outerRepository.save(new Outer(outerDto));
-        return sizeRepository.save(new Size(outerDto.getName(), outer, product));
+        Outer outer = outerRepository.save(Outer.builder()
+                                            .full(outerDto.getFull())
+                                            .shoulder(outerDto.getShoulder())
+                                            .chest(outerDto.getChest())
+                                            .sleeve(outerDto.getSleeve())
+                                            .build());
+        return sizeRepository.save(Size.builder()
+                                    .name(outerDto.getName())
+                                    .outer(outer)
+                                    .product(product)
+                                    .build());
     }
 
     @Transactional
     public Size saveTop(TopDto topDto, Product product) {
-        Top top = topRepository.save(new Top(topDto));
-        return sizeRepository.save(new Size(topDto.getName(), top, product));
+        Top top = topRepository.save(Top.builder()
+                                        .full(topDto.getFull())
+                                        .shoulder(topDto.getShoulder())
+                                        .chest(topDto.getChest())
+                                        .sleeve(topDto.getSleeve())
+                                        .build());
+        return sizeRepository.save(Size.builder()
+                                    .name(topDto.getName())
+                                    .top(top)
+                                    .product(product)
+                                    .build());
     }
 
     @Transactional
     public Size saveDress(DressDto dressDto, Product product) {
-        Dress dress = dressRepository.save(new Dress(dressDto));
-        return sizeRepository.save(new Size(dressDto.getName(), dress, product));
+        Dress dress = dressRepository.save(Dress.builder()
+                                            .full(dressDto.getFull())
+                                            .shoulder(dressDto.getShoulder())
+                                            .chest(dressDto.getChest())
+                                            .waist(dressDto.getWaist())
+                                            .armHall(dressDto.getArmHall())
+                                            .hip(dressDto.getHip())
+                                            .sleeve(dressDto.getSleeve())
+                                            .sleeveWidth(dressDto.getSleeveWidth())
+                                            .bottomWidth(dressDto.getBottomWidth())
+                                            .build());
+        return sizeRepository.save(Size.builder()
+                                    .name(dressDto.getName())
+                                    .dress(dress)
+                                    .product(product)
+                                    .build());
     }
 
     @Transactional
     public Size saveBottom(BottomDto bottomDto, Product product) {
-        Bottom bottom = bottomRepository.save(new Bottom(bottomDto));
-        return sizeRepository.save(new Size(bottomDto.getName(), bottom, product));
+        Bottom bottom = bottomRepository.save(Bottom.builder()
+                                                .full(bottomDto.getFull())
+                                                .waist(bottomDto.getWaist())
+                                                .thigh(bottomDto.getThigh())
+                                                .rise(bottomDto.getRise())
+                                                .bottomWidth(bottomDto.getBottomWidth())
+                                                .hipWidth(bottomDto.getHipWidth())
+                                                .build());
+        return sizeRepository.save(Size.builder()
+                                    .name(bottomDto.getName())
+                                    .bottom(bottom)
+                                    .product(product)
+                                    .build());
     }
 }

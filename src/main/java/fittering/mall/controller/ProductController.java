@@ -44,8 +44,19 @@ public class ProductController {
         Category category = categoryService.findByName(productDto.getCategoryName());
         SubCategory subCategory = categoryService.findByNameOfSubCategory(productDto.getSubCategoryName());
         Mall mall = mallService.findByName(productDto.getMallName());
-        List<DescriptionImage> descriptionImages = productService.saveDescriptionImages(productDto.getDescriptionImages());
-        Product product = productService.save(new Product(productDto, category, subCategory, mall, descriptionImages));
+        Product product = productService.save(Product.builder()
+                                                .price(productDto.getPrice())
+                                                .name(productDto.getName())
+                                                .gender(productDto.getGender())
+                                                .type(productDto.getType())
+                                                .image(productDto.getImage())
+                                                .view(0)
+                                                .timeView(0)
+                                                .category(category)
+                                                .subCategory(subCategory)
+                                                .mall(mall)
+                                                .build());
+        productService.saveDescriptionImages(productDto.getDescriptionImages(), product);
         List<Size> sizes = new ArrayList<>();
 
         if (productDto.getType().equals(OUTER)) {

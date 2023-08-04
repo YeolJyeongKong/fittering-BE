@@ -2,16 +2,17 @@ package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.FetchType.LAZY;
-import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = PROTECTED)
+@Builder
 @Table(name = "favorite")
+@AllArgsConstructor
 public class Favorite {
 
     @Id @GeneratedValue
@@ -33,13 +34,6 @@ public class Favorite {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Favorite(User user, Mall mall) {
-        this.user = user;
-        this.mall = mall;
-    }
-
-    public Favorite(User user, Product product) {
-        this.user = user;
-        this.product = product;
+    protected Favorite() {
     }
 }

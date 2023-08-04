@@ -2,6 +2,7 @@ package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,13 +32,10 @@ public class RecentRecommendation {
 
     private LocalDateTime updatedAt;
 
+    @Builder
     public RecentRecommendation(User user, Product product) {
         this.user = user;
         this.product = product;
-        updatedAt = LocalDateTime.now();
-    }
-
-    public void setUpdatedAt() {
         updatedAt = LocalDateTime.now();
     }
 }
