@@ -40,7 +40,6 @@ public class UserService {
     public User save(SignUpDto signUpDto) {
         Measurement measurement = measurementRepository.save(new Measurement());
         User user = new User(signUpDto, passwordEncoder.encode(signUpDto.getPassword()), measurement);
-        measurement.setUser(user);
         return userRepository.save(user);
     }
 
@@ -81,14 +80,9 @@ public class UserService {
 
     @Transactional
     public void measurementUpdate(MeasurementDto measurementDto, Long userId) {
-        Optional<Measurement> optionalMeasurement = measurementRepository.findByUserId(userId);
-        if (optionalMeasurement.isEmpty()) {
-            Measurement measurement = measurementRepository.save(new Measurement());
-            measurement.setUser(findById(userId));
-            measurement.update(measurementDto);
-            return;
-        }
-        optionalMeasurement.get().update(measurementDto);
+        Measurement measurement = measurementRepository.findByUserId(userId)
+                .orElseThrow(() -> new NoResultException("measurement dosen't exist"));
+        measurement.update(measurementDto);
     }
 
     public List<ProductPreviewDto> recentProductPreview(Long userId) {

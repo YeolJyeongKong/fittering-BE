@@ -1,5 +1,6 @@
 package fittering.mall.service;
 
+import fittering.mall.domain.CustomMailMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,18 +23,12 @@ public class MailService {
     private String fromAddress;
 
     public MailDto createMail(String tmpPassword, String to) {
-        MailDto mailDto = new MailDto(fromAddress, to, title, message + tmpPassword);
-        return mailDto;
+        return new MailDto(fromAddress, to, title, message + tmpPassword);
     }
 
     public void sendMail(MailDto mailDto) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(mailDto.getTo());
-        mailMessage.setSubject(mailDto.getTitle());
-        mailMessage.setText(mailDto.getMessage());
-        mailMessage.setFrom(mailDto.getFrom());
-        mailMessage.setReplyTo(mailDto.getFrom());
-
+        SimpleMailMessage mailMessage = new CustomMailMessage(mailDto.getTo(), mailDto.getTitle(),
+                mailDto.getMessage(), mailDto.getFrom(), mailDto.getFrom());
         mailSender.send(mailMessage);
     }
 }

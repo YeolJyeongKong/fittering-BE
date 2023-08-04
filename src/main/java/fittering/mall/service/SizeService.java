@@ -43,9 +43,4 @@ public class SizeService {
         Bottom bottom = bottomRepository.save(new Bottom(bottomDto));
         return sizeRepository.save(new Size(bottomDto.getName(), bottom, product));
     }
-
-    @Transactional
-    public void setProduct(Size size, Product product) {
-        size.setProduct(product);
-    }
 }

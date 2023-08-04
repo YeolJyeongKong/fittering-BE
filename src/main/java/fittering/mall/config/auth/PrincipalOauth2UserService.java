@@ -42,7 +42,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         if (optionalUser.isEmpty()) {
             Measurement measurement = measurementRepository.save(new Measurement());
             user = userRepository.save(new User(email, provider, providerId, measurement));
-            measurement.setUser(user);
             return new PrincipalDetails(user, oAuth2UserInfo);
         }
 

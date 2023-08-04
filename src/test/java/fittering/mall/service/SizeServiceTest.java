@@ -93,8 +93,6 @@ class SizeServiceTest {
         BottomDto bottomDto = new BottomDto("S", 104.0, 37.5, 51.5, 33.8, 28.0, 26.0);
         Size bottomSize = sizeService.saveBottom(bottomDto, product);
 
-        sizeService.setProduct(bottomSize, product);
-
         assertEquals(bottomSize.getProduct(), product);
     }
 

@@ -31,10 +31,6 @@ public class Measurement {
     @OneToOne(mappedBy = "measurement", fetch = LAZY)
     private User user;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public void update(MeasurementDto measurementDto) {
         height = measurementDto.getHeight();
         weight = measurementDto.getWeight();
