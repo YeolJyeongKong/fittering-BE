@@ -1,12 +1,12 @@
 package fittering.mall.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import fittering.mall.domain.dto.controller.response.QResponseProductPreviewDto;
+import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
-import fittering.mall.domain.dto.ProductPreviewDto;
-import fittering.mall.domain.dto.QProductPreviewDto;
 import fittering.mall.domain.entity.Favorite;
 
 import java.util.List;
@@ -40,10 +40,10 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
     }
 
     @Override
-    public Page<ProductPreviewDto> userFavoriteProduct(Long userId, Pageable pageable) {
+    public Page<ResponseProductPreviewDto> userFavoriteProduct(Long userId, Pageable pageable) {
 
-        List<ProductPreviewDto> content = queryFactory
-                .select(new QProductPreviewDto(
+        List<ResponseProductPreviewDto> content = queryFactory
+                .select(new QResponseProductPreviewDto(
                         product.id.as("productId"),
                         product.image.as("productImage"),
                         product.name.as("productName"),

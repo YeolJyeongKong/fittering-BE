@@ -1,5 +1,14 @@
 package fittering.mall.service;
 
+import fittering.mall.domain.dto.controller.request.RequestUserDto;
+import fittering.mall.domain.dto.controller.response.ResponseMeasurementDto;
+import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.domain.dto.controller.response.ResponseUserDto;
+import fittering.mall.domain.dto.service.LoginDto;
+import fittering.mall.domain.dto.service.MeasurementDto;
+import fittering.mall.domain.dto.service.SignUpDto;
+import fittering.mall.domain.mapper.MeasurementMapper;
+import fittering.mall.domain.mapper.UserMapper;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -9,15 +18,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
-import fittering.mall.domain.dto.*;
 import fittering.mall.domain.entity.*;
 import fittering.mall.repository.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -40,18 +48,8 @@ public class UserService {
     @Transactional
     public User save(SignUpDto signUpDto) {
         Measurement measurement = measurementRepository.save(new Measurement());
-        User user = User.builder()
-                        .email(signUpDto.getEmail())
-                        .username(signUpDto.getUsername())
-                        .gender(signUpDto.getGender())
-                        .year(signUpDto.getYear())
-                        .month(signUpDto.getMonth())
-                        .day(signUpDto.getDay())
-                        .ageRange(User.getAgeRange(signUpDto.getYear(), signUpDto.getMonth(), signUpDto.getDay()))
-                        .password(passwordEncoder.encode(signUpDto.getPassword()))
-                        .measurement(measurement)
-                        .roles(new ArrayList<>(List.of("USER")))
-                        .build();
+        User user = UserMapper.INSTANCE.toUser(signUpDto, getAgeRange(signUpDto.getYear(), signUpDto.getMonth(), signUpDto.getDay()),
+                passwordEncoder.encode(signUpDto.getPassword()), measurement, new ArrayList<>(List.of("USER")));
         return userRepository.save(user);
     }
 
@@ -65,15 +63,15 @@ public class UserService {
                 .orElseThrow(() -> new NoResultException("user dosen't exist"));
     }
 
-    public UserDto info(Long userId) {
-        return userRepository.info(userId);
+    public ResponseUserDto info(Long userId) {
+        return UserMapper.INSTANCE.toResponseUserDto(userRepository.info(userId));
     }
 
     @Transactional
-    public void infoUpdate(UserDto userDto, Long userId) {
+    public void infoUpdate(RequestUserDto requestUserDto, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoResultException("user dosen't exist"));
-        user.update(userDto);
+        user.update(UserMapper.INSTANCE.toUserDto(requestUserDto));
     }
 
     public boolean passwordCheck(Long userId, String inputPassword) {
@@ -86,8 +84,9 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
     }
 
-    public MeasurementDto measurementInfo(Long userId) {
-        return userRepository.measurementInfo(userId);
+    public ResponseMeasurementDto measurementInfo(Long userId) {
+        MeasurementDto measurementDto = userRepository.measurementInfo(userId);
+        return MeasurementMapper.INSTANCE.toResponseMeasurementDto(measurementDto);
     }
 
     @Transactional
@@ -97,11 +96,11 @@ public class UserService {
         measurement.update(measurementDto);
     }
 
-    public List<ProductPreviewDto> recentProductPreview(Long userId) {
+    public List<ResponseProductPreviewDto> recentProductPreview(Long userId) {
         return recentRepository.recentProductPreview(userId);
     }
 
-    public Page<ProductPreviewDto> recentProduct(Long userId, Pageable pageable) {
+    public Page<ResponseProductPreviewDto> recentProduct(Long userId, Pageable pageable) {
         return recentRepository.recentProduct(userId, pageable);
     }
 
@@ -181,12 +180,6 @@ public class UserService {
 
         favoriteRepository.deleteByUserId(userId);
         measurementRepository.deleteByUserId(userId);
-
-        user.getRanks().forEach(rank -> {
-            Mall mall = mallRepository.findById(rank.getMall().getId())
-                    .orElseThrow(() -> new NoResultException("mall dosen't exist"));
-            mall.deleteRank();
-        });
         rankRepository.deleteByUserId(userId);
 
         List<Recent> recents = recentRepository.findByUserId(user.getId());
@@ -209,17 +202,17 @@ public class UserService {
     }
 
     @Transactional
-    public void updateRecentlastInializedAt() {
+    public void updateRecentLastInitializedAt() {
         userRepository.findAll().forEach(user -> {
-            if (user.getRecentlastInializedAt() == null) {
-                user.updateRecentlastInializedAt();
+            if (user.getRecentLastInitializedAt() == null) {
+                user.updateRecentLastInitializedAt();
                 return;
             }
 
-            LocalDateTime initializeAt = user.getRecentlastInializedAt();
+            LocalDateTime initializeAt = user.getRecentLastInitializedAt();
             LocalDateTime now = LocalDateTime.now();
             if (ChronoUnit.WEEKS.between(initializeAt, now) >= 1) {
-                user.updateRecentlastInializedAt();
+                user.updateRecentLastInitializedAt();
                 recentRepository.initializeRecents(user.getId());
             }
         });
@@ -237,5 +230,20 @@ public class UserService {
         userRepository.findAll().forEach(user -> {
             recentRecommendationRepository.deleteByUserId(user.getId());
         });
+    }
+
+    private Integer getAgeRange(Integer year, Integer month, Integer day) {
+        LocalDate birthDate = LocalDate.of(year, month, day);
+        LocalDate currentDate = LocalDate.now();
+
+        int yearDiff = currentDate.getYear() - year;
+        int age = birthDate.isBefore(currentDate) ? yearDiff - 1 : yearDiff;
+
+        if (age <= 18) return 0;
+        if (age <= 23) return 1;
+        if (age <= 28) return 2;
+        if (age <= 33) return 3;
+        if (age <= 39) return 4;
+        return 5;
     }
 }

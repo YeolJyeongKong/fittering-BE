@@ -13,7 +13,7 @@ public class RecentScheduler {
     private final int day = 1000 * 60 * 60 * 24;
 
     @Scheduled(fixedDelay = day)
-    public void updateRecentlastInializedAt() {
-        userService.updateRecentlastInializedAt();
+    public void updateRecentLastInitializedAt() {
+        userService.updateRecentLastInitializedAt();
     }
 }

@@ -1,5 +1,6 @@
 package fittering.mall.service;
 
+import fittering.mall.domain.dto.controller.request.RequestSignUpDto;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import fittering.mall.domain.RestPage;
-import fittering.mall.domain.dto.MallDto;
-import fittering.mall.domain.dto.ProductDetailDto;
+import fittering.mall.domain.dto.service.MallDto;
 import fittering.mall.domain.dto.ProductPreviewDto;
-import fittering.mall.domain.dto.SignUpDto;
 import fittering.mall.domain.entity.*;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ class FavoriteServiceTest {
     @Test
     @DisplayName("유저 즐겨찾기 쇼핑몰 테스트")
     void favoriteMallTest() {
-        User user = userService.save(new SignUpDto("tes", "password", "test@test.com", "M", 1, 2, 3));
+        User user = userService.save(new RequestSignUpDto("tes", "password", "test@test.com", "M", 1, 2, 3));
         Mall mall1 = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
         Mall mall2 = mallService.save(new MallDto(2L, "testMall2", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
         Mall mall3 = mallService.save(new MallDto(3L, "testMall3", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
@@ -71,7 +70,7 @@ class FavoriteServiceTest {
         Category category = categoryService.save("top");
         SubCategory subCategory = categoryService.saveSubCategory("top", "shirt");
         Mall mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
-        User user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
+        User user = userService.save(new RequestSignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         List<String> descImgsStr = List.of("descImage.jpg");
 
         Product product = productService.save(Product.builder()

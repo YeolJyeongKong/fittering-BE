@@ -1,5 +1,10 @@
 package fittering.mall.service;
 
+import fittering.mall.domain.dto.service.LoginDto;
+import fittering.mall.domain.dto.controller.request.RequestSignUpDto;
+import fittering.mall.domain.dto.service.MallDto;
+import fittering.mall.domain.dto.service.MeasurementDto;
+import fittering.mall.domain.dto.service.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.RestPage;
-import fittering.mall.domain.dto.*;
 import fittering.mall.domain.entity.*;
 import fittering.mall.repository.*;
 
@@ -58,7 +62,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
+        user = userService.save(new RequestSignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         category = categoryService.save("top");
         subCategory = categoryService.saveSubCategory("top", "shirt");
         mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
@@ -187,12 +191,8 @@ class UserServiceTest {
         assertThat(favoriteRepository.findById(favoriteProduct.getId())).isEmpty();
         assertThat(mallRepository.findFavoriteCount(mall.getId())).isEqualTo(0L);
         assertThat(productRepository.findFavoriteCount(product.getId())).isEqualTo(0L);
-
         assertThat(measurementRepository.findById(user.getMeasurement().getId())).isEmpty();
-
         assertThat(rankRepository.findById(rank.getId())).isEmpty();
-        assertThat(mallRepository.findByRankId(rank.getId())).isEmpty();
-
         assertThat(productRepository.findRecentCount(recent.getId())).isEqualTo(0L);
 
         assertThat(recentRecommendationRepository.findById(recentRecommendation.getId())).isEmpty();

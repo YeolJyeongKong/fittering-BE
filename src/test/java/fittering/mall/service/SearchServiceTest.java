@@ -1,5 +1,6 @@
 package fittering.mall.service;
 
+import fittering.mall.domain.dto.controller.request.RequestSignUpDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.RestPage;
-import fittering.mall.domain.dto.MallDto;
+import fittering.mall.domain.dto.service.MallDto;
 import fittering.mall.domain.dto.ProductPreviewDto;
-import fittering.mall.domain.dto.SignUpDto;
 import fittering.mall.domain.entity.*;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ class SearchServiceTest {
         topSubCategory = categoryService.saveSubCategory("top", "shirt");
         mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
         mall2 = mallService.save(new MallDto(2L, "testMall2", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
-        user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
+        user = userService.save(new RequestSignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         descImgsStr = List.of("descImage.jpg");
         product = productService.save(Product.builder()
                 .price(10000)

@@ -5,8 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import fittering.mall.domain.dto.MallDto;
-import fittering.mall.domain.dto.ProductDetailDto;
+import fittering.mall.domain.dto.service.MallDto;
 import fittering.mall.domain.entity.*;
 
 import java.util.ArrayList;
@@ -57,7 +56,7 @@ class MallServiceTest {
                 .build());
         List<DescriptionImage> descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
 
-        mallService.addProduct("testMall1", product.getId());
+        mallService.addProduct(mall1.getName(), product.getId());
         mallService.findProducts("testMall1").forEach(productDto -> {
             assertThat(productDto.getProductId()).isEqualTo(product.getId());
             assertThat(productDto.getProductImage()).isEqualTo(product.getImage());

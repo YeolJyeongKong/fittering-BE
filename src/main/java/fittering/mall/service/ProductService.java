@@ -1,5 +1,8 @@
 package fittering.mall.service;
 
+import fittering.mall.domain.dto.controller.response.*;
+import fittering.mall.domain.mapper.CategoryMapper;
+import fittering.mall.domain.mapper.SizeMapper;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +10,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import fittering.mall.domain.RestPage;
-import fittering.mall.domain.dto.*;
 import fittering.mall.domain.entity.*;
 import fittering.mall.repository.*;
 
@@ -41,67 +43,79 @@ public class ProductService {
     }
 
     @Cacheable(value = "Product", key = "'0_' + #categoryId + '_' + #gender + '_' + #filterId + '_' + #pageable.pageNumber")
-    public RestPage<ProductPreviewDto> productWithCategory(Long categoryId, String gender, Long filterId, Pageable pageable) {
+    public RestPage<ResponseProductPreviewDto> productWithCategory(Long categoryId, String gender, Long filterId, Pageable pageable) {
         return new RestPage<>(productRepository.productWithCategory(null, categoryId, gender, filterId, pageable));
     }
 
     @Cacheable(value = "Product", key = "'1_' + #subCategoryId + '_' + #gender + '_' + #filterId + '_' + #pageable.pageNumber")
-    public RestPage<ProductPreviewDto> productWithSubCategory(Long subCategoryId, String gender, Long filterId, Pageable pageable) {
+    public RestPage<ResponseProductPreviewDto> productWithSubCategory(Long subCategoryId, String gender, Long filterId, Pageable pageable) {
         return new RestPage<>(productRepository.productWithSubCategory(null, subCategoryId, gender, filterId, pageable));
     }
 
     @Cacheable(value = "MallProduct", key = "#mallId + '_' + #categoryId + '_' + #gender + '_' + #filterId +  '_' + #pageable.pageNumber")
-    public RestPage<ProductPreviewDto> productWithCategoryOfMall(Long mallId, Long categoryId, String gender,
+    public RestPage<ResponseProductPreviewDto> productWithCategoryOfMall(Long mallId, Long categoryId, String gender,
                                                              Long filterId, Pageable pageable) {
         return new RestPage<>(productRepository.productWithCategory(mallId, categoryId, gender, filterId, pageable));
     }
 
     @Cacheable(value = "MallProduct", key = "'sub_' + #mallId + '_' + #subCategoryId + '_' + #gender + '_' + #filterId +  '_' + #pageable.pageNumber")
-    public RestPage<ProductPreviewDto> productWithSubCategoryOfMall(Long mallId, Long subCategoryId, String gender,
-                                                                 Long filterId, Pageable pageable) {
+    public RestPage<ResponseProductPreviewDto> productWithSubCategoryOfMall(Long mallId, Long subCategoryId, String gender,
+                                                                            Long filterId, Pageable pageable) {
         return new RestPage<>(productRepository.productWithSubCategory(mallId, subCategoryId, gender, filterId, pageable));
     }
 
     @Cacheable(value = "Product", key = "'count'")
-    public List<ProductCategoryDto> multipleProductCountWithCategory() {
+    public List<ResponseProductCategoryDto> multipleProductCountWithCategory() {
 
-        List<ProductCategoryDto> result = new ArrayList<>();
+        List<ResponseProductCategoryDto> result = new ArrayList<>();
 
         categoryRepository.findAll().forEach(category -> {
-            result.add(new ProductCategoryDto(category.getName(),
-                    productRepository.productCountWithCategory(category.getId())));
+            ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
+                    category.getName(),
+                    productRepository.productCountWithCategory(category.getId())
+            );
+            result.add(categoryDto);
         });
 
         subCategoryRepository.findAll().forEach(subCategory -> {
-            result.add(new ProductCategoryDto(subCategory.getName(),
-                    productRepository.productCountWithSubCategory(subCategory.getId())));
+            ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
+                    subCategory.getName(),
+                    productRepository.productCountWithCategory(subCategory.getId())
+            );
+            result.add(categoryDto);
         });
 
         return result;
     }
 
     @Cacheable(value = "MallProduct", key = "#mallId + '_' + 'count'")
-    public List<ProductCategoryDto> productCountWithCategoryOfMall(Long mallId) {
+    public List<ResponseProductCategoryDto> productCountWithCategoryOfMall(Long mallId) {
         Mall mall = mallRepository.findById(mallId)
                 .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-        List<ProductCategoryDto> result = new ArrayList<>();
+        List<ResponseProductCategoryDto> result = new ArrayList<>();
 
         categoryRepository.findAll().forEach(category -> {
-            result.add(new ProductCategoryDto(category.getName(),
-                    productRepository.productCountWithCategoryOfMall(mall.getName(), category.getId())));
+            ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
+                    category.getName(),
+                    productRepository.productCountWithCategoryOfMall(mall.getName(), category.getId())
+            );
+            result.add(categoryDto);
         });
 
         subCategoryRepository.findAll().forEach(subCategory -> {
-            result.add(new ProductCategoryDto(subCategory.getName(),
-                    productRepository.productCountWithSubCategoryOfMall(mall.getName(), subCategory.getId())));
+            ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
+                    subCategory.getName(),
+                    productRepository.productCountWithSubCategoryOfMall(mall.getName(), subCategory.getId())
+            );
+            result.add(categoryDto);
         });
 
         return result;
     }
 
-    public List<ProductPreviewDto> recommendProduct(List<Long> productIds, boolean preview) {
+    public List<ResponseProductPreviewDto> recommendProduct(List<Long> productIds, boolean preview) {
 
-        List<ProductPreviewDto> result = new ArrayList<>();
+        List<ResponseProductPreviewDto> result = new ArrayList<>();
 
         for (int i = 0; i < productIds.size(); i++) {
             if (preview && i >= MAX_PREVIEW_PRODUCT_COUNT) break;
@@ -113,23 +127,23 @@ public class ProductService {
     }
 
     @Cacheable(value = "ProductDetail", key = "#productId")
-    public OuterProductDto outerProductDetail(Long productId) {
-        return productRepository.outerProductDetail(productId);
+    public ResponseOuterDto outerProductDetail(Long productId) {
+        return SizeMapper.INSTANCE.toResponseOuterDto(productRepository.outerProductDetail(productId));
     }
 
     @Cacheable(value = "ProductDetail", key = "#productId")
-    public TopProductDto topProductDetail(Long productId) {
-        return productRepository.topProductDetail(productId);
+    public ResponseTopDto topProductDetail(Long productId) {
+        return SizeMapper.INSTANCE.toResponseTopDto(productRepository.topProductDetail(productId));
     }
 
     @Cacheable(value = "ProductDetail", key = "#productId")
-    public DressProductDto dressProductDetail(Long productId) {
-        return productRepository.dressProductDetail(productId);
+    public ResponseDressDto dressProductDetail(Long productId) {
+        return SizeMapper.INSTANCE.toResponseDressDto(productRepository.dressProductDetail(productId));
     }
 
     @Cacheable(value = "ProductDetail", key = "#productId")
-    public BottomProductDto bottomProductDetail(Long productId) {
-        return productRepository.bottomProductDetail(productId);
+    public ResponseBottomDto bottomProductDetail(Long productId) {
+        return SizeMapper.INSTANCE.toResponseBottomDto(productRepository.bottomProductDetail(productId));
     }
 
     @Transactional

@@ -1,13 +1,15 @@
 package fittering.mall.service;
 
+import fittering.mall.domain.dto.controller.response.ResponseMallDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallPreviewDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
+import fittering.mall.domain.mapper.MallMapper;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import fittering.mall.domain.dto.MallPreviewDto;
-import fittering.mall.domain.dto.MallDto;
-import fittering.mall.domain.dto.MallRankProductDto;
+import fittering.mall.domain.dto.service.MallPreviewDto;
 import fittering.mall.domain.entity.*;
 import fittering.mall.repository.MallRepository;
 import fittering.mall.repository.ProductRepository;
@@ -46,31 +48,38 @@ public class RankService {
                 .orElseThrow(() -> new NoResultException("rank doesn't exist"));
     }
 
-    public List<MallDto> mallRank(Long userId) {
-        List<Mall> malls = rankRepository.mallRank(userId);
-        List<MallDto> result = new ArrayList<>();
+    public List<ResponseMallDto> mallRank(Long userId) {
+        List<Rank> ranks = rankRepository.mallRank(userId);
+        List<ResponseMallDto> result = new ArrayList<>();
 
-        malls.forEach(mall -> {
+        ranks.forEach(rank -> {
+            Mall mall = rank.getMall();
             List<Product> products = mall.getProducts();
-            List<MallRankProductDto> productDtos = new ArrayList<>();
+            List<ResponseMallRankProductDto> productDtos = new ArrayList<>();
 
             int productCount = 0;
             for (Product productProxy : products) {
                 if (productCount++ == MAX_PRODUCT_COUNT) break;
                 Product product = productRepository.findById(productProxy.getId())
                         .orElseThrow(() -> new NoResultException("product doesn't exist"));
-                productDtos.add(new MallRankProductDto(product.getId(), product.getImage()));
+                productDtos.add(ResponseMallRankProductDto.builder()
+                                                .productId(product.getId())
+                                                .productImage(product.getImage())
+                                                .build());
             }
 
-            result.add(new MallDto(mall.getId(), mall.getName(), mall.getUrl(), mall.getImage(),
-                    mall.getDescription(), mall.getRank().getView(), productDtos));
+            result.add(MallMapper.INSTANCE.toResponseMallDto(mall, rank.getView()));
         });
-
         return result;
     }
 
-    public List<MallPreviewDto> mallRankPreview(Long userId, Pageable pageable, int count) {
-        return rankRepository.mallRankPreview(userId, pageable, count);
+    public List<ResponseMallPreviewDto> mallRankPreview(Long userId, Pageable pageable, int count) {
+        List<MallPreviewDto> mallPreviewDtos = rankRepository.mallRankPreview(userId, pageable, count);
+        List<ResponseMallPreviewDto> result = new ArrayList<>();
+        mallPreviewDtos.forEach(mallPreviewDto -> {
+            result.add(MallMapper.INSTANCE.toResponseMallPreviewDto(mallPreviewDto));
+        });
+        return result;
     }
 
     @Transactional
@@ -78,10 +87,9 @@ public class RankService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResultException("product doesn't exist"));
         Optional<Rank> optionalRank = rankRepository.findByUserIdAndMallId(userId, product.getMall().getId());
-        Rank rank = null;
 
         if (optionalRank.isPresent()) {
-            rank = optionalRank.get();
+            Rank rank = optionalRank.get();
             rank.updateView();
             return;
         }
@@ -90,21 +98,19 @@ public class RankService {
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
         Mall mall = mallRepository.findById(product.getMall().getId())
                 .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-        rank = rankRepository.save(Rank.builder()
-                                    .user(user)
-                                    .mall(mall)
-                                    .view(0)
-                                    .build());
-        rank.updateView();
+        rankRepository.save(Rank.builder()
+                                .user(user)
+                                .mall(mall)
+                                .view(1)
+                                .build());
     }
 
     @Transactional
     public void updateViewOnMall(Long userId, Long mallId) {
         Optional<Rank> optionalRank = rankRepository.findByUserIdAndMallId(userId, mallId);
-        Rank rank = null;
 
         if(optionalRank.isPresent()) {
-            rank = optionalRank.get();
+            Rank rank = optionalRank.get();
             rank.updateView();
             return;
         }
@@ -113,11 +119,10 @@ public class RankService {
                 .orElseThrow(() -> new NoResultException("user doesn't exist"));
         Mall mall = mallRepository.findById(mallId)
                 .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-        rank = rankRepository.save(Rank.builder()
-                                    .user(user)
-                                    .mall(mall)
-                                    .view(0)
-                                    .build());
-        rank.updateView();
+        rankRepository.save(Rank.builder()
+                                .user(user)
+                                .mall(mall)
+                                .view(1)
+                                .build());
     }
 }

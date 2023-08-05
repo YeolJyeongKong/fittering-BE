@@ -1,8 +1,15 @@
 package fittering.mall.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import fittering.mall.domain.dto.repository.QSavedMeasurementDto;
+import fittering.mall.domain.dto.repository.QSavedUserDto;
+import fittering.mall.domain.dto.repository.SavedMeasurementDto;
+import fittering.mall.domain.dto.repository.SavedUserDto;
+import fittering.mall.domain.dto.service.MeasurementDto;
+import fittering.mall.domain.dto.service.UserDto;
+import fittering.mall.domain.mapper.MeasurementMapper;
+import fittering.mall.domain.mapper.UserMapper;
 import jakarta.persistence.EntityManager;
-import fittering.mall.domain.dto.*;
 
 import static fittering.mall.domain.entity.QMeasurement.measurement;
 import static fittering.mall.domain.entity.QUser.user;
@@ -18,8 +25,8 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
 
     @Override
     public UserDto info(Long userId) {
-        return queryFactory
-                .select(new QUserDto(
+        SavedUserDto savedUserDto = queryFactory
+                .select(new QSavedUserDto(
                         user.email,
                         user.username,
                         user.gender,
@@ -32,12 +39,13 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                         userIdEq(userId)
                 )
                 .fetchOne();
+        return UserMapper.INSTANCE.toUserDto(savedUserDto);
     }
 
     @Override
     public MeasurementDto measurementInfo(Long userId) {
-        return queryFactory
-                .select(new QMeasurementDto(
+        SavedMeasurementDto savedMeasurementDto = queryFactory
+                .select(new QSavedMeasurementDto(
                         measurement.height,
                         measurement.weight,
                         measurement.arm,
@@ -54,5 +62,6 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                         userIdEq(userId)
                 )
                 .fetchOne();
+        return MeasurementMapper.INSTANCE.toMeasurementDto(savedMeasurementDto);
     }
 }

@@ -1,5 +1,9 @@
 package fittering.mall.service;
 
+import fittering.mall.domain.dto.controller.response.ResponseMallDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
+import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.domain.mapper.MallMapper;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +12,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import fittering.mall.domain.RestPage;
-import fittering.mall.domain.dto.MallDto;
-import fittering.mall.domain.dto.MallRankProductDto;
-import fittering.mall.domain.dto.ProductPreviewDto;
 import fittering.mall.domain.entity.Favorite;
 import fittering.mall.domain.entity.Mall;
 import fittering.mall.domain.entity.Product;
@@ -34,28 +35,29 @@ public class FavoriteService {
     private final UserRepository userRepository;
 
     @Cacheable(value = "UserFavoriteMall", key = "#userId")
-    public List<MallDto> userFavoriteMall(Long userId) {
+    public List<ResponseMallDto> userFavoriteMall(Long userId) {
 
         List<Favorite> favoriteMalls = favoriteRepository.userFavoriteMall(userId);
-        List<MallDto> result = new ArrayList<>();
+        List<ResponseMallDto> result = new ArrayList<>();
 
         favoriteMalls.forEach(favorite -> {
             Mall mall = favorite.getMall();
             List<Product> products = mall.getProducts();
-            List<MallRankProductDto> productDtos = new ArrayList<>();
+            List<ResponseMallRankProductDto> productDtos = new ArrayList<>();
 
             int productCount = 0;
             for (Product productProxy : products) {
                 if(productCount++ == MAX_PRODUCT_COUNT) break;
                 Product product = productRepository.findById(productProxy.getId())
                         .orElseThrow(() -> new NoResultException("product dosen't exist"));
-                productDtos.add(new MallRankProductDto(product.getId(), product.getImage()));
+                productDtos.add(ResponseMallRankProductDto.builder()
+                        .productId(product.getId())
+                        .productImage(product.getImage())
+                        .build());
             }
 
-            result.add(new MallDto(mall.getId(), mall.getName(), mall.getUrl(), mall.getImage(),
-                    mall.getDescription(), 0, productDtos));
+            result.add(MallMapper.INSTANCE.toResponseMallDto(mall, 0));
         });
-
         return result;
     }
 
@@ -77,7 +79,7 @@ public class FavoriteService {
         favoriteRepository.deleteByUserIdAndMallId(userId, mallId);
     }
 
-    public RestPage<ProductPreviewDto> userFavoriteProduct(Long userId, Pageable pageable) {
+    public RestPage<ResponseProductPreviewDto> userFavoriteProduct(Long userId, Pageable pageable) {
         return new RestPage<>(favoriteRepository.userFavoriteProduct(userId, pageable));
     }
 

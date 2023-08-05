@@ -1,9 +1,9 @@
 package fittering.mall.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import fittering.mall.domain.dto.controller.response.QResponseProductPreviewDto;
+import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
 import jakarta.persistence.EntityManager;
-import fittering.mall.domain.dto.ProductPreviewDto;
-import fittering.mall.domain.dto.QProductPreviewDto;
 
 import java.util.List;
 
@@ -22,9 +22,9 @@ public class MallRepositoryImpl implements MallRepositoryCustom {
     }
 
     @Override
-    public List<ProductPreviewDto> findProducts(String mallName) {
+    public List<ResponseProductPreviewDto> findProducts(String mallName) {
         return queryFactory
-                .select(new QProductPreviewDto(
+                .select(new QResponseProductPreviewDto(
                         product.id.as("productId"),
                         product.image.as("productImage"),
                         product.name.as("productName"),

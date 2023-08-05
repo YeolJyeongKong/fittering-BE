@@ -1,11 +1,13 @@
 package fittering.mall.service;
 
+import fittering.mall.domain.dto.controller.response.ResponseMallDto;
+import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.domain.mapper.MallMapper;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import fittering.mall.domain.dto.MallDto;
-import fittering.mall.domain.dto.ProductPreviewDto;
+import fittering.mall.domain.dto.service.MallDto;
 import fittering.mall.domain.entity.Mall;
 import fittering.mall.domain.entity.Product;
 import fittering.mall.repository.MallRepository;
@@ -21,17 +23,13 @@ public class MallService {
     private final ProductRepository productRepository;
 
     public Mall save(MallDto mallDto) {
-        return mallRepository.save(Mall.builder()
-                                    .name(mallDto.getName())
-                                    .url(mallDto.getUrl())
-                                    .image(mallDto.getImage())
-                                    .description(mallDto.getDescription())
-                                    .build());
+        return mallRepository.save(MallMapper.INSTANCE.toMall(mallDto));
     }
 
-    public Mall findById(Long mallId) {
-        return mallRepository.findById(mallId)
+    public ResponseMallDto findById(Long mallId) {
+        Mall mall = mallRepository.findById(mallId)
                 .orElseThrow(() -> new NoResultException("mall dosen't exist"));
+        return MallMapper.INSTANCE.toResponseMallDto(mall, 0);
     }
 
     public Mall findByName(String mallName) {
@@ -47,7 +45,7 @@ public class MallService {
         mall.getProducts().add(product);
     }
 
-    public List<ProductPreviewDto> findProducts(String mallName) {
+    public List<ResponseProductPreviewDto> findProducts(String mallName) {
         return mallRepository.findProducts(mallName);
     }
 }

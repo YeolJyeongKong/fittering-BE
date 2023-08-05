@@ -1,5 +1,12 @@
 package fittering.mall.controller;
 
+import fittering.mall.domain.dto.controller.request.RequestProductDetailDto;
+import fittering.mall.domain.dto.controller.response.*;
+import fittering.mall.domain.dto.service.DressProductDto;
+import fittering.mall.domain.dto.service.OuterProductDto;
+import fittering.mall.domain.dto.service.TopProductDto;
+import fittering.mall.domain.mapper.ProductMapper;
+import fittering.mall.domain.mapper.SizeMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import fittering.mall.config.auth.PrincipalDetails;
-import fittering.mall.domain.dto.*;
 import fittering.mall.domain.entity.*;
 import fittering.mall.service.*;
 
@@ -40,107 +46,96 @@ public class ProductController {
     @Operation(summary = "상품 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"상품 등록 완료\"")))
     @PostMapping("/product")
-    public ResponseEntity<?> save(@RequestBody ProductDetailDto productDto) {
-        Category category = categoryService.findByName(productDto.getCategoryName());
-        SubCategory subCategory = categoryService.findByNameOfSubCategory(productDto.getSubCategoryName());
-        Mall mall = mallService.findByName(productDto.getMallName());
-        Product product = productService.save(Product.builder()
-                                                .price(productDto.getPrice())
-                                                .name(productDto.getName())
-                                                .gender(productDto.getGender())
-                                                .type(productDto.getType())
-                                                .image(productDto.getImage())
-                                                .view(0)
-                                                .timeView(0)
-                                                .category(category)
-                                                .subCategory(subCategory)
-                                                .mall(mall)
-                                                .build());
-        productService.saveDescriptionImages(productDto.getDescriptionImages(), product);
-        List<Size> sizes = new ArrayList<>();
+    public ResponseEntity<?> save(@RequestBody RequestProductDetailDto requestProductDto) {
+        Category category = categoryService.findByName(requestProductDto.getCategoryName());
+        SubCategory subCategory = categoryService.findByNameOfSubCategory(requestProductDto.getSubCategoryName());
+        Mall mall = mallService.findByName(requestProductDto.getMallName());
+        Product product = productService.save(ProductMapper.INSTANCE.toProduct(
+                requestProductDto, 0, 0, category, subCategory, mall));
+        productService.saveDescriptionImages(requestProductDto.getDescriptionImages(), product);
 
-        if (productDto.getType().equals(OUTER)) {
-            getSizesOfOuter(productDto, product, sizes);
+        if (requestProductDto.getType().equals(OUTER)) {
+            getSizesOfOuter(requestProductDto, product);
             return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
         }
 
-        if (productDto.getType().equals(TOP)) {
-            getSizesOfTop(productDto, product, sizes);
+        if (requestProductDto.getType().equals(TOP)) {
+            getSizesOfTop(requestProductDto, product);
             return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
         }
 
-        if(productDto.getType().equals(DRESS)) {
-            getSizesOfDress(productDto, product, sizes);
+        if (requestProductDto.getType().equals(DRESS)) {
+            getSizesOfDress(requestProductDto, product);
             return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
         }
 
-        getSizesOfBottom(productDto, product, sizes);
+        getSizesOfBottom(requestProductDto, product);
         return new ResponseEntity<>("상품 등록 완료", HttpStatus.OK);
     }
 
     @Operation(summary = "카테고리별 상품 조회 (대분류)")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/category/{categoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithCategory(@PathVariable("categoryId") Long categoryId,
                                                  @PathVariable("gender") String gender,
                                                  @PathVariable("filterId") Long filterId,
                                                  Pageable pageable) {
-        Page<ProductPreviewDto> products = productService.productWithCategory(categoryId, gender, filterId, pageable);
+        Page<ResponseProductPreviewDto> products = productService.productWithCategory(categoryId, gender, filterId, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @Operation(summary = "카테고리별 상품 조회 (소분류)")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/category/sub/{subCategoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithSubCategory(@PathVariable("subCategoryId") Long subCategoryId,
                                                     @PathVariable("gender") String gender,
                                                     @PathVariable("filterId") Long filterId,
                                                     Pageable pageable) {
-        Page<ProductPreviewDto> products = productService.productWithSubCategory(subCategoryId, gender, filterId, pageable);
+        Page<ResponseProductPreviewDto> products = productService.productWithSubCategory(subCategoryId, gender, filterId, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @Operation(summary = "카테고리별 상품 개수 조회")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductCategoryDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductCategoryDto.class))))
     @GetMapping("/category/count")
     public ResponseEntity<?> multipleProductCountWithCategory() {
-        List<ProductCategoryDto> categoryWithProductCounts = productService.multipleProductCountWithCategory();
+        List<ResponseProductCategoryDto> categoryWithProductCounts = productService.multipleProductCountWithCategory();
         return new ResponseEntity<>(categoryWithProductCounts, HttpStatus.OK);
     }
 
     @Operation(summary = "쇼핑몰 카테고리별 상품 조회 (대분류)")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/malls/{mallId}/{categoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithCategoryOfMall(@PathVariable("mallId") Long mallId,
                                                        @PathVariable("categoryId") Long categoryId,
                                                        @PathVariable("gender") String gender,
                                                        @PathVariable("filterId") Long filterId,
                                                        Pageable pageable) {
-        Page<ProductPreviewDto> products = productService.productWithCategoryOfMall(
+        Page<ResponseProductPreviewDto> products = productService.productWithCategoryOfMall(
                 mallId, categoryId, gender, filterId, pageable
         );
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @Operation(summary = "쇼핑몰 카테고리별 상품 조회 (소분류)")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/malls/{mallId}/{subCategoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithSubCategoryOfMall(@PathVariable("mallId") Long mallId,
                                                           @PathVariable("subCategoryId") Long subCategoryId,
                                                           @PathVariable("gender") String gender,
                                                           @PathVariable("filterId") Long filterId,
                                                           Pageable pageable) {
-        Page<ProductPreviewDto> products = productService.productWithSubCategoryOfMall(
+        Page<ResponseProductPreviewDto> products = productService.productWithSubCategoryOfMall(
                 mallId, subCategoryId, gender, filterId, pageable
         );
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @Operation(summary = "쇼핑몰 내 카테고리별 상품 개수 조회")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductCategoryDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductCategoryDto.class))))
     @GetMapping("/malls/{mallId}/category/count")
     public ResponseEntity<?> productCountWithCategoryOfMall(@PathVariable("mallId") Long mallId) {
-        List<ProductCategoryDto> categoryWithProductCounts = productService.productCountWithCategoryOfMall(mallId);
+        List<ResponseProductCategoryDto> categoryWithProductCounts = productService.productCountWithCategoryOfMall(mallId);
         return new ResponseEntity<>(categoryWithProductCounts, HttpStatus.OK);
     }
 
@@ -153,8 +148,10 @@ public class ProductController {
      */
     @Operation(summary = "상품 상세 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = {
+            @Content(schema = @Schema(implementation = OuterProductDto.class)),
             @Content(schema = @Schema(implementation = TopProductDto.class)),
-            @Content(schema = @Schema(implementation = BottomProductDto.class))
+            @Content(schema = @Schema(implementation = ResponseBottomDto.class)),
+            @Content(schema = @Schema(implementation = DressProductDto.class))
     })
     @GetMapping("/product/{productId}")
     public ResponseEntity<?> productDetail(@PathVariable("productId") Long productId,
@@ -165,53 +162,45 @@ public class ProductController {
         Product product = productService.findById(productId);
 
         if(product.getType().equals(OUTER)) {
-            OuterProductDto outerProduct = productService.outerProductDetail(productId);
+            ResponseOuterDto outerProduct = productService.outerProductDetail(productId);
             return new ResponseEntity<>(outerProduct, HttpStatus.OK);
         }
 
         if(product.getType().equals(TOP)) {
-            TopProductDto topProduct = productService.topProductDetail(productId);
+            ResponseTopDto topProduct = productService.topProductDetail(productId);
             return new ResponseEntity<>(topProduct, HttpStatus.OK);
         }
 
         if(product.getType().equals(DRESS)) {
-            DressProductDto dressProduct = productService.dressProductDetail(productId);
+            ResponseDressDto dressProduct = productService.dressProductDetail(productId);
             return new ResponseEntity<>(dressProduct, HttpStatus.OK);
         }
 
         if(product.getType().equals(BOTTOM)) {
-            BottomProductDto bottomProduct = productService.bottomProductDetail(productId);
+            ResponseBottomDto bottomProduct = productService.bottomProductDetail(productId);
             return new ResponseEntity<>(bottomProduct, HttpStatus.OK);
         }
 
         return new ResponseEntity<>("정의된 타입 없음", HttpStatus.BAD_REQUEST);
     }
 
-    private void getSizesOfOuter(ProductDetailDto productDto, Product product, List<Size> sizes) {
-        productDto.getOuterSizes().forEach(outerDto -> {
-            Size size = sizeService.saveOuter(outerDto, product);
-            sizes.add(size);
-        });
+    private void getSizesOfOuter(RequestProductDetailDto productDto, Product product) {
+        productDto.getOuterSizes().forEach(requestOuterDto ->
+                sizeService.saveOuter(SizeMapper.INSTANCE.toOuterDto(requestOuterDto), product));
     }
 
-    private void getSizesOfTop(ProductDetailDto productDto, Product product, List<Size> sizes) {
-        productDto.getTopSizes().forEach(topDto -> {
-            Size size = sizeService.saveTop(topDto, product);
-            sizes.add(size);
-        });
+    private void getSizesOfTop(RequestProductDetailDto productDto, Product product) {
+        productDto.getTopSizes().forEach(requestTopDto ->
+                sizeService.saveTop(SizeMapper.INSTANCE.toTopDto(requestTopDto), product));
     }
 
-    private void getSizesOfDress(ProductDetailDto productDto, Product product, List<Size> sizes) {
-        productDto.getDressSizes().forEach(dressDto -> {
-            Size size = sizeService.saveDress(dressDto, product);
-            sizes.add(size);
-        });
+    private void getSizesOfDress(RequestProductDetailDto productDto, Product product) {
+        productDto.getDressSizes().forEach(requestDressDto ->
+                sizeService.saveDress(SizeMapper.INSTANCE.toDressDto(requestDressDto), product));
     }
 
-    private void getSizesOfBottom(ProductDetailDto productDto, Product product, List<Size> sizes) {
-        productDto.getBottomSizes().forEach(bottomDto -> {
-            Size size = sizeService.saveBottom(bottomDto, product);
-            sizes.add(size);
-        });
+    private void getSizesOfBottom(RequestProductDetailDto productDto, Product product) {
+        productDto.getBottomSizes().forEach(requestBottomDto ->
+                sizeService.saveBottom(SizeMapper.INSTANCE.toBottomDto(requestBottomDto), product));
     }
 }

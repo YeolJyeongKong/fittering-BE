@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import fittering.mall.domain.dto.MeasurementDto;
+import fittering.mall.domain.dto.service.MeasurementDto;
 
 import static jakarta.persistence.FetchType.LAZY;
 

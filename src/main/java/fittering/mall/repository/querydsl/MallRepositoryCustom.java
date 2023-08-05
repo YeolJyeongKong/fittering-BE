@@ -1,10 +1,10 @@
 package fittering.mall.repository.querydsl;
 
-import fittering.mall.domain.dto.ProductPreviewDto;
+import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
 
 import java.util.List;
 
 public interface MallRepositoryCustom {
-    List<ProductPreviewDto> findProducts(String mallName);
+    List<ResponseProductPreviewDto> findProducts(String mallName);
     Long findFavoriteCount(Long mallId);
 }

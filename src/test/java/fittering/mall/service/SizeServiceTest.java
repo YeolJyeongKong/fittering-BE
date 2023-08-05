@@ -1,10 +1,12 @@
 package fittering.mall.service;
 
+import fittering.mall.domain.dto.service.BottomDto;
+import fittering.mall.domain.dto.service.MallDto;
+import fittering.mall.domain.dto.service.TopDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import fittering.mall.domain.dto.*;
 import fittering.mall.domain.entity.*;
 
 import java.util.ArrayList;

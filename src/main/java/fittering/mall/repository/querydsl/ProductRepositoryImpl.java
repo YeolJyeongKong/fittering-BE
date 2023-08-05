@@ -3,11 +3,14 @@ package fittering.mall.repository.querydsl;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import fittering.mall.domain.dto.controller.response.QResponseProductPreviewDto;
+import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.domain.dto.service.*;
+import fittering.mall.domain.mapper.SizeMapper;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
-import fittering.mall.domain.dto.*;
 import fittering.mall.domain.entity.*;
 
 import java.util.ArrayList;
@@ -43,9 +46,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public ProductPreviewDto productById(Long productId) {
+    public ResponseProductPreviewDto productById(Long productId) {
         return queryFactory
-                .select(new QProductPreviewDto(
+                .select(new QResponseProductPreviewDto(
                         product.id.as("productId"),
                         product.image.as("productImage"),
                         product.name.as("productName"),
@@ -62,11 +65,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public Page<ProductPreviewDto> productWithCategory(Long mallId, Long categoryId, String gender,
-                                                       Long filterId, Pageable pageable) {
+    public Page<ResponseProductPreviewDto> productWithCategory(Long mallId, Long categoryId, String gender,
+                                                               Long filterId, Pageable pageable) {
 
-        List<ProductPreviewDto> content = queryFactory
-                .select(new QProductPreviewDto(
+        List<ResponseProductPreviewDto> content = queryFactory
+                .select(new QResponseProductPreviewDto(
                         product.id.as("productId"),
                         product.image.as("productImage"),
                         product.name.as("productName"),
@@ -106,11 +109,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public Page<ProductPreviewDto> productWithSubCategory(Long mallId, Long subCategoryId, String gender,
+    public Page<ResponseProductPreviewDto> productWithSubCategory(Long mallId, Long subCategoryId, String gender,
                                                           Long filterId, Pageable pageable) {
 
-        List<ProductPreviewDto> content = queryFactory
-                .select(new QProductPreviewDto(
+        List<ResponseProductPreviewDto> content = queryFactory
+                .select(new QResponseProductPreviewDto(
                         product.id.as("productId"),
                         product.image.as("productImage"),
                         product.name.as("productName"),
@@ -150,10 +153,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public Page<ProductPreviewDto> searchProduct(String productName, String gender, Long filterId, Pageable pageable) {
+    public Page<ResponseProductPreviewDto> searchProduct(String productName, String gender, Long filterId, Pageable pageable) {
 
-        List<ProductPreviewDto> content = queryFactory
-                .select(new QProductPreviewDto(
+        List<ResponseProductPreviewDto> content = queryFactory
+                .select(new QResponseProductPreviewDto(
                         product.id.as("productId"),
                         product.image.as("productImage"),
                         product.name.as("productName"),
@@ -276,7 +279,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .fetchOne();
 
         List<OuterDto> outerDtos = new ArrayList<>();
-        productInfo.getSizes().forEach(size -> outerDtos.add(new OuterDto(size)));
+        productInfo.getSizes().forEach(size -> outerDtos.add(OuterDto.builder()
+                                                                .name(size.getName())
+                                                                .full(size.getOuter().getFull())
+                                                                .shoulder(size.getOuter().getShoulder())
+                                                                .chest(size.getOuter().getChest())
+                                                                .sleeve(size.getOuter().getSleeve())
+                                                                .build()));
 
         Tuple tuple = queryFactory
                 .select(product.count(), user.gender, user.ageRange)
@@ -297,10 +306,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             Tuple popular = optionalPopular.get();
             String gender = popular.get(user.gender);
             Integer ageRange = popular.get(user.ageRange);
-            return new OuterProductDto(favoriteCount, productInfo, gender, ageRange, outerDtos);
+            return SizeMapper.INSTANCE.toOuterProductDto(favoriteCount, productInfo, gender, ageRange, outerDtos);
         }
 
-        return new OuterProductDto(favoriteCount, productInfo, "", null, outerDtos);
+        return SizeMapper.INSTANCE.toOuterProductDto(favoriteCount, productInfo, "", null, outerDtos);
     }
 
     @Override
@@ -329,7 +338,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .fetchOne();
 
         List<TopDto> topDtos = new ArrayList<>();
-        productInfo.getSizes().forEach(size -> topDtos.add(new TopDto(size)));
+        productInfo.getSizes().forEach(size -> topDtos.add(TopDto.builder()
+                                                            .name(size.getName())
+                                                            .full(size.getTop().getFull())
+                                                            .shoulder(size.getTop().getShoulder())
+                                                            .chest(size.getTop().getChest())
+                                                            .sleeve(size.getTop().getSleeve())
+                                                            .build()));
 
         Tuple tuple = queryFactory
                 .select(product.count(), user.gender, user.ageRange)
@@ -350,10 +365,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             Tuple popular = optionalPopular.get();
             String gender = popular.get(user.gender);
             Integer ageRange = popular.get(user.ageRange);
-            return new TopProductDto(favoriteCount, productInfo, gender, ageRange, topDtos);
+            return SizeMapper.INSTANCE.toTopProductDto(favoriteCount, productInfo, gender, ageRange, topDtos);
         }
 
-        return new TopProductDto(favoriteCount, productInfo, "", null, topDtos);
+        return SizeMapper.INSTANCE.toTopProductDto(favoriteCount, productInfo, "", null, topDtos);
     }
 
     @Override
@@ -382,7 +397,18 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .fetchOne();
 
         List<DressDto> dressDtos = new ArrayList<>();
-        productInfo.getSizes().forEach(size -> dressDtos.add(new DressDto(size)));
+        productInfo.getSizes().forEach(size -> dressDtos.add(DressDto.builder()
+                                                                .name(size.getName())
+                                                                .full(size.getDress().getFull())
+                                                                .shoulder(size.getDress().getShoulder())
+                                                                .chest(size.getDress().getChest())
+                                                                .waist(size.getDress().getWaist())
+                                                                .armHall(size.getDress().getArmHall())
+                                                                .hip(size.getDress().getHip())
+                                                                .sleeve(size.getDress().getSleeve())
+                                                                .sleeveWidth(size.getDress().getSleeveWidth())
+                                                                .bottomWidth(size.getDress().getBottomWidth())
+                                                                .build()));
 
         Tuple tuple = queryFactory
                 .select(product.count(), user.gender, user.ageRange)
@@ -403,10 +429,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             Tuple popular = optionalPopular.get();
             String gender = popular.get(user.gender);
             Integer ageRange = popular.get(user.ageRange);
-            return new DressProductDto(favoriteCount, productInfo, gender, ageRange, dressDtos);
+            return SizeMapper.INSTANCE.toDressProductDto(favoriteCount, productInfo, gender, ageRange, dressDtos);
         }
 
-        return new DressProductDto(favoriteCount, productInfo, "", null, dressDtos);
+        return SizeMapper.INSTANCE.toDressProductDto(favoriteCount, productInfo, "", null, dressDtos);
     }
 
     @Override
@@ -448,7 +474,15 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .fetchOne();
 
         List<BottomDto> bottomDtos = new ArrayList<>();
-        productInfo.getSizes().forEach(size -> bottomDtos.add(new BottomDto(size)));
+        productInfo.getSizes().forEach(size -> bottomDtos.add(BottomDto.builder()
+                                                                .name(size.getName())
+                                                                .full(size.getBottom().getFull())
+                                                                .waist(size.getBottom().getWaist())
+                                                                .thigh(size.getBottom().getThigh())
+                                                                .rise(size.getBottom().getRise())
+                                                                .bottomWidth(size.getBottom().getBottomWidth())
+                                                                .hipWidth(size.getBottom().getHipWidth())
+                                                                .build()));
 
         Optional<Tuple> optionalPopular = Optional.ofNullable(tuple);
 
@@ -456,10 +490,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             Tuple popular = optionalPopular.get();
             String gender = popular.get(user.gender);
             Integer ageRange = popular.get(user.ageRange);
-            return new BottomProductDto(favoriteCount, productInfo, gender, ageRange, bottomDtos);
+            return SizeMapper.INSTANCE.toBottomProductDto(favoriteCount, productInfo, gender, ageRange, bottomDtos);
         }
 
-        return new BottomProductDto(favoriteCount, productInfo, "", null, bottomDtos);
+        return SizeMapper.INSTANCE.toBottomProductDto(favoriteCount, productInfo, "", null, bottomDtos);
     }
 
     @Override

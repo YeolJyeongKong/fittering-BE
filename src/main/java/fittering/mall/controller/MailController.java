@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import fittering.mall.domain.dto.MailDto;
+import fittering.mall.domain.dto.service.MailDto;
 import fittering.mall.service.MailService;
 import fittering.mall.service.UserService;
 

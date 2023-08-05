@@ -1,12 +1,12 @@
 package fittering.mall.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import fittering.mall.domain.dto.controller.response.QResponseProductPreviewDto;
+import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
-import fittering.mall.domain.dto.ProductPreviewDto;
-import fittering.mall.domain.dto.QProductPreviewDto;
 import fittering.mall.domain.entity.Recent;
 
 import java.util.List;
@@ -43,9 +43,9 @@ public class RecentRepositoryImpl implements RecentRepositoryCustom {
      * 일주일에 한 번 초기화
      */
     @Override
-    public List<ProductPreviewDto> recentProductPreview(Long userId) {
+    public List<ResponseProductPreviewDto> recentProductPreview(Long userId) {
         return queryFactory
-                .select(new QProductPreviewDto(
+                .select(new QResponseProductPreviewDto(
                         product.id.as("productId"),
                         product.image.as("productImage"),
                         product.name.as("productName"),
@@ -70,9 +70,9 @@ public class RecentRepositoryImpl implements RecentRepositoryCustom {
      * 일주일에 한 번 초기화
      */
     @Override
-    public Page<ProductPreviewDto> recentProduct(Long userId, Pageable pageable) {
-        List<ProductPreviewDto> content = queryFactory
-                .select(new QProductPreviewDto(
+    public Page<ResponseProductPreviewDto> recentProduct(Long userId, Pageable pageable) {
+        List<ResponseProductPreviewDto> content = queryFactory
+                .select(new QResponseProductPreviewDto(
                         product.id.as("productId"),
                         product.image.as("productImage"),
                         product.name.as("productName"),

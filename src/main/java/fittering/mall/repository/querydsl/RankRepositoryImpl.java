@@ -1,11 +1,15 @@
 package fittering.mall.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import fittering.mall.domain.dto.repository.QSavedMallPreviewDto;
+import fittering.mall.domain.dto.repository.SavedMallPreviewDto;
+import fittering.mall.domain.dto.service.MallPreviewDto;
+import fittering.mall.domain.mapper.MallMapper;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
-import fittering.mall.domain.dto.*;
 import fittering.mall.domain.entity.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static fittering.mall.domain.entity.QMall.mall;
@@ -23,8 +27,8 @@ public class RankRepositoryImpl implements RankRepositoryCustom {
 
     @Override
     public List<MallPreviewDto> mallRankPreview(Long userId, Pageable pageable, int count) {
-        return queryFactory
-                .select(new QMallPreviewDto(
+        List<SavedMallPreviewDto> savedMallPreviewDtos = queryFactory
+                .select(new QSavedMallPreviewDto(
                         mall.name,
                         mall.url,
                         mall.image
@@ -38,13 +42,18 @@ public class RankRepositoryImpl implements RankRepositoryCustom {
                 .orderBy(rank.view.desc())
                 .limit(count)
                 .fetch();
+
+        List<MallPreviewDto> result = new ArrayList<>();
+        savedMallPreviewDtos.forEach(savedMallPreviewDto -> {
+            result.add(MallMapper.INSTANCE.toMallPreviewDto(savedMallPreviewDto));
+        });
+        return result;
     }
 
     @Override
-    public List<Mall> mallRank(Long userId) {
+    public List<Rank> mallRank(Long userId) {
         return queryFactory
-                .select(mall)
-                .from(rank)
+                .selectFrom(rank)
                 .leftJoin(rank.mall, mall)
                 .leftJoin(rank.user, user)
                 .where(

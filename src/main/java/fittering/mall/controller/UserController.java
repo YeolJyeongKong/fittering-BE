@@ -1,5 +1,13 @@
 package fittering.mall.controller;
 
+import fittering.mall.domain.dto.controller.request.RequestMeasurementDto;
+import fittering.mall.domain.dto.controller.request.RequestSmartMeasurementDto;
+import fittering.mall.domain.dto.controller.request.RequestUserDto;
+import fittering.mall.domain.dto.controller.response.ResponseMeasurementDto;
+import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.domain.dto.controller.response.ResponseUserDto;
+import fittering.mall.domain.dto.service.MeasurementDto;
+import fittering.mall.domain.mapper.MeasurementMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import fittering.mall.config.auth.PrincipalDetails;
-import fittering.mall.domain.dto.*;
 import fittering.mall.domain.entity.Product;
 import fittering.mall.service.FavoriteService;
 import fittering.mall.service.ProductService;
@@ -39,20 +46,20 @@ public class UserController {
     private final RankService rankService;
 
     @Operation(summary = "마이페이지 조회")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserDto.class)))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseUserDto.class)))
     @GetMapping("/user/mypage")
     public ResponseEntity<?> edit(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        UserDto userDto = userService.info(principalDetails.getUser().getId());
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        ResponseUserDto userInfo = userService.info(principalDetails.getUser().getId());
+        return new ResponseEntity<>(userInfo, HttpStatus.OK);
     }
 
     @Operation(summary = "마이페이지 수정")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserDto.class)))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = RequestUserDto.class)))
     @PostMapping("/user/mypage")
-    public ResponseEntity<?> edit(@RequestBody UserDto userDto,
+    public ResponseEntity<?> edit(@RequestBody RequestUserDto requestUserDto,
                                   @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        userService.infoUpdate(userDto, principalDetails.getUser().getId());
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        userService.infoUpdate(requestUserDto, principalDetails.getUser().getId());
+        return new ResponseEntity<>(requestUserDto, HttpStatus.OK);
     }
 
     @Operation(summary = "비밀번호 수정")
@@ -73,28 +80,29 @@ public class UserController {
     }
 
     @Operation(summary = "체형 정보 조회")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MeasurementDto.class)))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseMeasurementDto.class)))
     @GetMapping("/user/mysize")
     public ResponseEntity<?> measurementEdit(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        MeasurementDto measurementDto = userService.measurementInfo(principalDetails.getUser().getId());
-        return new ResponseEntity<>(measurementDto, HttpStatus.OK);
+        ResponseMeasurementDto measurement = userService.measurementInfo(principalDetails.getUser().getId());
+        return new ResponseEntity<>(measurement, HttpStatus.OK);
     }
 
     @Operation(summary = "체형 정보 수정")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MeasurementDto.class)))
     @PostMapping("/user/mysize")
-    public ResponseEntity<?> measurementEdit(@RequestBody MeasurementDto measurementDto,
+    public ResponseEntity<?> measurementEdit(@RequestBody RequestMeasurementDto requestMeasurementDto,
                                              @AuthenticationPrincipal PrincipalDetails principalDetails) {
+        MeasurementDto measurementDto = MeasurementMapper.INSTANCE.toMeasurementDto(requestMeasurementDto);
         userService.measurementUpdate(measurementDto, principalDetails.getUser().getId());
         return new ResponseEntity<>(measurementDto, HttpStatus.OK);
     }
 
     @Operation(summary = "유저 즐겨찾기 상품 조회")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/user/favorite_goods")
     public ResponseEntity<?> favoriteProduct(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                              Pageable pageable) {
-        Page<ProductPreviewDto> products = favoriteService.userFavoriteProduct(
+        Page<ResponseProductPreviewDto> products = favoriteService.userFavoriteProduct(
                                                 principalDetails.getUser().getId(), pageable
                                            );
         return new ResponseEntity<>(products, HttpStatus.OK);
@@ -119,32 +127,32 @@ public class UserController {
     }
 
     @Operation(summary = "유저 최근 본 상품 조회 (미리보기)")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/user/recent/preview")
     public ResponseEntity<?> recentProductPreview(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        List<ProductPreviewDto> products = userService.recentProductPreview(principalDetails.getUser().getId());
+        List<ResponseProductPreviewDto> products = userService.recentProductPreview(principalDetails.getUser().getId());
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @Operation(summary = "유저 최근 본 상품 조회")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/user/recent")
     public ResponseEntity<?> recentProduct(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                            Pageable pageable) {
-        Page<ProductPreviewDto> products = userService.recentProduct(principalDetails.getUser().getId(), pageable);
+        Page<ResponseProductPreviewDto> products = userService.recentProduct(principalDetails.getUser().getId(), pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @Operation(summary = "체형 스마트 분석")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MeasurementDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMeasurementDto.class))))
     @PostMapping("/user/recommendation/measurement")
-    public ResponseEntity<?> recommendMeasurement(@RequestBody SmartMeasurementDto smartMeasurementDto,
+    public ResponseEntity<?> recommendMeasurement(@RequestBody RequestSmartMeasurementDto requestSmartMeasurementDto,
                                                   @AuthenticationPrincipal PrincipalDetails principalDetails) {
         //request: smartMeasurementDto
         //실루엣 이미지(정면/측면), 키, 몸무게, 성별
         //TODO: 체형 측정 API에서 체형 측정 결과를 받아오는 로직 필요
-        MeasurementDto measurementDto = null; //response
-        return new ResponseEntity<>(measurementDto, HttpStatus.OK);
+        ResponseMeasurementDto responseMeasurementDto = null; //response
+        return new ResponseEntity<>(responseMeasurementDto, HttpStatus.OK);
     }
 
     /**
@@ -159,20 +167,20 @@ public class UserController {
      *   으로 하기로 했는데 재학습을 하지 않는다는 말이 있어서 일단 보류
      */
     @Operation(summary = "추천 상품 조회 (미리보기)")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/user/recommendation/preview")
     public ResponseEntity<?> recommendProductPreview(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         List<Long> productIds = findRecommendedProductIds(principalDetails.getUser().getId());
-        List<ProductPreviewDto> products = productService.recommendProduct(productIds, true);
+        List<ResponseProductPreviewDto> products = productService.recommendProduct(productIds, true);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @Operation(summary = "추천 상품 조회")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/user/recommendation")
     public ResponseEntity<?> recommendProduct(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         List<Long> productIds = findRecommendedProductIds(principalDetails.getUser().getId());
-        List<ProductPreviewDto> products = productService.recommendProduct(productIds, false);
+        List<ResponseProductPreviewDto> products = productService.recommendProduct(productIds, false);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -186,7 +194,7 @@ public class UserController {
             return productIds;
         }
 
-        List<ProductPreviewDto> recentProducts = userService.recentProductPreview(userId); //request
+        List<ResponseProductPreviewDto> recentProducts = userService.recentProductPreview(userId); //request
         /**
          * TODO: 추천 상품 API에서 데이터를 받아오는 로직 추가 필요
          * - 해당 API에서 가져오는 상품 개수가 10개라고 가정
@@ -214,20 +222,20 @@ public class UserController {
      *   으로 하기로 했는데 재학습을 하지 않는다는 말이 있어서 일단 보류
      */
     @Operation(summary = "비슷한 체형 고객 pick 조회 (미리보기)")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/user/recommendation/pick/preview")
     public ResponseEntity<?> recommendProductPreviewOnPick(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         List<Long> productIds = findRecommendedProductIdsOnPick(principalDetails.getUser().getId());
-        List<ProductPreviewDto> products = productService.recommendProduct(productIds, true);
+        List<ResponseProductPreviewDto> products = productService.recommendProduct(productIds, true);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @Operation(summary = "비슷한 체형 고객 pick 조회")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ProductPreviewDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/user/recommendation/pick")
     public ResponseEntity<?> recommendProductOnPick(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         List<Long> productIds = findRecommendedProductIdsOnPick(principalDetails.getUser().getId());
-        List<ProductPreviewDto> products = productService.recommendProduct(productIds, false);
+        List<ResponseProductPreviewDto> products = productService.recommendProduct(productIds, false);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -241,7 +249,7 @@ public class UserController {
             return productIds;
         }
 
-        MeasurementDto measurement = userService.measurementInfo(userId); //request
+        ResponseMeasurementDto measurement = userService.measurementInfo(userId); //request
         /**
          * TODO: 비슷한 체형 고객 pick API에서 데이터를 받아오는 로직 추가 필요
          * - 해당 API에서 가져오는 상품 개수가 10개라고 가정

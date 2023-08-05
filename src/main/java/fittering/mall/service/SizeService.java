@@ -1,12 +1,13 @@
 package fittering.mall.service;
 
+import fittering.mall.domain.mapper.SizeMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import fittering.mall.domain.dto.BottomDto;
-import fittering.mall.domain.dto.DressDto;
-import fittering.mall.domain.dto.OuterDto;
-import fittering.mall.domain.dto.TopDto;
+import fittering.mall.domain.dto.service.BottomDto;
+import fittering.mall.domain.dto.service.DressDto;
+import fittering.mall.domain.dto.service.OuterDto;
+import fittering.mall.domain.dto.service.TopDto;
 import fittering.mall.domain.entity.*;
 import fittering.mall.repository.*;
 
@@ -22,12 +23,7 @@ public class SizeService {
 
     @Transactional
     public Size saveOuter(OuterDto outerDto, Product product) {
-        Outer outer = outerRepository.save(Outer.builder()
-                                            .full(outerDto.getFull())
-                                            .shoulder(outerDto.getShoulder())
-                                            .chest(outerDto.getChest())
-                                            .sleeve(outerDto.getSleeve())
-                                            .build());
+        Outer outer = outerRepository.save(SizeMapper.INSTANCE.toOuter(outerDto));
         return sizeRepository.save(Size.builder()
                                     .name(outerDto.getName())
                                     .outer(outer)
@@ -37,12 +33,7 @@ public class SizeService {
 
     @Transactional
     public Size saveTop(TopDto topDto, Product product) {
-        Top top = topRepository.save(Top.builder()
-                                        .full(topDto.getFull())
-                                        .shoulder(topDto.getShoulder())
-                                        .chest(topDto.getChest())
-                                        .sleeve(topDto.getSleeve())
-                                        .build());
+        Top top = topRepository.save(SizeMapper.INSTANCE.toTop(topDto));
         return sizeRepository.save(Size.builder()
                                     .name(topDto.getName())
                                     .top(top)
@@ -52,17 +43,7 @@ public class SizeService {
 
     @Transactional
     public Size saveDress(DressDto dressDto, Product product) {
-        Dress dress = dressRepository.save(Dress.builder()
-                                            .full(dressDto.getFull())
-                                            .shoulder(dressDto.getShoulder())
-                                            .chest(dressDto.getChest())
-                                            .waist(dressDto.getWaist())
-                                            .armHall(dressDto.getArmHall())
-                                            .hip(dressDto.getHip())
-                                            .sleeve(dressDto.getSleeve())
-                                            .sleeveWidth(dressDto.getSleeveWidth())
-                                            .bottomWidth(dressDto.getBottomWidth())
-                                            .build());
+        Dress dress = dressRepository.save(SizeMapper.INSTANCE.toDress(dressDto));
         return sizeRepository.save(Size.builder()
                                     .name(dressDto.getName())
                                     .dress(dress)
@@ -72,14 +53,7 @@ public class SizeService {
 
     @Transactional
     public Size saveBottom(BottomDto bottomDto, Product product) {
-        Bottom bottom = bottomRepository.save(Bottom.builder()
-                                                .full(bottomDto.getFull())
-                                                .waist(bottomDto.getWaist())
-                                                .thigh(bottomDto.getThigh())
-                                                .rise(bottomDto.getRise())
-                                                .bottomWidth(bottomDto.getBottomWidth())
-                                                .hipWidth(bottomDto.getHipWidth())
-                                                .build());
+        Bottom bottom = bottomRepository.save(SizeMapper.INSTANCE.toBottom(bottomDto));
         return sizeRepository.save(Size.builder()
                                     .name(bottomDto.getName())
                                     .bottom(bottom)
