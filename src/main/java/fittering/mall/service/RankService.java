@@ -59,13 +59,14 @@ public class RankService {
 
             int productCount = 0;
             for (Product productProxy : products) {
-                if (productCount++ == MAX_PRODUCT_COUNT) break;
+                if (isEnoughProducts(productCount)) break;
+                productCount++;
                 Product product = productRepository.findById(productProxy.getId())
                         .orElseThrow(() -> new NoResultException("product doesn't exist"));
                 productDtos.add(ResponseMallRankProductDto.builder()
-                                                .productId(product.getId())
-                                                .productImage(product.getImage())
-                                                .build());
+                                                    .productId(product.getId())
+                                                    .productImage(product.getImage())
+                                                    .build());
             }
 
             result.add(MallMapper.INSTANCE.toResponseMallDto(mall, rank.getView()));
@@ -124,5 +125,9 @@ public class RankService {
                                 .mall(mall)
                                 .view(1)
                                 .build());
+    }
+
+    private boolean isEnoughProducts(int count) {
+        return count >= MAX_PRODUCT_COUNT;
     }
 }

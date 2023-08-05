@@ -47,13 +47,14 @@ public class FavoriteService {
 
             int productCount = 0;
             for (Product productProxy : products) {
-                if(productCount++ == MAX_PRODUCT_COUNT) break;
+                if (isEnoughProducts(productCount)) break;
+                productCount++;
                 Product product = productRepository.findById(productProxy.getId())
                         .orElseThrow(() -> new NoResultException("product dosen't exist"));
                 productDtos.add(ResponseMallRankProductDto.builder()
-                        .productId(product.getId())
-                        .productImage(product.getImage())
-                        .build());
+                                                    .productId(product.getId())
+                                                    .productImage(product.getImage())
+                                                    .build());
             }
 
             result.add(MallMapper.INSTANCE.toResponseMallDto(mall, 0));
@@ -98,5 +99,9 @@ public class FavoriteService {
     @Transactional
     public void deleteFavoriteProduct(Long userId, Long productId) {
         favoriteRepository.deleteByUserIdAndProductId(userId, productId);
+    }
+
+    private boolean isEnoughProducts(int count) {
+        return count >= MAX_PRODUCT_COUNT;
     }
 }
