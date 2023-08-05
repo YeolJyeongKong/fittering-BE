@@ -7,9 +7,6 @@ import fittering.mall.domain.dto.service.OuterProductDto;
 import fittering.mall.domain.dto.service.TopProductDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import fittering.mall.domain.entity.Product;
-
-import java.util.List;
 
 public interface ProductRepositoryCustom {
     ResponseProductPreviewDto productById(Long productId);
@@ -24,7 +21,6 @@ public interface ProductRepositoryCustom {
     TopProductDto topProductDetail(Long productId);
     DressProductDto dressProductDetail(Long productId);
     BottomProductDto bottomProductDetail(Long productId);
-    List<Product> findByIds(List<Long> productIds);
     Long findFavoriteCount(Long favoriteId);
     Long findRecentCount(Long recentId);
     Long findRecentRecommendation(Long recentRecommendationId);

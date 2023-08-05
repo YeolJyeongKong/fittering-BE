@@ -497,23 +497,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public List<Product> findByIds(List<Long> productIds) {
-        List<Product> result = new ArrayList<>();
-
-        for (Long productId : productIds) {
-            Product product = queryFactory
-                    .selectFrom(QProduct.product)
-                    .where(
-                            productIdEq(productId)
-                    )
-                    .fetchOne();
-            result.add(product);
-        }
-
-        return result;
-    }
-
-    @Override
     public Long findFavoriteCount(Long favoriteId) {
         Long nullableCount = queryFactory
                 .select(product.count())

@@ -28,7 +28,6 @@ import fittering.mall.config.auth.PrincipalDetails;
 import fittering.mall.domain.entity.Product;
 import fittering.mall.service.FavoriteService;
 import fittering.mall.service.ProductService;
-import fittering.mall.service.RankService;
 import fittering.mall.service.UserService;
 
 import java.util.ArrayList;
@@ -43,7 +42,6 @@ public class UserController {
     private final UserService userService;
     private final ProductService productService;
     private final FavoriteService favoriteService;
-    private final RankService rankService;
 
     @Operation(summary = "마이페이지 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseUserDto.class)))
