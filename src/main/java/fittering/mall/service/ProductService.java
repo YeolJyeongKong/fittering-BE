@@ -80,7 +80,7 @@ public class ProductService {
         subCategoryRepository.findAll().forEach(subCategory -> {
             ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
                     subCategory.getName(),
-                    productRepository.productCountWithCategory(subCategory.getId())
+                    productRepository.productCountWithSubCategory(subCategory.getId())
             );
             result.add(categoryDto);
         });
