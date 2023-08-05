@@ -10,7 +10,6 @@ import org.hibernate.validator.constraints.Length;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.FetchType.*;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
@@ -36,8 +35,8 @@ public class Mall {
     @OneToMany(mappedBy = "mall")
     private List<Product> products = new ArrayList<>();
 
-    @OneToOne(mappedBy = "mall", fetch = LAZY)
-    private Rank rank;
+    @OneToMany(mappedBy = "mall")
+    private List<Rank> ranks = new ArrayList<>();
 
     @OneToMany(mappedBy = "mall")
     private List<Favorite> favorites = new ArrayList<>();
@@ -48,9 +47,5 @@ public class Mall {
         this.url = url;
         this.image = image;
         this.description = description;
-    }
-
-    public void deleteRank() {
-        rank = null;
     }
 }

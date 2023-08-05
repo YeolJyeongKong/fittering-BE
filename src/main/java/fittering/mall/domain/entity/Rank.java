@@ -29,7 +29,7 @@ public class Rank {
     private User user;
 
     @JsonIgnore
-    @OneToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "mall_id")
     private Mall mall;
 
