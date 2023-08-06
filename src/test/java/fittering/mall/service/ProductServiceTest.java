@@ -1,9 +1,11 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.service.BottomProductDto;
+import fittering.mall.domain.dto.controller.response.ResponseBottomDto;
+import fittering.mall.domain.dto.controller.response.ResponseProductCategoryDto;
+import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.domain.dto.controller.response.ResponseTopDto;
 import fittering.mall.domain.dto.service.MallDto;
-import fittering.mall.domain.dto.service.TopProductDto;
-import fittering.mall.domain.dto.controller.request.RequestSignUpDto;
+import fittering.mall.domain.dto.service.SignUpDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +58,7 @@ class ProductServiceTest {
         topSubCategory = categoryService.saveSubCategory("top", "shirt");
         bottomSubCategory = categoryService.saveSubCategory("bottom", "pants");
         mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
-        user = userService.save(new RequestSignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
+        user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         descImgsStr = List.of("descImage.jpg");
         product = productService.save(Product.builder()
                 .price(10000)
@@ -133,7 +135,7 @@ class ProductServiceTest {
 
     @Test
     void productWithCategory() {
-        Page<ProductPreviewDto> findProductByCategory =
+        Page<ResponseProductPreviewDto> findProductByCategory =
                 productService.productWithCategory(topCategory.getId(), "M", 0L, PageRequest.of(0, 10));
         compareProduct(product, findProductByCategory.getContent().get(0));
         compareProduct(product2, findProductByCategory.getContent().get(1));
@@ -144,7 +146,7 @@ class ProductServiceTest {
 
     @Test
     void productWithCategoryOfMall() {
-        Page<ProductPreviewDto> findProductByCategoryOfMall =
+        Page<ResponseProductPreviewDto> findProductByCategoryOfMall =
                 productService.productWithCategoryOfMall(mall.getId(), topCategory.getId(), "M", 0L, PageRequest.of(0, 10));
         compareProduct(product, findProductByCategoryOfMall.getContent().get(0));
         compareProduct(product2, findProductByCategoryOfMall.getContent().get(1));
@@ -234,7 +236,7 @@ class ProductServiceTest {
         List<DescriptionImage> bottomDescriptionImgs3 = List.of(new DescriptionImage(descImgsStr.get(0), bottomProduct3));
         List<DescriptionImage> bottomDescriptionImgs4 = List.of(new DescriptionImage(descImgsStr.get(0), bottomProduct4));
 
-        List<ProductCategoryDto> findProductCountsOnCategory = productService.multipleProductCountWithCategory();
+        List<ResponseProductCategoryDto> findProductCountsOnCategory = productService.multipleProductCountWithCategory();
         assertThat(findProductCountsOnCategory.get(0).getCount()).isEqualTo(7);
         assertThat(findProductCountsOnCategory.get(1).getCount()).isEqualTo(4);
     }
@@ -323,11 +325,11 @@ class ProductServiceTest {
         List<DescriptionImage> bottomDescriptionImgs4 = List.of(new DescriptionImage(descImgsStr.get(0), bottomProduct4));
 
 
-        List<ProductCategoryDto> findProductCountsOnCategoryOfMall = productService.productCountWithCategoryOfMall(mall.getId());
+        List<ResponseProductCategoryDto> findProductCountsOnCategoryOfMall = productService.productCountWithCategoryOfMall(mall.getId());
         assertThat(findProductCountsOnCategoryOfMall.get(0).getCount()).isEqualTo(7);
         assertThat(findProductCountsOnCategoryOfMall.get(1).getCount()).isEqualTo(0);
 
-        List<ProductCategoryDto> findProductCountsOnCategoryOfMall2 = productService.productCountWithCategoryOfMall(mall2.getId());
+        List<ResponseProductCategoryDto> findProductCountsOnCategoryOfMall2 = productService.productCountWithCategoryOfMall(mall2.getId());
         assertThat(findProductCountsOnCategoryOfMall2.get(0).getCount()).isEqualTo(0);
         assertThat(findProductCountsOnCategoryOfMall2.get(1).getCount()).isEqualTo(4);
     }
@@ -343,7 +345,7 @@ class ProductServiceTest {
         }};
 
         //preview
-        List<ProductPreviewDto> recommendedProductsPreview = productService.recommendProduct(productIds, true);
+        List<ResponseProductPreviewDto> recommendedProductsPreview = productService.recommendProduct(productIds, true);
         assertThat(recommendedProductsPreview.size()).isEqualTo(4);
         compareProduct(product, recommendedProductsPreview.get(0));
         compareProduct(product2, recommendedProductsPreview.get(1));
@@ -351,7 +353,7 @@ class ProductServiceTest {
         compareProduct(product4, recommendedProductsPreview.get(3));
 
         //not preview
-        List<ProductPreviewDto> recommendedProducts = productService.recommendProduct(productIds, false);
+        List<ResponseProductPreviewDto> recommendedProducts = productService.recommendProduct(productIds, false);
         assertThat(recommendedProducts.size()).isEqualTo(5);
         compareProduct(product, recommendedProducts.get(0));
         compareProduct(product2, recommendedProducts.get(1));
@@ -362,7 +364,7 @@ class ProductServiceTest {
 
     @Test
     void topProductDetail() {
-        TopProductDto topProductDto = productService.topProductDetail(product.getId());
+        ResponseTopDto topProductDto = productService.topProductDetail(product.getId());
         assertThat(topProductDto.getProductImage()).isEqualTo(product.getImage());
         assertThat(topProductDto.getProductName()).isEqualTo(product.getName());
         assertThat(topProductDto.getProductGender()).isEqualTo(product.getGender());
@@ -392,7 +394,7 @@ class ProductServiceTest {
                 .build());
         List<DescriptionImage> bottomDescriptionImgs = List.of(new DescriptionImage(descImgsStr.get(0), bottomProduct));
 
-        BottomProductDto bottomProductDto = productService.bottomProductDetail(bottomProduct.getId());
+        ResponseBottomDto bottomProductDto = productService.bottomProductDetail(bottomProduct.getId());
         assertThat(bottomProductDto.getProductImage()).isEqualTo(bottomProduct.getImage());
         assertThat(bottomProductDto.getProductName()).isEqualTo(bottomProduct.getName());
         assertThat(bottomProductDto.getProductGender()).isEqualTo(bottomProduct.getGender());
@@ -461,7 +463,7 @@ class ProductServiceTest {
         });
     }
 
-    private static void compareProduct(Product savedProduct, ProductPreviewDto productPreviewDto) {
+    private static void compareProduct(Product savedProduct, ResponseProductPreviewDto productPreviewDto) {
         assertThat(productPreviewDto.getProductId()).isEqualTo(savedProduct.getId());
         assertThat(productPreviewDto.getProductImage()).isEqualTo(savedProduct.getImage());
         assertThat(productPreviewDto.getProductName()).isEqualTo(savedProduct.getName());

@@ -1,8 +1,9 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.request.RequestSignUpDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
 import fittering.mall.domain.dto.service.MallDto;
-import fittering.mall.domain.dto.service.MallRankProductDto;
+import fittering.mall.domain.dto.service.SignUpDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ class RankServiceTest {
         topSubCategory = categoryService.saveSubCategory("top", "shirt");
         mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
         mall2 = mallService.save(new MallDto(2L, "testMall2", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
-        user = userService.save(new RequestSignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
+        user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         descImgsStr = List.of("descImage.jpg");
         product = productService.save(Product.builder()
                 .price(10000)
@@ -117,14 +118,14 @@ class RankServiceTest {
         Rank rank1 = rankService.save(user.getId(), mall.getId());
         Rank rank2 = rankService.save(user.getId(), mall2.getId());
 
-        List<MallDto> mallDtos = rankService.mallRank(user.getId());
+        List<ResponseMallDto> mallDtos = rankService.mallRank(user.getId());
 
         assertThat(mallDtos.get(0).getId()).isEqualTo(rank1.getMall().getId());
         assertThat(mallDtos.get(0).getName()).isEqualTo(rank1.getMall().getName());
         assertThat(mallDtos.get(0).getImage()).isEqualTo(rank1.getMall().getImage());
         assertThat(mallDtos.get(0).getView()).isEqualTo(rank1.getView());
 
-        List<MallRankProductDto> productDto = mallDtos.get(0).getProducts();
+        List<ResponseMallRankProductDto> productDto = mallDtos.get(0).getProducts();
         assertThat(productDto.get(0).getProductId()).isEqualTo(product.getId());
         assertThat(productDto.get(0).getProductImage()).isEqualTo(product.getImage());
         assertThat(productDto.get(1).getProductId()).isEqualTo(product2.getId());

@@ -1,6 +1,8 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.request.RequestSignUpDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallDto;
+import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.domain.dto.service.SignUpDto;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import fittering.mall.domain.RestPage;
 import fittering.mall.domain.dto.service.MallDto;
-import fittering.mall.domain.dto.ProductPreviewDto;
 import fittering.mall.domain.entity.*;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ class FavoriteServiceTest {
     @Test
     @DisplayName("유저 즐겨찾기 쇼핑몰 테스트")
     void favoriteMallTest() {
-        User user = userService.save(new RequestSignUpDto("tes", "password", "test@test.com", "M", 1, 2, 3));
+        User user = userService.save(new SignUpDto("tes", "password", "test@test.com", "M", 1, 2, 3));
         Mall mall1 = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
         Mall mall2 = mallService.save(new MallDto(2L, "testMall2", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
         Mall mall3 = mallService.save(new MallDto(3L, "testMall3", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
@@ -49,10 +50,10 @@ class FavoriteServiceTest {
         savedFavorite.add(createMallDto(savedFavorite2));
         savedFavorite.add(createMallDto(savedFavorite3));
 
-        List<MallDto> findFavorites = favoriteService.userFavoriteMall(user.getId());
+        List<ResponseMallDto> findFavorites = favoriteService.userFavoriteMall(user.getId());
         for (int i=0; i<findFavorites.size(); i++) {
             MallDto savedMallDto = savedFavorite.get(i);
-            MallDto findMallDto = findFavorites.get(i);
+            ResponseMallDto findMallDto = findFavorites.get(i);
             checkMallDto(savedMallDto, findMallDto);
         }
 
@@ -60,7 +61,7 @@ class FavoriteServiceTest {
         favoriteService.deleteFavoriteMall(user.getId(), mall2.getId());
         favoriteService.deleteFavoriteMall(user.getId(), mall3.getId());
 
-        List<MallDto> deletedUserList = favoriteService.userFavoriteMall(user.getId());
+        List<ResponseMallDto> deletedUserList = favoriteService.userFavoriteMall(user.getId());
         assertThat(deletedUserList.size()).isEqualTo(0);
     }
 
@@ -70,7 +71,7 @@ class FavoriteServiceTest {
         Category category = categoryService.save("top");
         SubCategory subCategory = categoryService.saveSubCategory("top", "shirt");
         Mall mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
-        User user = userService.save(new RequestSignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
+        User user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         List<String> descImgsStr = List.of("descImage.jpg");
 
         Product product = productService.save(Product.builder()
@@ -118,7 +119,7 @@ class FavoriteServiceTest {
         favoriteService.saveFavoriteProduct(user.getId(), product2.getId());
         favoriteService.saveFavoriteProduct(user.getId(), product3.getId());
 
-        RestPage<ProductPreviewDto> products = favoriteService.userFavoriteProduct(user.getId(), PageRequest.of(0, 10));
+        RestPage<ResponseProductPreviewDto> products = favoriteService.userFavoriteProduct(user.getId(), PageRequest.of(0, 10));
         assertThat(products.getTotalElements()).isEqualTo(3);
         compareProduct(product, products.getContent().get(0));
         compareProduct(product2, products.getContent().get(1));
@@ -128,11 +129,11 @@ class FavoriteServiceTest {
         favoriteService.deleteFavoriteProduct(user.getId(), product2.getId());
         favoriteService.deleteFavoriteProduct(user.getId(), product3.getId());
 
-        RestPage<ProductPreviewDto> deletedProducts = favoriteService.userFavoriteProduct(user.getId(), PageRequest.of(0, 10));
+        RestPage<ResponseProductPreviewDto> deletedProducts = favoriteService.userFavoriteProduct(user.getId(), PageRequest.of(0, 10));
         assertThat(deletedProducts.getTotalElements()).isEqualTo(0);
     }
 
-    private static void checkMallDto(MallDto savedMallDto, MallDto findMallDto) {
+    private static void checkMallDto(MallDto savedMallDto, ResponseMallDto findMallDto) {
         assertThat(savedMallDto.getId()).isEqualTo(findMallDto.getId());
         assertThat(savedMallDto.getName()).isEqualTo(findMallDto.getName());
         assertThat(savedMallDto.getImage()).isEqualTo(findMallDto.getImage());
@@ -145,7 +146,7 @@ class FavoriteServiceTest {
                 mall.getDescription(), 0, new ArrayList<>());
     }
 
-    private static void compareProduct(Product savedProduct, ProductPreviewDto productPreviewDto) {
+    private static void compareProduct(Product savedProduct, ResponseProductPreviewDto productPreviewDto) {
         assertThat(productPreviewDto.getProductId()).isEqualTo(savedProduct.getId());
         assertThat(productPreviewDto.getProductImage()).isEqualTo(savedProduct.getImage());
         assertThat(productPreviewDto.getProductName()).isEqualTo(savedProduct.getName());

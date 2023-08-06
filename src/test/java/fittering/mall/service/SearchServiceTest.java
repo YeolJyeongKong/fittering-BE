@@ -1,6 +1,7 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.request.RequestSignUpDto;
+import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.domain.dto.service.SignUpDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.RestPage;
 import fittering.mall.domain.dto.service.MallDto;
-import fittering.mall.domain.dto.ProductPreviewDto;
 import fittering.mall.domain.entity.*;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ class SearchServiceTest {
         topSubCategory = categoryService.saveSubCategory("top", "shirt");
         mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
         mall2 = mallService.save(new MallDto(2L, "testMall2", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
-        user = userService.save(new RequestSignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
+        user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         descImgsStr = List.of("descImage.jpg");
         product = productService.save(Product.builder()
                 .price(10000)
@@ -113,16 +113,16 @@ class SearchServiceTest {
 
     @Test
     void products() {
-        RestPage<ProductPreviewDto> shirtProducts = searchService.products("셔츠", "M", 0L, PageRequest.of(0, 10));
+        RestPage<ResponseProductPreviewDto> shirtProducts = searchService.products("셔츠", "M", 0L, PageRequest.of(0, 10));
         List<Product> products = List.of(product, product2, product3);
         for (int i=0; i<products.size(); i++) {
             Product product = products.get(i);
-            ProductPreviewDto shirtProduct = shirtProducts.getContent().get(i);
+            ResponseProductPreviewDto shirtProduct = shirtProducts.getContent().get(i);
             compareProduct(product, shirtProduct);
         }
     }
 
-    private static void compareProduct(Product savedProduct, ProductPreviewDto productService) {
+    private static void compareProduct(Product savedProduct, ResponseProductPreviewDto productService) {
         assertThat(productService.getProductId()).isEqualTo(savedProduct.getId());
         assertThat(productService.getProductImage()).isEqualTo(savedProduct.getImage());
         assertThat(productService.getProductName()).isEqualTo(savedProduct.getName());

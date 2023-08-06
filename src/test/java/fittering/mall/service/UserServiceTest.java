@@ -1,10 +1,11 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.service.LoginDto;
-import fittering.mall.domain.dto.controller.request.RequestSignUpDto;
-import fittering.mall.domain.dto.service.MallDto;
-import fittering.mall.domain.dto.service.MeasurementDto;
-import fittering.mall.domain.dto.service.UserDto;
+import fittering.mall.domain.dto.controller.request.RequestUserDto;
+import fittering.mall.domain.dto.controller.response.ResponseMeasurementDto;
+import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.domain.dto.controller.response.ResponseUserDto;
+import fittering.mall.domain.dto.service.*;
+import fittering.mall.domain.mapper.MeasurementMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = userService.save(new RequestSignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
+        user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
         category = categoryService.save("top");
         subCategory = categoryService.saveSubCategory("top", "shirt");
         mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
@@ -96,7 +97,7 @@ class UserServiceTest {
 
     @Test
     void info() {
-        UserDto userInfo = userService.info(user.getId());
+        ResponseUserDto userInfo = userService.info(user.getId());
         assertThat(userInfo.getEmail()).isEqualTo(user.getEmail());
         assertThat(userInfo.getUsername()).isEqualTo(user.getUsername());
         assertThat(userInfo.getGender()).isEqualTo(user.getGender());
@@ -107,7 +108,7 @@ class UserServiceTest {
 
     @Test
     void infoUpdate() {
-        UserDto userDto = new UserDto("test@test.com", "testUser", "M", 1996, 12, 25);
+        RequestUserDto userDto = new RequestUserDto("test@test.com", "testUser", "M", 1996, 12, 25);
         userService.infoUpdate(userDto, user.getId());
 
         assertThat(user.getEmail()).isEqualTo(userDto.getEmail());
@@ -126,30 +127,41 @@ class UserServiceTest {
 
     @Test
     void measurementInfo() {
-        MeasurementDto measurement = userService.measurementInfo(user.getId());
-        measurementCheck(measurement, new MeasurementDto(new Measurement()));
+        ResponseMeasurementDto measurement = userService.measurementInfo(user.getId());
+        measurementCheck(measurement, new ResponseMeasurementDto());
 
         MeasurementDto newMeasurment = new MeasurementDto(200, 100, 100, 120, 100, 99, 98, 80, 76);
         userService.measurementUpdate(newMeasurment, user.getId());
 
-        measurementCheck(newMeasurment, new MeasurementDto(user.getMeasurement()));
+        measurementCheck(MeasurementMapper.INSTANCE.toResponseMeasurementDto(newMeasurment),
+                        ResponseMeasurementDto.builder()
+                                .height(user.getMeasurement().getHeight())
+                                .weight(user.getMeasurement().getWeight())
+                                .arm(user.getMeasurement().getArm())
+                                .leg(user.getMeasurement().getLeg())
+                                .shoulder(user.getMeasurement().getShoulder())
+                                .waist(user.getMeasurement().getWaist())
+                                .chest(user.getMeasurement().getChest())
+                                .thigh(user.getMeasurement().getThigh())
+                                .hip(user.getMeasurement().getHip())
+                                .build());
     }
 
     @Test
     void recentProduct() {
         userService.saveRecentProduct(user.getId(), product.getId());
-        List<ProductPreviewDto> products = userService.recentProductPreview(user.getId());
+        List<ResponseProductPreviewDto> products = userService.recentProductPreview(user.getId());
         compareProduct(product, products.get(0));
     }
 
     @Test
     void favoriteProductTest() {
         favoriteService.saveFavoriteProduct(user.getId(), product.getId());
-        RestPage<ProductPreviewDto> findProducts = favoriteService.userFavoriteProduct(user.getId(), PageRequest.of(0, 10));
+        RestPage<ResponseProductPreviewDto> findProducts = favoriteService.userFavoriteProduct(user.getId(), PageRequest.of(0, 10));
         compareProduct(product, findProducts.getContent().get(0));
 
         favoriteService.deleteFavoriteProduct(user.getId(), product.getId());
-        RestPage<ProductPreviewDto> deletedProducts = favoriteService.userFavoriteProduct(user.getId(), PageRequest.of(0, 10));
+        RestPage<ResponseProductPreviewDto> deletedProducts = favoriteService.userFavoriteProduct(user.getId(), PageRequest.of(0, 10));
         assertThat(deletedProducts.getContent().size()).isEqualTo(0);
     }
 
@@ -203,7 +215,7 @@ class UserServiceTest {
         assertThat(userRepository.findById(user.getId())).isEmpty();
     }
 
-    private static void measurementCheck(MeasurementDto measurementDto, MeasurementDto measurementDto2) {
+    private static void measurementCheck(ResponseMeasurementDto measurementDto, ResponseMeasurementDto measurementDto2) {
         assertThat(measurementDto.getHeight()).isEqualTo(measurementDto2.getHeight());
         assertThat(measurementDto.getWeight()).isEqualTo(measurementDto2.getWeight());
         assertThat(measurementDto.getArm()).isEqualTo(measurementDto2.getArm());
@@ -215,7 +227,7 @@ class UserServiceTest {
         assertThat(measurementDto.getHip()).isEqualTo(measurementDto2.getHip());
     }
 
-    private static void compareProduct(Product savedProduct, ProductPreviewDto productPreviewDto) {
+    private static void compareProduct(Product savedProduct, ResponseProductPreviewDto productPreviewDto) {
         assertThat(productPreviewDto.getProductId()).isEqualTo(savedProduct.getId());
         assertThat(productPreviewDto.getProductImage()).isEqualTo(savedProduct.getImage());
         assertThat(productPreviewDto.getProductName()).isEqualTo(savedProduct.getName());
