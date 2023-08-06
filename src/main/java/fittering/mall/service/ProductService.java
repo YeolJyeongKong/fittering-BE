@@ -202,4 +202,9 @@ public class ProductService {
         });
         return result;
     }
+
+    @Transactional
+    public void initializeTimeView() {
+        productRepository.findAll().forEach(Product::initializeTimeView);
+    }
 }

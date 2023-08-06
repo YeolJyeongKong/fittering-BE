@@ -101,4 +101,8 @@ public class Product {
     public void updateTimeView() {
         timeView = timeView + 1;
     }
+
+    public void initializeTimeView() {
+        timeView = 0;
+    }
 }
