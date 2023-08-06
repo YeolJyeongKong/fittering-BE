@@ -95,11 +95,11 @@ public class Product {
     }
 
     public void updateView() {
-        view = view + 1;
+        view++;
     }
 
     public void updateTimeView() {
-        timeView = timeView + 1;
+        timeView++;
     }
 
     public void initializeTimeView() {
