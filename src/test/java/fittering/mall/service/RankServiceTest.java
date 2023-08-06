@@ -142,8 +142,8 @@ class RankServiceTest {
         assertThat(productDto.get(0).getProductId()).isEqualTo(product4.getId());
         assertThat(productDto.get(0).getProductImage()).isEqualTo(product4.getImage());
 
-        rankService.updateViewOnProduct(user.getId(), product.getId());
-        rankService.updateViewOnProduct(user.getId(), product4.getId());
+        rankService.updateViewOnMall(user.getId(), product.getMall().getId());
+        rankService.updateViewOnMall(user.getId(), product4.getMall().getId());
 
         rank1 = rankService.findById(rank1.getId());
         rank2 = rankService.findById(rank2.getId());

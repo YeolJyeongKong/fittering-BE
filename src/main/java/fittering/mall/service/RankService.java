@@ -84,29 +84,6 @@ public class RankService {
     }
 
     @Transactional
-    public void updateViewOnProduct(Long userId, Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NoResultException("product doesn't exist"));
-        Optional<Rank> optionalRank = rankRepository.findByUserIdAndMallId(userId, product.getMall().getId());
-
-        if (optionalRank.isPresent()) {
-            Rank rank = optionalRank.get();
-            rank.updateView();
-            return;
-        }
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoResultException("user doesn't exist"));
-        Mall mall = mallRepository.findById(product.getMall().getId())
-                .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-        rankRepository.save(Rank.builder()
-                                .user(user)
-                                .mall(mall)
-                                .view(1)
-                                .build());
-    }
-
-    @Transactional
     public void updateViewOnMall(Long userId, Long mallId) {
         Optional<Rank> optionalRank = rankRepository.findByUserIdAndMallId(userId, mallId);
 
