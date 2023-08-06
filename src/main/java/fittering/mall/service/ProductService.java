@@ -150,6 +150,7 @@ public class ProductService {
     public void updateView(Long productId) {
         Product product = findById(productId);
         product.updateView();
+        product.updateTimeView();
     }
 
     @Transactional
@@ -200,5 +201,10 @@ public class ProductService {
             result.add(descriptionImageRepository.save(descriptionImage));
         });
         return result;
+    }
+
+    @Transactional
+    public void initializeTimeView() {
+        productRepository.findAll().forEach(Product::initializeTimeView);
     }
 }

@@ -24,6 +24,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RankService {
 
+    private static final int INITIAL_VIEW = 0;
+    private static final int FIRST_VIEW = 1;
     private static final int MAX_PRODUCT_COUNT = 5;
     private final UserRepository userRepository;
     private final MallRepository mallRepository;
@@ -39,7 +41,7 @@ public class RankService {
         return rankRepository.save(Rank.builder()
                                     .user(user)
                                     .mall(mall)
-                                    .view(0)
+                                    .view(INITIAL_VIEW)
                                     .build());
     }
 
@@ -84,29 +86,6 @@ public class RankService {
     }
 
     @Transactional
-    public void updateViewOnProduct(Long userId, Long productId) {
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new NoResultException("product doesn't exist"));
-        Optional<Rank> optionalRank = rankRepository.findByUserIdAndMallId(userId, product.getMall().getId());
-
-        if (optionalRank.isPresent()) {
-            Rank rank = optionalRank.get();
-            rank.updateView();
-            return;
-        }
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoResultException("user doesn't exist"));
-        Mall mall = mallRepository.findById(product.getMall().getId())
-                .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-        rankRepository.save(Rank.builder()
-                                .user(user)
-                                .mall(mall)
-                                .view(1)
-                                .build());
-    }
-
-    @Transactional
     public void updateViewOnMall(Long userId, Long mallId) {
         Optional<Rank> optionalRank = rankRepository.findByUserIdAndMallId(userId, mallId);
 
@@ -123,7 +102,7 @@ public class RankService {
         rankRepository.save(Rank.builder()
                                 .user(user)
                                 .mall(mall)
-                                .view(1)
+                                .view(FIRST_VIEW)
                                 .build());
     }
 

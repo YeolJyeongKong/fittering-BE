@@ -95,6 +95,14 @@ public class Product {
     }
 
     public void updateView() {
-        view = view + 1;
+        view++;
+    }
+
+    public void updateTimeView() {
+        timeView++;
+    }
+
+    public void initializeTimeView() {
+        timeView = 0;
     }
 }
