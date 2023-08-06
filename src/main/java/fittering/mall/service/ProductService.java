@@ -150,6 +150,7 @@ public class ProductService {
     public void updateView(Long productId) {
         Product product = findById(productId);
         product.updateView();
+        product.updateTimeView();
     }
 
     @Transactional

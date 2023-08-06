@@ -97,4 +97,8 @@ public class Product {
     public void updateView() {
         view = view + 1;
     }
+
+    public void updateTimeView() {
+        timeView = timeView + 1;
+    }
 }
