@@ -24,7 +24,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RankService {
 
-    private static final int INITIAL_VIEW = 1;
+    private static final int INITIAL_VIEW = 0;
+    private static final int FIRST_VIEW = 1;
     private static final int MAX_PRODUCT_COUNT = 5;
     private final UserRepository userRepository;
     private final MallRepository mallRepository;
@@ -40,7 +41,7 @@ public class RankService {
         return rankRepository.save(Rank.builder()
                                     .user(user)
                                     .mall(mall)
-                                    .view(0)
+                                    .view(INITIAL_VIEW)
                                     .build());
     }
 
@@ -101,7 +102,7 @@ public class RankService {
         rankRepository.save(Rank.builder()
                                 .user(user)
                                 .mall(mall)
-                                .view(INITIAL_VIEW)
+                                .view(FIRST_VIEW)
                                 .build());
     }
 
