@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers("/login", "/signup", "/error").permitAll()
-                                .requestMatchers("/api/v1/login", "api/v1/signup").permitAll()
+                                .requestMatchers("/api/v1/login", "/api/v1/signup").permitAll()
                                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/api-docs/**").permitAll()
                                 .requestMatchers("/actuator/prometheus/**").permitAll()
 //                                .anyRequest().authenticated()
