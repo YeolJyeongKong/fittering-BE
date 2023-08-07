@@ -49,7 +49,7 @@ public class UserService {
     public User save(SignUpDto signUpDto) {
         Measurement measurement = measurementRepository.save(new Measurement());
         User user = UserMapper.INSTANCE.toUser(signUpDto, getAgeRange(signUpDto.getYear(), signUpDto.getMonth(), signUpDto.getDay()),
-                passwordEncoder.encode(signUpDto.getPassword()), measurement, new ArrayList<>(List.of("USER")));
+                passwordEncoder.encode(signUpDto.getPassword()), measurement, new ArrayList<>(List.of("ROLE_USER")));
         return userRepository.save(user);
     }
 
