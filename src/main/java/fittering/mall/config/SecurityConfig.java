@@ -33,7 +33,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
-                                .requestMatchers("/login", "/signup").permitAll()
+                                .requestMatchers("/login", "/signup", "/error").permitAll()
                                 .requestMatchers("/api/v1/login", "api/v1/signup").permitAll()
                                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/api-docs/**").permitAll()
                                 .requestMatchers("/actuator/prometheus/**").permitAll()
