@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestMallDto {
-    private Long id;
     private String name;
     private String url;
     private String image;
