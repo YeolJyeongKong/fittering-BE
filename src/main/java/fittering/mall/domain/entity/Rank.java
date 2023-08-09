@@ -40,7 +40,7 @@ public class Rank {
         this.view = view;
     }
 
-    public void updateView() {
-        view++;
+    public void updateView(Integer view) {
+        this.view += view;
     }
 }
