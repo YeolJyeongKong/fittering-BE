@@ -31,6 +31,7 @@ public class RankService {
     private final MallRepository mallRepository;
     private final RankRepository rankRepository;
     private final ProductRepository productRepository;
+    private final RedisService redisService;
 
     @Transactional
     public Rank save(Long userId, Long mallId) {
@@ -90,8 +91,8 @@ public class RankService {
         Optional<Rank> optionalRank = rankRepository.findByUserIdAndMallId(userId, mallId);
 
         if(optionalRank.isPresent()) {
-            Rank rank = optionalRank.get();
-            rank.updateView();
+            Long rankId = optionalRank.get().getId();
+            redisService.batchUpdateViewOfRank(rankId);
             return;
         }
 

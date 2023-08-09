@@ -30,6 +30,7 @@ public class ProductService {
     private final UserRecommendationRepository userRecommendationRepository;
     private final DescriptionImageRepository descriptionImageRepository;
     private final SubCategoryRepository subCategoryRepository;
+    private final RedisService redisService;
 
     @Transactional
     public Product save(Product product) {
@@ -146,11 +147,9 @@ public class ProductService {
         return SizeMapper.INSTANCE.toResponseBottomDto(productRepository.bottomProductDetail(productId));
     }
 
-    @Transactional
     public void updateView(Long productId) {
-        Product product = findById(productId);
-        product.updateView();
-        product.updateTimeView();
+        redisService.updateViewOfProduct(productId);
+        redisService.updateTimeViewOfProduct(productId);
     }
 
     @Transactional
