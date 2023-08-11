@@ -2,6 +2,7 @@ package fittering.mall.config.auth;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -18,6 +19,9 @@ import fittering.mall.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
+import static fittering.mall.domain.entity.User.getAgeRange;
 
 @Slf4j
 @Service
@@ -26,6 +30,11 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
     private final MeasurementRepository measurementRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private static final String DEFAULT_GENDER = "M";
+    private static final Integer DEFAULT_YEAR = 2023;
+    private static final Integer DEFAULT_MONTH = 1;
+    private static final Integer DEFAULT_DAY = 1;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -45,7 +54,13 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             Measurement measurement = measurementRepository.save(new Measurement());
             user = userRepository.save(User.builder()
                                         .username(email.substring(0, email.indexOf('@')))
+                                        .password(passwordEncoder.encode(UUID.randomUUID().toString()))
                                         .email(email)
+                                        .gender(DEFAULT_GENDER)
+                                        .year(DEFAULT_YEAR)
+                                        .month(DEFAULT_MONTH)
+                                        .day(DEFAULT_DAY)
+                                        .ageRange(getAgeRange(DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY))
                                         .provider(provider)
                                         .providerId(providerId)
                                         .providerLoginId(provider + "_" + providerId)

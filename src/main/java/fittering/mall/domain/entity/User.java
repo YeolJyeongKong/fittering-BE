@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.Length;
 import fittering.mall.domain.dto.service.UserDto;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -129,5 +130,20 @@ public class User {
 
     public void updateRecentLastInitializedAt() {
         recentLastInitializedAt = LocalDateTime.now();
+    }
+
+    public static Integer getAgeRange(Integer year, Integer month, Integer day) {
+        LocalDate birthDate = LocalDate.of(year, month, day);
+        LocalDate currentDate = LocalDate.now();
+
+        int yearDiff = currentDate.getYear() - year;
+        int age = birthDate.isBefore(currentDate) ? yearDiff - 1 : yearDiff;
+
+        if (age <= 18) return 0;
+        if (age <= 23) return 1;
+        if (age <= 28) return 2;
+        if (age <= 33) return 3;
+        if (age <= 39) return 4;
+        return 5;
     }
 }
