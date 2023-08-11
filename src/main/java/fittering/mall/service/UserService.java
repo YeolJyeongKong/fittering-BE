@@ -61,8 +61,7 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new NoResultException("user dosen't exist"));
+        return userRepository.findByEmail(email).orElse(null);
     }
 
     public ResponseUserDto info(Long userId) {
