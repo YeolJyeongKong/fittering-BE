@@ -18,7 +18,7 @@ public class OAuthController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/login/apple")
-    public String servicesRedirect(AppleServiceResponse appleServiceResponse) {
+    public String appleServiceRedirect(AppleServiceResponse appleServiceResponse) {
         if (appleServiceResponse == null) {
             return "redirect:https://fit-tering.com/login";
         }
