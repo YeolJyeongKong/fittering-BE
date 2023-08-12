@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import static fittering.mall.domain.entity.User.getAgeRange;
@@ -28,10 +27,6 @@ public class AppleService {
     private static final Integer DEFAULT_YEAR = 2023;
     private static final Integer DEFAULT_MONTH = 1;
     private static final Integer DEFAULT_DAY = 1;
-
-    public Map<String, String> getLoginMetaInfo() {
-        return appleUtils.getMetaInfo();
-    }
 
     public User saveUser(String email, String provider) {
         Measurement measurement = measurementRepository.save(new Measurement());
