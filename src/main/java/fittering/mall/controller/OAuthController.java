@@ -55,10 +55,16 @@ public class OAuthController {
     @Value("${google.grant-type}")
     private String GOOGLE_GRANT_TYPE;
 
+    private final String MAIN_LOGIN_URL = "https://fit-tering.com/login";
+    private final String KAKAO_AUTH_URL = "https://kauth.kakao.com/oauth/authorize";
+    private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
+    private final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
+    private final String GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
+
     @PostMapping("/login/apple")
     public String appleServiceRedirect(AppleServiceResponse appleServiceResponse) {
         if (appleServiceResponse == null) {
-            return "redirect:https://fit-tering.com/login";
+            return "redirect:" + MAIN_LOGIN_URL;
         }
 
         String email = oAuthService.getEmail(appleServiceResponse.getId_token());
@@ -66,14 +72,17 @@ public class OAuthController {
 
         if (user == null) {
             User newUser = oAuthService.saveUser(email, "apple");
-            return "redirect:https://fit-tering.com/login?token=" + jwtTokenProvider.createToken(newUser.getEmail(), newUser.getRoles());
+            return "redirect:" + MAIN_LOGIN_URL
+                    + "?token=" + jwtTokenProvider.createToken(newUser.getEmail(), newUser.getRoles());
         }
-        return "redirect:https://fit-tering.com/login?token=" + jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
+        return "redirect:" + MAIN_LOGIN_URL
+                + "?token=" + jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
     }
 
     @GetMapping("/login/oauth/kakao")
     public String loginKakaoOAuth() {
-        return "redirect:https://kauth.kakao.com/oauth/authorize?client_id=" + KAKAO_CLIENT_ID
+        return "redirect:" + KAKAO_AUTH_URL
+                + "?client_id=" + KAKAO_CLIENT_ID
                 + "&redirect_uri=" + KAKAO_REDIRECT_URI
                 + "&response_type=" + KAKAO_RESPONSE_TYPE
                 + "&scope=" + KAKAO_SCOPE;
@@ -81,7 +90,7 @@ public class OAuthController {
 
     @GetMapping("/login/kakao")
     public String kakaoServiceRedirect(@RequestParam String code) {
-        URI uri = UriComponentsBuilder.fromUriString("https://kauth.kakao.com/oauth/token")
+        URI uri = UriComponentsBuilder.fromUriString(KAKAO_TOKEN_URL)
                 .build()
                 .toUri();
 
@@ -98,14 +107,17 @@ public class OAuthController {
 
         if (user == null) {
             User newUser = oAuthService.saveUser(email, "kakao");
-            return "redirect:https://fit-tering.com/login?token=" + jwtTokenProvider.createToken(newUser.getEmail(), newUser.getRoles());
+            return "redirect:" + MAIN_LOGIN_URL
+                    + "?token=" + jwtTokenProvider.createToken(newUser.getEmail(), newUser.getRoles());
         }
-        return "redirect:https://fit-tering.com/login?token=" + jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
+        return "redirect:" + MAIN_LOGIN_URL
+                + "?token=" + jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
     }
 
     @GetMapping("/login/oauth/google")
     public String loginGoogleOAuth() {
-        return "redirect:https://accounts.google.com/o/oauth2/v2/auth?client_id=" + GOOGLE_CLIENT_ID
+        return "redirect:" + GOOGLE_AUTH_URL
+                + "?client_id=" + GOOGLE_CLIENT_ID
                 + "&redirect_uri=" + GOOGLE_REDIRECT_URI
                 + "&response_type=" + GOOGLE_RESPONSE_TYPE
                 + "&scope=" + GOOGLE_SCOPE;
@@ -113,7 +125,7 @@ public class OAuthController {
 
     @GetMapping("/login/google")
     public String googleServiceRedirect(@RequestParam String code) {
-        URI uri = UriComponentsBuilder.fromUriString("https://oauth2.googleapis.com/token")
+        URI uri = UriComponentsBuilder.fromUriString(GOOGLE_TOKEN_URL)
                 .build()
                 .toUri();
 
@@ -130,8 +142,10 @@ public class OAuthController {
 
         if (user == null) {
             User newUser = oAuthService.saveUser(email, "google");
-            return "redirect:https://fit-tering.com/login?token=" + jwtTokenProvider.createToken(newUser.getEmail(), newUser.getRoles());
+            return "redirect:" + MAIN_LOGIN_URL
+                    + "?token=" + jwtTokenProvider.createToken(newUser.getEmail(), newUser.getRoles());
         }
-        return "redirect:https://fit-tering.com/login?token=" + jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
+        return "redirect:" + MAIN_LOGIN_URL
+                + "?token=" + jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
     }
 }
