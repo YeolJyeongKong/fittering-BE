@@ -1,6 +1,7 @@
 package fittering.mall.controller;
 
 import fittering.mall.config.auth.domain.AppleServiceResponse;
+import fittering.mall.config.auth.domain.GoogleServiceResponse;
 import fittering.mall.config.auth.domain.KakaoServiceResponse;
 import fittering.mall.config.jwt.JwtTokenProvider;
 import fittering.mall.domain.entity.User;
@@ -40,6 +41,19 @@ public class OAuthController {
     private String KAKAO_SCOPE;
     @Value("${kakao.grant-type}")
     private String KAKAO_GRANT_TYPE;
+
+    @Value("${google.client-id}")
+    private String GOOGLE_CLIENT_ID;
+    @Value("${google.client-secret}")
+    private String GOOGLE_CLIENT_SECRET;
+    @Value("${google.redirect-uri}")
+    private String GOOGLE_REDIRECT_URI;
+    @Value("${google.response-type}")
+    private String GOOGLE_RESPONSE_TYPE;
+    @Value("${google.scope}")
+    private String GOOGLE_SCOPE;
+    @Value("${google.grant-type}")
+    private String GOOGLE_GRANT_TYPE;
 
     @PostMapping("/login/apple")
     public String appleServiceRedirect(AppleServiceResponse appleServiceResponse) {
@@ -84,6 +98,38 @@ public class OAuthController {
 
         if (user == null) {
             User newUser = oAuthService.saveUser(email, "kakao");
+            return "redirect:https://fit-tering.com/login?token=" + jwtTokenProvider.createToken(newUser.getEmail(), newUser.getRoles());
+        }
+        return "redirect:https://fit-tering.com/login?token=" + jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
+    }
+
+    @GetMapping("/login/oauth/google")
+    public String loginGoogleOAuth() {
+        return "redirect:https://accounts.google.com/o/oauth2/v2/auth?client_id=" + GOOGLE_CLIENT_ID
+                + "&redirect_uri=" + GOOGLE_REDIRECT_URI
+                + "&response_type=" + GOOGLE_RESPONSE_TYPE
+                + "&scope=" + GOOGLE_SCOPE;
+    }
+
+    @GetMapping("/login/google")
+    public String googleServiceRedirect(@RequestParam String code) {
+        URI uri = UriComponentsBuilder.fromUriString("https://oauth2.googleapis.com/token")
+                .build()
+                .toUri();
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", GOOGLE_GRANT_TYPE);
+        params.add("client_id", GOOGLE_CLIENT_ID);
+        params.add("client_secret", GOOGLE_CLIENT_SECRET);
+        params.add("redirect_uri", GOOGLE_REDIRECT_URI);
+        params.add("code", code);
+        GoogleServiceResponse response = restTemplate.postForObject(uri, params, GoogleServiceResponse.class);
+
+        String email = oAuthService.getEmail(response.getId_token());
+        User user = userService.findByEmail(email);
+
+        if (user == null) {
+            User newUser = oAuthService.saveUser(email, "google");
             return "redirect:https://fit-tering.com/login?token=" + jwtTokenProvider.createToken(newUser.getEmail(), newUser.getRoles());
         }
         return "redirect:https://fit-tering.com/login?token=" + jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
