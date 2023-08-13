@@ -1,6 +1,6 @@
 package fittering.mall.service;
 
-import fittering.mall.config.auth.AppleUtils;
+import fittering.mall.config.auth.AppUtils;
 import fittering.mall.domain.entity.Measurement;
 import fittering.mall.domain.entity.User;
 import fittering.mall.repository.MeasurementRepository;
@@ -17,9 +17,9 @@ import static fittering.mall.domain.entity.User.getAgeRange;
 
 @Service
 @RequiredArgsConstructor
-public class AppleService {
+public class OAuthService {
 
-    private final AppleUtils appleUtils;
+    private final AppUtils appUtils;
     private final UserRepository userRepository;
     private final MeasurementRepository measurementRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -46,6 +46,6 @@ public class AppleService {
     }
 
     public String getEmail(String id_token) {
-        return appleUtils.getEmailFromIdToken(id_token);
+        return appUtils.getEmailFromIdToken(id_token);
     }
 }

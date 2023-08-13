@@ -5,7 +5,7 @@ import com.nimbusds.jwt.SignedJWT;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AppleUtils {
+public class AppUtils {
 
     public String getEmailFromIdToken(String id_token) {
         try {
