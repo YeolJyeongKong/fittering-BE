@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static fittering.mall.domain.entity.User.getAgeRange;
 
@@ -118,9 +119,11 @@ public class UserService {
     }
 
     public User login(LoginDto loginDto) {
-        User user = userRepository.findByEmail(loginDto.getEmail())
-                .orElseThrow(() -> new NoResultException("User doesn't exist"));
-
+        Optional<User> optionalUser = userRepository.findByEmail(loginDto.getEmail());
+        if (optionalUser.isEmpty()) {
+            return null;
+        }
+        User user = optionalUser.get();
         return passwordEncoder.matches(loginDto.getPassword(), user.getPassword()) ? user : null;
     }
 
