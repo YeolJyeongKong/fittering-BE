@@ -29,8 +29,8 @@ public class RankRepositoryImpl implements RankRepositoryCustom {
     public List<MallPreviewDto> mallRankPreview(Long userId, Pageable pageable, int count) {
         List<SavedMallPreviewDto> savedMallPreviewDtos = queryFactory
                 .select(new QSavedMallPreviewDto(
+                        mall.id,
                         mall.name,
-                        mall.url,
                         mall.image
                 ))
                 .from(rank)
