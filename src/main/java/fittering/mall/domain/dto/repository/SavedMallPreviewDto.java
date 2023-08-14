@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 public class SavedMallPreviewDto {
+    private Long id;
     private String name;
-    private String url;
     private String image;
 
     @QueryProjection
-    public SavedMallPreviewDto(String name, String url, String image) {
+    public SavedMallPreviewDto(Long id, String name, String image) {
+        this.id = id;
         this.name = name;
-        this.url = url;
         this.image = image;
     }
 }
