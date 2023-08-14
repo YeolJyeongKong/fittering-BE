@@ -27,6 +27,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import static fittering.mall.domain.entity.User.getAgeRange;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -59,8 +61,7 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new NoResultException("user dosen't exist"));
+        return userRepository.findByEmail(email).orElse(null);
     }
 
     public ResponseUserDto info(Long userId) {
@@ -230,20 +231,5 @@ public class UserService {
         userRepository.findAll().forEach(user -> {
             recentRecommendationRepository.deleteByUserId(user.getId());
         });
-    }
-
-    private Integer getAgeRange(Integer year, Integer month, Integer day) {
-        LocalDate birthDate = LocalDate.of(year, month, day);
-        LocalDate currentDate = LocalDate.now();
-
-        int yearDiff = currentDate.getYear() - year;
-        int age = birthDate.isBefore(currentDate) ? yearDiff - 1 : yearDiff;
-
-        if (age <= 18) return 0;
-        if (age <= 23) return 1;
-        if (age <= 28) return 2;
-        if (age <= 33) return 3;
-        if (age <= 39) return 4;
-        return 5;
     }
 }
