@@ -6,11 +6,13 @@ import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
 import fittering.mall.domain.dto.controller.response.ResponseUserDto;
 import fittering.mall.domain.dto.service.*;
 import fittering.mall.domain.mapper.MeasurementMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.RestPage;
 import fittering.mall.domain.entity.*;
@@ -55,6 +57,9 @@ class UserServiceTest {
     @Autowired
     UserRecommendationRepository userRecommendationRepository;
 
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
     private User user;
     private Category category;
     private SubCategory subCategory;
@@ -82,6 +87,11 @@ class UserServiceTest {
                 .mall(mall)
                 .build());
         List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
+    }
+
+    @AfterEach
+    void End() {
+        redisTemplate.keys("*").forEach(key -> redisTemplate.delete(key));
     }
 
     @Test

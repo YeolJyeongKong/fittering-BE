@@ -3,9 +3,11 @@ package fittering.mall.service;
 import fittering.mall.domain.dto.service.BottomDto;
 import fittering.mall.domain.dto.service.MallDto;
 import fittering.mall.domain.dto.service.TopDto;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.entity.*;
 
@@ -26,6 +28,13 @@ class SizeServiceTest {
     MallService mallService;
     @Autowired
     ProductService productService;
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
+    @AfterEach
+    void End() {
+        redisTemplate.keys("*").forEach(key -> redisTemplate.delete(key));
+    }
 
     @Test
     void saveTop() {

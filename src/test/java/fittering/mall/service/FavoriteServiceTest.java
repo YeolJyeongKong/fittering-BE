@@ -4,6 +4,7 @@ import fittering.mall.domain.dto.controller.response.ResponseMallDto;
 import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
 import fittering.mall.domain.dto.service.SignUpDto;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import fittering.mall.domain.RestPage;
 import fittering.mall.domain.dto.service.MallDto;
 import fittering.mall.domain.entity.*;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,13 @@ class FavoriteServiceTest {
     ProductService productService;
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
+    @AfterEach
+    void End() {
+        redisTemplate.keys("*").forEach(key -> redisTemplate.delete(key));
+    }
 
     @Test
     @DisplayName("유저 즐겨찾기 쇼핑몰 테스트")

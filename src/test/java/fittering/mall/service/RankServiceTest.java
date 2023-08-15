@@ -4,10 +4,12 @@ import fittering.mall.domain.dto.controller.response.ResponseMallDto;
 import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
 import fittering.mall.domain.dto.service.MallDto;
 import fittering.mall.domain.dto.service.SignUpDto;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.entity.*;
 
@@ -30,6 +32,8 @@ class RankServiceTest {
     CategoryService categoryService;
     @Autowired
     UserService userService;
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
 
     private Category topCategory;
     private SubCategory topSubCategory;
@@ -110,6 +114,11 @@ class RankServiceTest {
         descImgs2 = List.of(new ProductDescription(descImgsStr.get(0), product2));
         descImgs3 = List.of(new ProductDescription(descImgsStr.get(0), product3));
         descImgs4 = List.of(new ProductDescription(descImgsStr.get(0), product4));
+    }
+
+    @AfterEach
+    void End() {
+        redisTemplate.keys("*").forEach(key -> redisTemplate.delete(key));
     }
 
     @Test
