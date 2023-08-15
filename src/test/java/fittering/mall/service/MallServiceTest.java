@@ -50,6 +50,7 @@ class MallServiceTest {
                 .image("image.jpg")
                 .view(0)
                 .timeView(0)
+                .origin("https://test.com/product/1")
                 .category(category)
                 .subCategory(subCategory)
                 .mall(mall1)
