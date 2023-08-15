@@ -47,6 +47,9 @@ public class Product {
     private String image;
 
     @NonNull
+    private String origin;
+
+    @NonNull
     private Integer view;
 
     @NonNull

@@ -20,6 +20,7 @@ public class TopProductDto {
     private String mallName;
     private String mallUrl;
     private String mallImage;
+    private String origin;
     private String category;
     private Integer view;
     private String popularGender;

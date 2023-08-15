@@ -15,6 +15,7 @@ public interface ProductMapper {
             @Mapping(target = "id", ignore = true),
             @Mapping(source = "requestProductDetailDto.name", target = "name"),
             @Mapping(source = "requestProductDetailDto.image", target = "image"),
+            @Mapping(source = "requestProductDetailDto.origin", target = "origin"),
             @Mapping(source = "category", target = "category"),
             @Mapping(source = "subCategory", target = "subCategory"),
             @Mapping(source = "mall", target = "mall")

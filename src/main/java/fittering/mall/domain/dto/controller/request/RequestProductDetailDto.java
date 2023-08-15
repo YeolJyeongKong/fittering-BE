@@ -17,6 +17,7 @@ public class RequestProductDetailDto {
     private String gender;
     private Integer type;
     private String image;
+    private String origin;
     private String categoryName;
     private String subCategoryName;
     private String mallName;

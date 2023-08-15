@@ -147,10 +147,10 @@ public class ProductController {
      */
     @Operation(summary = "상품 상세 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = {
-            @Content(schema = @Schema(implementation = OuterProductDto.class)),
-            @Content(schema = @Schema(implementation = TopProductDto.class)),
-            @Content(schema = @Schema(implementation = ResponseBottomDto.class)),
-            @Content(schema = @Schema(implementation = DressProductDto.class))
+            @Content(schema = @Schema(implementation = ResponseOuterDto.class)),
+            @Content(schema = @Schema(implementation = ResponseTopDto.class)),
+            @Content(schema = @Schema(implementation = ResponseDressDto.class)),
+            @Content(schema = @Schema(implementation = ResponseBottomDto.class))
     })
     @GetMapping("/product/{productId}")
     public ResponseEntity<?> productDetail(@PathVariable("productId") Long productId,
