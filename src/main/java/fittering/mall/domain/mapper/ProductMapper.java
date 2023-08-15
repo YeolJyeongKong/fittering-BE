@@ -15,12 +15,13 @@ public interface ProductMapper {
             @Mapping(target = "id", ignore = true),
             @Mapping(source = "requestProductDetailDto.name", target = "name"),
             @Mapping(source = "requestProductDetailDto.image", target = "image"),
+            @Mapping(source = "requestProductDetailDto.origin", target = "origin"),
             @Mapping(source = "category", target = "category"),
             @Mapping(source = "subCategory", target = "subCategory"),
             @Mapping(source = "mall", target = "mall")
     })
     Product toProduct(RequestProductDetailDto requestProductDetailDto, Integer view, Integer timeView,
                       Category category, SubCategory subCategory, Mall mall);
-    @Mapping(source = "descriptionImage", target = "url")
-    DescriptionImage toDescriptionImage(String descriptionImage);
+    @Mapping(source = "productDescription", target = "url")
+    ProductDescription toProductDescription(String productDescription);
 }

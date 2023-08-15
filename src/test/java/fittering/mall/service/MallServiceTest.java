@@ -1,12 +1,14 @@
 package fittering.mall.service;
 
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import fittering.mall.domain.dto.service.MallDto;
 import fittering.mall.domain.entity.*;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,13 @@ class MallServiceTest {
     ProductService productService;
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
+    @AfterEach
+    void End() {
+        redisTemplate.keys("*").forEach(key -> redisTemplate.delete(key));
+    }
 
     @Test
     @DisplayName("쇼핑몰 테스트")
@@ -50,11 +59,12 @@ class MallServiceTest {
                 .image("image.jpg")
                 .view(0)
                 .timeView(0)
+                .origin("https://test.com/product/1")
                 .category(category)
                 .subCategory(subCategory)
                 .mall(mall1)
                 .build());
-        List<DescriptionImage> descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
+        List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
 
         mallService.addProduct(mall1.getName(), product.getId());
         mallService.findProducts("testMall1").forEach(productDto -> {

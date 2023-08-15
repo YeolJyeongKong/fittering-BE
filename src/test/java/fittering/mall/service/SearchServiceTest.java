@@ -2,11 +2,13 @@ package fittering.mall.service;
 
 import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
 import fittering.mall.domain.dto.service.SignUpDto;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.RestPage;
 import fittering.mall.domain.dto.service.MallDto;
@@ -33,6 +35,8 @@ class SearchServiceTest {
     CategoryService categoryService;
     @Autowired
     UserService userService;
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
 
     private Category topCategory;
     private SubCategory topSubCategory;
@@ -43,10 +47,10 @@ class SearchServiceTest {
     private Product product3;
     private Product product4;
     private List<String> descImgsStr;
-    private List<DescriptionImage> descImgs;
-    private List<DescriptionImage> descImgs2;
-    private List<DescriptionImage> descImgs3;
-    private List<DescriptionImage> descImgs4;
+    private List<ProductDescription> descImgs;
+    private List<ProductDescription> descImgs2;
+    private List<ProductDescription> descImgs3;
+    private List<ProductDescription> descImgs4;
     private User user;
 
     @BeforeEach
@@ -65,6 +69,7 @@ class SearchServiceTest {
                 .image("image.jpg")
                 .view(0)
                 .timeView(0)
+                .origin("https://test.com/product/1")
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
@@ -77,6 +82,7 @@ class SearchServiceTest {
                 .image("image.jpg")
                 .view(0)
                 .timeView(0)
+                .origin("https://test.com/product/2")
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
@@ -89,6 +95,7 @@ class SearchServiceTest {
                 .image("image.jpg")
                 .view(0)
                 .timeView(0)
+                .origin("https://test.com/product/3")
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
@@ -101,14 +108,20 @@ class SearchServiceTest {
                 .image("image.jpg")
                 .view(0)
                 .timeView(0)
+                .origin("https://test.com/product/4")
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
                 .build());
-        descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
-        descImgs2 = List.of(new DescriptionImage(descImgsStr.get(0), product2));
-        descImgs3 = List.of(new DescriptionImage(descImgsStr.get(0), product3));
-        descImgs4 = List.of(new DescriptionImage(descImgsStr.get(0), product4));
+        descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
+        descImgs2 = List.of(new ProductDescription(descImgsStr.get(0), product2));
+        descImgs3 = List.of(new ProductDescription(descImgsStr.get(0), product3));
+        descImgs4 = List.of(new ProductDescription(descImgsStr.get(0), product4));
+    }
+
+    @AfterEach
+    void End() {
+        redisTemplate.keys("*").forEach(key -> redisTemplate.delete(key));
     }
 
     @Test

@@ -13,7 +13,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class DescriptionImage {
+public class ProductDescription {
 
     @Id @GeneratedValue
     @Column(name = "description_images_id")
@@ -28,7 +28,7 @@ public class DescriptionImage {
     private Product product;
 
     @Builder
-    public DescriptionImage(String url, Product product) {
+    public ProductDescription(String url, Product product) {
         this.url = url;
         this.product = product;
     }

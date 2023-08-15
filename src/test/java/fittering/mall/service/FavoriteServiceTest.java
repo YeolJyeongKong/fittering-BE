@@ -4,6 +4,7 @@ import fittering.mall.domain.dto.controller.response.ResponseMallDto;
 import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
 import fittering.mall.domain.dto.service.SignUpDto;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import fittering.mall.domain.RestPage;
 import fittering.mall.domain.dto.service.MallDto;
 import fittering.mall.domain.entity.*;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,13 @@ class FavoriteServiceTest {
     ProductService productService;
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
+    @AfterEach
+    void End() {
+        redisTemplate.keys("*").forEach(key -> redisTemplate.delete(key));
+    }
 
     @Test
     @DisplayName("유저 즐겨찾기 쇼핑몰 테스트")
@@ -82,6 +91,7 @@ class FavoriteServiceTest {
                                                 .image("image.jpg")
                                                 .view(0)
                                                 .timeView(0)
+                                                .origin("https://test.com/product/1")
                                                 .category(category)
                                                 .subCategory(subCategory)
                                                 .mall(mall)
@@ -94,6 +104,7 @@ class FavoriteServiceTest {
                                                 .image("image.jpg")
                                                 .view(0)
                                                 .timeView(0)
+                                                .origin("https://test.com/product/2")
                                                 .category(category)
                                                 .subCategory(subCategory)
                                                 .mall(mall)
@@ -106,14 +117,15 @@ class FavoriteServiceTest {
                                                 .image("image.jpg")
                                                 .view(0)
                                                 .timeView(0)
+                                                .origin("https://test.com/product/3")
                                                 .category(category)
                                                 .subCategory(subCategory)
                                                 .mall(mall)
                                                 .build());
 
-        List<DescriptionImage> descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
-        List<DescriptionImage> descImgs2 = List.of(new DescriptionImage(descImgsStr.get(0), product2));
-        List<DescriptionImage> descImgs3 = List.of(new DescriptionImage(descImgsStr.get(0), product3));
+        List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
+        List<ProductDescription> descImgs2 = List.of(new ProductDescription(descImgsStr.get(0), product2));
+        List<ProductDescription> descImgs3 = List.of(new ProductDescription(descImgsStr.get(0), product3));
 
         favoriteService.saveFavoriteProduct(user.getId(), product.getId());
         favoriteService.saveFavoriteProduct(user.getId(), product2.getId());

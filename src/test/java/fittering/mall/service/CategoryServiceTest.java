@@ -1,9 +1,11 @@
 package fittering.mall.service;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.entity.Category;
 
@@ -15,6 +17,13 @@ class CategoryServiceTest {
 
     @Autowired
     CategoryService categoryService;
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
+    @AfterEach
+    void End() {
+        redisTemplate.keys("*").forEach(key -> redisTemplate.delete(key));
+    }
 
     @Test
     @DisplayName("카테고리 저장 및 이름으로 찾기")

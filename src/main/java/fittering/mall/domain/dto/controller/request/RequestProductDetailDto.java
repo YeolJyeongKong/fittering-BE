@@ -17,6 +17,7 @@ public class RequestProductDetailDto {
     private String gender;
     private Integer type;
     private String image;
+    private String origin;
     private String categoryName;
     private String subCategoryName;
     private String mallName;
@@ -24,5 +25,5 @@ public class RequestProductDetailDto {
     private List<RequestTopDto> topSizes;
     private List<RequestDressDto> dressSizes;
     private List<RequestBottomDto> bottomSizes;
-    private List<String> descriptionImages;
+    private List<String> productDescriptions;
 }
