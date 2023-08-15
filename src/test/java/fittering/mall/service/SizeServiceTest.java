@@ -45,7 +45,7 @@ class SizeServiceTest {
                 .subCategory(subCategory)
                 .mall(mall)
                 .build());
-        List<DescriptionImage> descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
+        List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
 
         TopDto topDto1 = new TopDto("S", 68.0, 50.0, 53.0, 24.0);
         TopDto topDto2 = new TopDto("M", 69.5, 51.5, 55.5, 25.0);
@@ -78,7 +78,7 @@ class SizeServiceTest {
                 .subCategory(subCategory)
                 .mall(mall)
                 .build());
-        List<DescriptionImage> descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
+        List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
 
         BottomDto bottomDto1 = new BottomDto("S", 104.0, 37.5, 51.5, 33.8, 28.0, 26.0);
         BottomDto bottomDto2 = new BottomDto("M", 105.0, 40.0, 54.0, 35.0, 29.0, 27.0);
@@ -111,7 +111,7 @@ class SizeServiceTest {
                 .subCategory(subCategory)
                 .mall(mall)
                 .build());
-        List<DescriptionImage> descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
+        List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
 
         BottomDto bottomDto = new BottomDto("S", 104.0, 37.5, 51.5, 33.8, 28.0, 26.0);
         Size bottomSize = sizeService.saveBottom(bottomDto, product);

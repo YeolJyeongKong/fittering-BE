@@ -80,7 +80,7 @@ class UserServiceTest {
                 .subCategory(subCategory)
                 .mall(mall)
                 .build());
-        List<DescriptionImage> descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
+        List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
     }
 
     @Test

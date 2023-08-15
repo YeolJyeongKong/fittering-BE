@@ -43,10 +43,10 @@ class SearchServiceTest {
     private Product product3;
     private Product product4;
     private List<String> descImgsStr;
-    private List<DescriptionImage> descImgs;
-    private List<DescriptionImage> descImgs2;
-    private List<DescriptionImage> descImgs3;
-    private List<DescriptionImage> descImgs4;
+    private List<ProductDescription> descImgs;
+    private List<ProductDescription> descImgs2;
+    private List<ProductDescription> descImgs3;
+    private List<ProductDescription> descImgs4;
     private User user;
 
     @BeforeEach
@@ -105,10 +105,10 @@ class SearchServiceTest {
                 .subCategory(topSubCategory)
                 .mall(mall)
                 .build());
-        descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
-        descImgs2 = List.of(new DescriptionImage(descImgsStr.get(0), product2));
-        descImgs3 = List.of(new DescriptionImage(descImgsStr.get(0), product3));
-        descImgs4 = List.of(new DescriptionImage(descImgsStr.get(0), product4));
+        descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
+        descImgs2 = List.of(new ProductDescription(descImgsStr.get(0), product2));
+        descImgs3 = List.of(new ProductDescription(descImgsStr.get(0), product3));
+        descImgs4 = List.of(new ProductDescription(descImgsStr.get(0), product4));
     }
 
     @Test

@@ -28,7 +28,7 @@ public class ProductService {
     private final MallRepository mallRepository;
     private final RecentRecommendationRepository recentRecommendationRepository;
     private final UserRecommendationRepository userRecommendationRepository;
-    private final DescriptionImageRepository descriptionImageRepository;
+    private final ProductDescriptionRepository productDescriptionRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final RedisService redisService;
 
@@ -190,14 +190,14 @@ public class ProductService {
     }
 
     @Transactional
-    public List<DescriptionImage> saveDescriptionImages(List<String> descriptionImages, Product product) {
-        List<DescriptionImage> result = new ArrayList<>();
-        descriptionImages.forEach(descriptionImageUrl -> {
-            DescriptionImage descriptionImage = DescriptionImage.builder()
-                                                    .url(descriptionImageUrl)
+    public List<ProductDescription> saveProductDescription(List<String> productDescriptions, Product product) {
+        List<ProductDescription> result = new ArrayList<>();
+        productDescriptions.forEach(productDescriptionUrl -> {
+            ProductDescription productDescription = ProductDescription.builder()
+                                                    .url(productDescriptionUrl)
                                                     .product(product)
                                                     .build();
-            result.add(descriptionImageRepository.save(descriptionImage));
+            result.add(productDescriptionRepository.save(productDescription));
         });
         return result;
     }

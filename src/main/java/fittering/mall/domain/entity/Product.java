@@ -89,7 +89,7 @@ public class Product {
 
     @Builder.Default
     @OneToMany(mappedBy = "product")
-    private List<DescriptionImage> descriptionImages = new ArrayList<>();
+    private List<ProductDescription> productDescriptions = new ArrayList<>();
 
     protected Product() {
     }

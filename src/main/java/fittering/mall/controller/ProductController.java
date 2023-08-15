@@ -25,7 +25,6 @@ import fittering.mall.config.auth.PrincipalDetails;
 import fittering.mall.domain.entity.*;
 import fittering.mall.service.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static fittering.mall.domain.entity.Product.*;
@@ -52,7 +51,7 @@ public class ProductController {
         Mall mall = mallService.findByName(requestProductDto.getMallName());
         Product product = productService.save(ProductMapper.INSTANCE.toProduct(
                 requestProductDto, 0, 0, category, subCategory, mall));
-        productService.saveDescriptionImages(requestProductDto.getDescriptionImages(), product);
+        productService.saveProductDescription(requestProductDto.getProductDescriptions(), product);
 
         if (requestProductDto.getType().equals(OUTER)) {
             getSizesOfOuter(requestProductDto, product);

@@ -54,7 +54,7 @@ class MallServiceTest {
                 .subCategory(subCategory)
                 .mall(mall1)
                 .build());
-        List<DescriptionImage> descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
+        List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
 
         mallService.addProduct(mall1.getName(), product.getId());
         mallService.findProducts("testMall1").forEach(productDto -> {

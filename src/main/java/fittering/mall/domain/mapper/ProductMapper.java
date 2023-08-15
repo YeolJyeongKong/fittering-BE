@@ -21,6 +21,6 @@ public interface ProductMapper {
     })
     Product toProduct(RequestProductDetailDto requestProductDetailDto, Integer view, Integer timeView,
                       Category category, SubCategory subCategory, Mall mall);
-    @Mapping(source = "descriptionImage", target = "url")
-    DescriptionImage toDescriptionImage(String descriptionImage);
+    @Mapping(source = "productDescription", target = "url")
+    ProductDescription toProductDescription(String productDescription);
 }

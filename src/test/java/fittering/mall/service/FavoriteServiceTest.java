@@ -111,9 +111,9 @@ class FavoriteServiceTest {
                                                 .mall(mall)
                                                 .build());
 
-        List<DescriptionImage> descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
-        List<DescriptionImage> descImgs2 = List.of(new DescriptionImage(descImgsStr.get(0), product2));
-        List<DescriptionImage> descImgs3 = List.of(new DescriptionImage(descImgsStr.get(0), product3));
+        List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
+        List<ProductDescription> descImgs2 = List.of(new ProductDescription(descImgsStr.get(0), product2));
+        List<ProductDescription> descImgs3 = List.of(new ProductDescription(descImgsStr.get(0), product3));
 
         favoriteService.saveFavoriteProduct(user.getId(), product.getId());
         favoriteService.saveFavoriteProduct(user.getId(), product2.getId());

@@ -24,5 +24,5 @@ public class RequestProductDetailDto {
     private List<RequestTopDto> topSizes;
     private List<RequestDressDto> dressSizes;
     private List<RequestBottomDto> bottomSizes;
-    private List<String> descriptionImages;
+    private List<String> productDescriptions;
 }

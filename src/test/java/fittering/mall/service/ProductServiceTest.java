@@ -39,11 +39,11 @@ class ProductServiceTest {
     private SubCategory bottomSubCategory;
     private Mall mall;
     private List<String> descImgsStr;
-    private List<DescriptionImage> descImgs;
-    private List<DescriptionImage> descImgs2;
-    private List<DescriptionImage> descImgs3;
-    private List<DescriptionImage> descImgs4;
-    private List<DescriptionImage> descImgs5;
+    private List<ProductDescription> descImgs;
+    private List<ProductDescription> descImgs2;
+    private List<ProductDescription> descImgs3;
+    private List<ProductDescription> descImgs4;
+    private List<ProductDescription> descImgs5;
     private Product product;
     private Product product2;
     private Product product3;
@@ -120,11 +120,11 @@ class ProductServiceTest {
                 .subCategory(topSubCategory)
                 .mall(mall)
                 .build());
-        descImgs = List.of(new DescriptionImage(descImgsStr.get(0), product));
-        descImgs2 = List.of(new DescriptionImage(descImgsStr.get(0), product2));
-        descImgs3 = List.of(new DescriptionImage(descImgsStr.get(0), product3));
-        descImgs4 = List.of(new DescriptionImage(descImgsStr.get(0), product4));
-        descImgs5 = List.of(new DescriptionImage(descImgsStr.get(0), product5));
+        descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
+        descImgs2 = List.of(new ProductDescription(descImgsStr.get(0), product2));
+        descImgs3 = List.of(new ProductDescription(descImgsStr.get(0), product3));
+        descImgs4 = List.of(new ProductDescription(descImgsStr.get(0), product4));
+        descImgs5 = List.of(new ProductDescription(descImgsStr.get(0), product5));
     }
 
     @Test
@@ -229,12 +229,12 @@ class ProductServiceTest {
                 .subCategory(bottomSubCategory)
                 .mall(mall)
                 .build());
-        List<DescriptionImage> topDescriptionImgs = List.of(new DescriptionImage(descImgsStr.get(0), topProduct));
-        List<DescriptionImage> topDescriptionImgs2 = List.of(new DescriptionImage(descImgsStr.get(0), topProduct2));
-        List<DescriptionImage> bottomDescriptionImgs = List.of(new DescriptionImage(descImgsStr.get(0), bottomProduct));
-        List<DescriptionImage> bottomDescriptionImgs2 = List.of(new DescriptionImage(descImgsStr.get(0), bottomProduct2));
-        List<DescriptionImage> bottomDescriptionImgs3 = List.of(new DescriptionImage(descImgsStr.get(0), bottomProduct3));
-        List<DescriptionImage> bottomDescriptionImgs4 = List.of(new DescriptionImage(descImgsStr.get(0), bottomProduct4));
+        List<ProductDescription> topDescriptionImgs = List.of(new ProductDescription(descImgsStr.get(0), topProduct));
+        List<ProductDescription> topDescriptionImgs2 = List.of(new ProductDescription(descImgsStr.get(0), topProduct2));
+        List<ProductDescription> bottomDescriptionImgs = List.of(new ProductDescription(descImgsStr.get(0), bottomProduct));
+        List<ProductDescription> bottomDescriptionImgs2 = List.of(new ProductDescription(descImgsStr.get(0), bottomProduct2));
+        List<ProductDescription> bottomDescriptionImgs3 = List.of(new ProductDescription(descImgsStr.get(0), bottomProduct3));
+        List<ProductDescription> bottomDescriptionImgs4 = List.of(new ProductDescription(descImgsStr.get(0), bottomProduct4));
 
         List<ResponseProductCategoryDto> findProductCountsOnCategory = productService.multipleProductCountWithCategory();
         assertThat(findProductCountsOnCategory.get(0).getCount()).isEqualTo(7);
@@ -267,8 +267,8 @@ class ProductServiceTest {
                 .subCategory(topSubCategory)
                 .mall(mall)
                 .build());
-        List<DescriptionImage> topDescriptionImgs = List.of(new DescriptionImage(descImgsStr.get(0), topProduct));
-        List<DescriptionImage> topDescriptionImgs2 = List.of(new DescriptionImage(descImgsStr.get(0), topProduct2));
+        List<ProductDescription> topDescriptionImgs = List.of(new ProductDescription(descImgsStr.get(0), topProduct));
+        List<ProductDescription> topDescriptionImgs2 = List.of(new ProductDescription(descImgsStr.get(0), topProduct2));
 
         Mall mall2 = mallService.save(new MallDto(2L, "testMall2", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
         Product bottomProduct = productService.save(Product.builder()
@@ -319,10 +319,10 @@ class ProductServiceTest {
                 .subCategory(bottomSubCategory)
                 .mall(mall2)
                 .build());
-        List<DescriptionImage> bottomDescriptionImgs = List.of(new DescriptionImage(descImgsStr.get(0), bottomProduct));
-        List<DescriptionImage> bottomDescriptionImgs2 = List.of(new DescriptionImage(descImgsStr.get(0), bottomProduct2));
-        List<DescriptionImage> bottomDescriptionImgs3 = List.of(new DescriptionImage(descImgsStr.get(0), bottomProduct3));
-        List<DescriptionImage> bottomDescriptionImgs4 = List.of(new DescriptionImage(descImgsStr.get(0), bottomProduct4));
+        List<ProductDescription> bottomDescriptionImgs = List.of(new ProductDescription(descImgsStr.get(0), bottomProduct));
+        List<ProductDescription> bottomDescriptionImgs2 = List.of(new ProductDescription(descImgsStr.get(0), bottomProduct2));
+        List<ProductDescription> bottomDescriptionImgs3 = List.of(new ProductDescription(descImgsStr.get(0), bottomProduct3));
+        List<ProductDescription> bottomDescriptionImgs4 = List.of(new ProductDescription(descImgsStr.get(0), bottomProduct4));
 
 
         List<ResponseProductCategoryDto> findProductCountsOnCategoryOfMall = productService.productCountWithCategoryOfMall(mall.getId());
@@ -392,7 +392,7 @@ class ProductServiceTest {
                 .subCategory(bottomSubCategory)
                 .mall(mall)
                 .build());
-        List<DescriptionImage> bottomDescriptionImgs = List.of(new DescriptionImage(descImgsStr.get(0), bottomProduct));
+        List<ProductDescription> bottomDescriptionImgs = List.of(new ProductDescription(descImgsStr.get(0), bottomProduct));
 
         ResponseBottomDto bottomProductDto = productService.bottomProductDetail(bottomProduct.getId());
         assertThat(bottomProductDto.getProductImage()).isEqualTo(bottomProduct.getImage());
@@ -458,8 +458,8 @@ class ProductServiceTest {
         assertThat(savedProduct.getView()).isEqualTo(findProduct.getView());
         assertThat(savedProduct.getTimeView()).isEqualTo(findProduct.getTimeView());
         assertThat(savedProduct.getType()).isEqualTo(findProduct.getType());
-        savedProduct.getDescriptionImages().forEach(descImg -> {
-            assertThat(findProduct.getDescriptionImages().contains(descImg)).isTrue();
+        savedProduct.getProductDescriptions().forEach(descImg -> {
+            assertThat(findProduct.getProductDescriptions().contains(descImg)).isTrue();
         });
     }
 
