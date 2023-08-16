@@ -19,6 +19,7 @@ import static fittering.mall.repository.querydsl.EqualMethod.userIdEq;
 
 public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
 
+    private static int PRODUCT_PREVIEW_MAX_SIZE = 4;
     private JPAQueryFactory queryFactory;
 
     public FavoriteRepositoryImpl(EntityManager em) {
@@ -75,6 +76,29 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
         Long count = nullableCount != null ? nullableCount : 0L;
 
         return PageableExecutionUtils.getPage(content, pageable, () -> count);
+    }
+
+    @Override
+    public List<ResponseProductPreviewDto> userFavoriteProductPreview(Long userId) {
+        return queryFactory
+                .select(new QResponseProductPreviewDto(
+                        product.id.as("productId"),
+                        product.image.as("productImage"),
+                        product.name.as("productName"),
+                        product.price,
+                        mall.name.as("mallName"),
+                        mall.url.as("mallUrl")
+                ))
+                .from(favorite)
+                .join(favorite.user, user)
+                .join(favorite.product, product)
+                .join(product.mall, mall)
+                .where(
+                        userIdEq(userId),
+                        favorite.mall.isNull()
+                )
+                .limit(PRODUCT_PREVIEW_MAX_SIZE)
+                .fetch();
     }
 
     @Override

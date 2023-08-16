@@ -10,6 +10,7 @@ import java.util.List;
 public interface FavoriteRepositoryCustom {
     List<Favorite> userFavoriteMall(Long userId);
     Page<ResponseProductPreviewDto> userFavoriteProduct(Long userId, Pageable pageable);
+    List<ResponseProductPreviewDto> userFavoriteProductPreview(Long userId);
     void deleteByUserIdAndMallId(Long userId, Long mallId);
     void deleteByUserIdAndProductId(Long userId, Long productId);
 }

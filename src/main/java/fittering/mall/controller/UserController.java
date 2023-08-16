@@ -106,6 +106,14 @@ public class UserController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @Operation(summary = "유저 즐겨찾기 상품 조회 (미리보기)")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
+    @GetMapping("/user/favorite_goods/preview")
+    public ResponseEntity<?> favoriteProductPreview(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        List<ResponseProductPreviewDto> products = favoriteService.userFavoriteProductPreview(principalDetails.getUser().getId());
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
     @Operation(summary = "유저 즐겨찾기 상품 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"유저 즐겨찾기 상품 등록 완료\"")))
     @PostMapping("/user/favorite_goods/{productId}")
