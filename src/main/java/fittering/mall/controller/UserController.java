@@ -249,12 +249,17 @@ public class UserController {
         List<Long> productIds = new ArrayList<>();
         List<Product> recommendedProducts = productService.productWithUserRecommendation(userId);
 
-        if(!recommendedProducts.isEmpty()) {
+        if (!recommendedProducts.isEmpty()) {
             getRecommendedProductIds(productIds, recommendedProducts);
             return productIds;
         }
 
         ResponseMeasurementDto measurement = userService.measurementInfo(userId); //request
+
+        if (measurementIsNull(measurement)) {
+            return new ArrayList<>();
+        }
+
         /**
          * TODO: 비슷한 체형 고객 pick API에서 데이터를 받아오는 로직 추가 필요
          * - 해당 API에서 가져오는 상품 개수가 10개라고 가정
@@ -292,5 +297,9 @@ public class UserController {
         for (Product recommendedProduct : recommendedProducts) {
             productIds.add(recommendedProduct.getId());
         }
+    }
+
+    private static boolean measurementIsNull(ResponseMeasurementDto measurement) {
+        return measurement.getHeight() == null || measurement.getWeight() == null;
     }
 }
