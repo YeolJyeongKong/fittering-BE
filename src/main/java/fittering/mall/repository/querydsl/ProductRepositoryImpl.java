@@ -576,7 +576,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         genderEq(gender)
                 )
                 .leftJoin(product.mall, mall)
-                .orderBy(product.view.desc())
+                .orderBy(product.timeView.desc())
                 .limit(TIME_RANK_PRODUCT_COUNT)
                 .fetch();
     }
