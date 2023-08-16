@@ -101,8 +101,7 @@ public class UserController {
     public ResponseEntity<?> favoriteProduct(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                              Pageable pageable) {
         Page<ResponseProductPreviewDto> products = favoriteService.userFavoriteProduct(
-                                                principalDetails.getUser().getId(), pageable
-                                           );
+                                                principalDetails.getUser().getId(), pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

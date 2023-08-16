@@ -60,6 +60,7 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
                         userIdEq(userId),
                         favorite.mall.isNull()
                 )
+                .orderBy(product.id.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -97,6 +98,7 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
                         userIdEq(userId),
                         favorite.mall.isNull()
                 )
+                .orderBy(product.id.desc())
                 .limit(PRODUCT_PREVIEW_MAX_SIZE)
                 .fetch();
     }
