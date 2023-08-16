@@ -207,7 +207,7 @@ public class ProductService {
         productRepository.findAll().forEach(Product::initializeTimeView);
     }
 
-    public List<ResponseProductPreviewDto> productsOfTimeRank() {
-        return productRepository.timeRank();
+    public List<ResponseProductPreviewDto> productsOfTimeRank(String gender) {
+        return productRepository.timeRank(gender);
     }
 }

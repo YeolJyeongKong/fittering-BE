@@ -561,7 +561,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public List<ResponseProductPreviewDto> timeRank() {
+    public List<ResponseProductPreviewDto> timeRank(String gender) {
         return queryFactory
                 .select(new QResponseProductPreviewDto(
                         product.id.as("productId"),
@@ -572,6 +572,9 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         mall.url.as("mallUrl")
                 ))
                 .from(product)
+                .where(
+                        genderEq(gender)
+                )
                 .leftJoin(product.mall, mall)
                 .orderBy(product.view.desc())
                 .limit(TIME_RANK_PRODUCT_COUNT)

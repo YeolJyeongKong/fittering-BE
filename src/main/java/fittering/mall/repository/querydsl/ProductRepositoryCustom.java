@@ -28,5 +28,5 @@ public interface ProductRepositoryCustom {
     Long findRecentCount(Long recentId);
     Long findRecentRecommendation(Long recentRecommendationId);
     Long findUserRecommendation(Long userRecommendationId);
-    List<ResponseProductPreviewDto> timeRank();
+    List<ResponseProductPreviewDto> timeRank(String gender);
 }

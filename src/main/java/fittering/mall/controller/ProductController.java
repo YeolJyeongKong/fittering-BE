@@ -185,9 +185,9 @@ public class ProductController {
 
     @Operation(summary = "실시간 랭킹순 상품 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
-    @GetMapping("/products/rank")
-    public ResponseEntity<?> productOfTimeRank() {
-        List<ResponseProductPreviewDto> productsOfTimeRank = productService.productsOfTimeRank();
+    @GetMapping("/products/rank/{gender}")
+    public ResponseEntity<?> productOfTimeRank(@PathVariable("gender") String gender) {
+        List<ResponseProductPreviewDto> productsOfTimeRank = productService.productsOfTimeRank(gender);
         return new ResponseEntity<>(productsOfTimeRank, HttpStatus.OK);
     }
 
