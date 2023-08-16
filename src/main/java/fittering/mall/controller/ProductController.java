@@ -183,6 +183,14 @@ public class ProductController {
         return new ResponseEntity<>("정의된 타입 없음", HttpStatus.BAD_REQUEST);
     }
 
+    @Operation(summary = "실시간 랭킹순 상품 조회")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
+    @GetMapping("/products/rank")
+    public ResponseEntity<?> productOfTimeRank() {
+        List<ResponseProductPreviewDto> productsOfTimeRank = productService.productsOfTimeRank();
+        return new ResponseEntity<>(productsOfTimeRank, HttpStatus.OK);
+    }
+
     private void getSizesOfOuter(RequestProductDetailDto productDto, Product product) {
         productDto.getOuterSizes().forEach(requestOuterDto ->
                 sizeService.saveOuter(SizeMapper.INSTANCE.toOuterDto(requestOuterDto), product));

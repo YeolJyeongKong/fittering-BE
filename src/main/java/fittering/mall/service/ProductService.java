@@ -206,4 +206,8 @@ public class ProductService {
     public void initializeTimeView() {
         productRepository.findAll().forEach(Product::initializeTimeView);
     }
+
+    public List<ResponseProductPreviewDto> productsOfTimeRank() {
+        return productRepository.timeRank();
+    }
 }
