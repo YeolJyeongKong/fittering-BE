@@ -101,8 +101,15 @@ public class UserController {
     public ResponseEntity<?> favoriteProduct(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                              Pageable pageable) {
         Page<ResponseProductPreviewDto> products = favoriteService.userFavoriteProduct(
-                                                principalDetails.getUser().getId(), pageable
-                                           );
+                                                principalDetails.getUser().getId(), pageable);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @Operation(summary = "유저 즐겨찾기 상품 조회 (미리보기)")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
+    @GetMapping("/user/favorite_goods/preview")
+    public ResponseEntity<?> favoriteProductPreview(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        List<ResponseProductPreviewDto> products = favoriteService.userFavoriteProductPreview(principalDetails.getUser().getId());
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

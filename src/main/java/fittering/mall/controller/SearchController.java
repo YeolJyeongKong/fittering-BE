@@ -1,6 +1,7 @@
 package fittering.mall.controller;
 
 import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.domain.dto.controller.response.ResponseRelatedSearchDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import fittering.mall.service.SearchService;
+
+import java.util.List;
 
 @Tag(name = "검색", description = "검색 서비스 관련 API")
 @RestController
@@ -33,6 +36,17 @@ public class SearchController {
                                     @PathVariable("filterId") Long filterId,
                                     Pageable pageable) {
         Page<ResponseProductPreviewDto> result = searchService.products(keyword, gender, filterId, pageable);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @Operation(summary = "연관검색어")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseRelatedSearchDto.class)))
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<?> relatedSearch(@PathVariable("keyword") String keyword) {
+        ResponseRelatedSearchDto result = ResponseRelatedSearchDto.builder()
+                .products(searchService.relatedSearchProducts(keyword))
+                .malls(searchService.relatedSearchMalls(keyword))
+                .build();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

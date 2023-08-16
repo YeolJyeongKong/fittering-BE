@@ -39,6 +39,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private static final int VIEW_DESC = 1;
     private static final int PRICE_ASC = 2;
     private static final int MOST_POPULAR_TARGET_COUNT = 1;
+    private static final int TIME_RANK_PRODUCT_COUNT = 18;
     private JPAQueryFactory queryFactory;
 
     public ProductRepositoryImpl(EntityManager em) {
@@ -191,6 +192,17 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         Long count = nullableCount != null ? nullableCount : 0L;
 
         return PageableExecutionUtils.getPage(content, pageable, () -> count);
+    }
+
+    @Override
+    public List<String> relatedSearch(String keyword) {
+        return queryFactory
+                .select(product.name)
+                .from(product)
+                .where(
+                        product.name.contains(keyword)
+                )
+                .fetch();
     }
 
     @Override
@@ -546,6 +558,27 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 )
                 .fetchOne();
         return nullableCount != null ? nullableCount : 0L;
+    }
+
+    @Override
+    public List<ResponseProductPreviewDto> timeRank(String gender) {
+        return queryFactory
+                .select(new QResponseProductPreviewDto(
+                        product.id.as("productId"),
+                        product.image.as("productImage"),
+                        product.name.as("productName"),
+                        product.price,
+                        mall.name.as("mallName"),
+                        mall.url.as("mallUrl")
+                ))
+                .from(product)
+                .where(
+                        genderEq(gender)
+                )
+                .leftJoin(product.mall, mall)
+                .orderBy(product.timeView.desc())
+                .limit(TIME_RANK_PRODUCT_COUNT)
+                .fetch();
     }
 
     public OrderSpecifier<? extends Number> filter(Long filterId) {
