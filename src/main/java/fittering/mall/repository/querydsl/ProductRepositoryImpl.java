@@ -195,6 +195,17 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
+    public List<String> relatedSearch(String keyword) {
+        return queryFactory
+                .select(product.name)
+                .from(product)
+                .where(
+                        product.name.contains(keyword)
+                )
+                .fetch();
+    }
+
+    @Override
     public Long productCountWithCategory(Long categoryId) {
         Long nullableCount = queryFactory
                 .select(product.count())

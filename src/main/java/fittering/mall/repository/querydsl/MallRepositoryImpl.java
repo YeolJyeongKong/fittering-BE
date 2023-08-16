@@ -52,4 +52,15 @@ public class MallRepositoryImpl implements MallRepositoryCustom {
                 .fetchOne();
         return nullableCount != null ? nullableCount : 0L;
     }
+
+    @Override
+    public List<String> relatedSearch(String keyword) {
+        return queryFactory
+                .select(mall.name)
+                .from(mall)
+                .where(
+                        mall.name.contains(keyword)
+                )
+                .fetch();
+    }
 }

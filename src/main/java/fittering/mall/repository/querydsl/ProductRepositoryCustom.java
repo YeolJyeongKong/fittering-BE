@@ -15,6 +15,7 @@ public interface ProductRepositoryCustom {
     Page<ResponseProductPreviewDto> productWithCategory(Long mallId, Long categoryId, String gender, Long filterId, Pageable pageable);
     Page<ResponseProductPreviewDto> productWithSubCategory(Long mallId, Long subCategoryId, String gender, Long filterId, Pageable pageable);
     Page<ResponseProductPreviewDto> searchProduct(String productName, String gender, Long filterId, Pageable pageable);
+    List<String> relatedSearch(String keyword);
     Long productCountWithCategory(Long categoryId);
     Long productCountWithSubCategory(Long categoryId);
     Long productCountWithCategoryOfMall(String mallName, Long categoryId);
