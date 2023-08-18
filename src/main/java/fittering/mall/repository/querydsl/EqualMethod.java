@@ -37,7 +37,10 @@ public class EqualMethod {
     }
 
     public static BooleanExpression categoryIdEq(Long categoryId) {
-        return categoryId != null ? category.id.eq(categoryId) : null;
+        if (categoryId == null) {
+            return null;
+        }
+        return categoryId == 0L ? Expressions.asBoolean(true).isTrue() : category.id.eq(categoryId);
     }
 
     public static BooleanExpression recentIdEq(Long recentId) {
