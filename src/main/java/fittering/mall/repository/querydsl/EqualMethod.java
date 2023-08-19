@@ -73,10 +73,10 @@ public class EqualMethod {
      * else     : 성별 무관
      */
     public static BooleanExpression genderEq(String gender) {
-        if(gender.equals(MALE) || gender.equals(FEMALE)) {
-            return product.gender.eq(gender);
+        if (!gender.equals(MALE) && !gender.equals(FEMALE)) {
+            return Expressions.asBoolean(true).isTrue();
         }
-        return Expressions.asBoolean(true).isTrue();
+        return product.gender.eq(gender);
     }
 
     public static BooleanExpression productNameContains(String productName) {
