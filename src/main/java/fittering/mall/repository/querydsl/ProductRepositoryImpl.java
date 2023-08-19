@@ -35,7 +35,7 @@ import static fittering.mall.repository.querydsl.EqualMethod.*;
 
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
-    private static final int INDEX_ASC = 0;
+    private static final int INDEX_DESC = 0;
     private static final int VIEW_DESC = 1;
     private static final int PRICE_ASC = 2;
     private static final int MOST_POPULAR_TARGET_COUNT = 1;
@@ -582,13 +582,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     public OrderSpecifier<? extends Number> filter(Long filterId) {
-        if(filterId == INDEX_ASC) {
-            return product.id.asc();
+        if (filterId == INDEX_DESC) {
+            return product.id.desc();
         }
-        if(filterId == VIEW_DESC) {
+        if (filterId == VIEW_DESC) {
             return product.view.desc();
         }
-        if(filterId == PRICE_ASC) {
+        if (filterId == PRICE_ASC) {
             return product.price.asc();
         }
         return product.price.desc();
