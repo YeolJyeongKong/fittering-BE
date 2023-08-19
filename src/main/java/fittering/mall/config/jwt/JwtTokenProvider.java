@@ -60,11 +60,11 @@ public class JwtTokenProvider {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (SignatureException e) {
-            throw new org.springframework.security.oauth2.jwt.JwtException("SignatureException");
+            throw new JwtException("SignatureException");
         } catch (MalformedJwtException e) {
-            throw new org.springframework.security.oauth2.jwt.JwtException("MalformedJwtException");
+            throw new JwtException("MalformedJwtException");
         } catch (ExpiredJwtException e) {
-            throw new org.springframework.security.oauth2.jwt.JwtException("ExpiredJwtException");
+            throw new JwtException("ExpiredJwtException");
         } catch (IllegalArgumentException e) {
             throw new JwtException("IllegalArgumentException");
         }
