@@ -29,7 +29,7 @@ public class MailController {
             @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"이메일을 사용하는 유저가 존재합니다.\""))),
             @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"일치하는 메일이 없습니다.\"")))
     })
-    @PostMapping("/check/email")
+    @PostMapping("/email/check")
     public ResponseEntity<?> checkEmail(@RequestParam("email") String email) {
         if(!userService.emailExist(email)) {
             return new ResponseEntity<>("일치하는 메일이 없습니다.", HttpStatus.BAD_REQUEST);
@@ -42,7 +42,7 @@ public class MailController {
             @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"비밀번호 발급이 완료되었습니다.\""))),
             @ApiResponse(responseCode = "400", description = "BAD REQUEST", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"비밀번호 찾기는 1시간에 한 번 가능합니다.\"")))
     })
-    @PostMapping("/send/password")
+    @PostMapping("/password/send")
     public ResponseEntity<?> sendPassword(@RequestParam("email") String email) {
         if(!userService.updatePasswordToken(email)) {
             return new ResponseEntity<>("비밀번호 찾기는 1시간에 한 번 가능합니다.", HttpStatus.BAD_REQUEST);
