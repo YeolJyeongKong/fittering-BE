@@ -1,9 +1,6 @@
 package fittering.mall.config.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
@@ -61,8 +59,14 @@ public class JwtTokenProvider {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (Exception e) {
-            return false;
+        } catch (SignatureException e) {
+            throw new JwtException("SignatureException");
+        } catch (MalformedJwtException e) {
+            throw new JwtException("MalformedJwtException");
+        } catch (ExpiredJwtException e) {
+            throw new JwtException("ExpiredJwtException");
+        } catch (IllegalArgumentException e) {
+            throw new JwtException("IllegalArgumentException");
         }
     }
 

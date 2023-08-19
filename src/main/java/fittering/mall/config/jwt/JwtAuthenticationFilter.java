@@ -1,5 +1,6 @@
 package fittering.mall.config.jwt;
 
+import fittering.mall.config.AcceptedUrl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -8,10 +9,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
+import java.util.List;
 
+@Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
@@ -23,7 +28,21 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         //헤더에서 토큰 가져오기
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
 
-        if (token != null && jwtTokenProvider.validateToken(token)) {
+        if (token == null) {
+            String requestURI = ((HttpServletRequest) request).getRequestURI();
+            List<String> acceptedUrls = AcceptedUrl.ACCEPTED_URL_LIST;
+
+            for (String acceptedUrl : acceptedUrls) {
+                if (requestURI.equals(acceptedUrl)) {
+                    chain.doFilter(request, response);
+                    return;
+                }
+            }
+
+            throw new JwtException("토큰이 빈 값입니다.");
+        }
+
+        if (jwtTokenProvider.validateToken(token)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(token); //유저 정보
             SecurityContextHolder.getContext().setAuthentication(authentication); //SecurityContext에 객체 저장
         }
