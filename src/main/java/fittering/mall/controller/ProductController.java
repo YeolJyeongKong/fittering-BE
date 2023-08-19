@@ -44,7 +44,7 @@ public class ProductController {
 
     @Operation(summary = "상품 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"상품 등록 완료\"")))
-    @PostMapping("/product")
+    @PostMapping("/products")
     public ResponseEntity<?> save(@RequestBody RequestProductDetailDto requestProductDto) {
         Category category = categoryService.findByName(requestProductDto.getCategoryName());
         SubCategory subCategory = categoryService.findByNameOfSubCategory(requestProductDto.getSubCategoryName());
@@ -74,7 +74,7 @@ public class ProductController {
 
     @Operation(summary = "카테고리별 상품 조회 (대분류)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
-    @GetMapping("/category/{categoryId}/{gender}/{filterId}")
+    @GetMapping("/categories/{categoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithCategory(@PathVariable("categoryId") Long categoryId,
                                                  @PathVariable("gender") String gender,
                                                  @PathVariable("filterId") Long filterId,
@@ -85,7 +85,7 @@ public class ProductController {
 
     @Operation(summary = "카테고리별 상품 조회 (소분류)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
-    @GetMapping("/category/sub/{subCategoryId}/{gender}/{filterId}")
+    @GetMapping("/categories/sub/{subCategoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithSubCategory(@PathVariable("subCategoryId") Long subCategoryId,
                                                     @PathVariable("gender") String gender,
                                                     @PathVariable("filterId") Long filterId,
@@ -96,7 +96,7 @@ public class ProductController {
 
     @Operation(summary = "카테고리별 상품 개수 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductCategoryDto.class))))
-    @GetMapping("/category/count")
+    @GetMapping("/categories/count")
     public ResponseEntity<?> multipleProductCountWithCategory() {
         List<ResponseProductCategoryDto> categoryWithProductCounts = productService.multipleProductCountWithCategory();
         return new ResponseEntity<>(categoryWithProductCounts, HttpStatus.OK);
@@ -132,7 +132,7 @@ public class ProductController {
 
     @Operation(summary = "쇼핑몰 내 카테고리별 상품 개수 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductCategoryDto.class))))
-    @GetMapping("/malls/{mallId}/category/count")
+    @GetMapping("/malls/{mallId}/categories/count")
     public ResponseEntity<?> productCountWithCategoryOfMall(@PathVariable("mallId") Long mallId) {
         List<ResponseProductCategoryDto> categoryWithProductCounts = productService.productCountWithCategoryOfMall(mallId);
         return new ResponseEntity<>(categoryWithProductCounts, HttpStatus.OK);
@@ -152,7 +152,7 @@ public class ProductController {
             @Content(schema = @Schema(implementation = ResponseDressDto.class)),
             @Content(schema = @Schema(implementation = ResponseBottomDto.class))
     })
-    @GetMapping("/product/{productId}")
+    @GetMapping("/products/{productId}")
     public ResponseEntity<?> productDetail(@PathVariable("productId") Long productId,
                                            @AuthenticationPrincipal PrincipalDetails principalDetails) {
         Product product = productService.findById(productId);
