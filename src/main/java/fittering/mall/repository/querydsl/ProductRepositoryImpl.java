@@ -280,7 +280,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         Product productInfo = queryFactory
                 .selectFrom(product)
-                .from(product)
                 .leftJoin(product.mall, mall)
                 .leftJoin(product.category, category)
                 .leftJoin(product.sizes, size)
@@ -339,7 +338,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         Product productInfo = queryFactory
                 .selectFrom(product)
-                .from(product)
                 .leftJoin(product.mall, mall)
                 .leftJoin(product.category, category)
                 .leftJoin(product.sizes, size)
@@ -398,7 +396,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         Product productInfo = queryFactory
                 .selectFrom(product)
-                .from(product)
                 .leftJoin(product.mall, mall)
                 .leftJoin(product.category, category)
                 .leftJoin(product.sizes, size)
@@ -475,7 +472,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         Product productInfo = queryFactory
                 .selectFrom(product)
-                .from(product)
                 .leftJoin(product.mall, mall)
                 .leftJoin(product.category, category)
                 .leftJoin(product.sizes, size)
