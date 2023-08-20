@@ -41,7 +41,7 @@ public class OAuthService {
                 .ageRange(getAgeRange(DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY))
                 .provider(provider)
                 .measurement(measurement)
-                .roles(new ArrayList<>(List.of("USER")))
+                .roles(new ArrayList<>(List.of("ROLE_USER")))
                 .build());
     }
 
