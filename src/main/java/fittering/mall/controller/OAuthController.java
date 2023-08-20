@@ -29,6 +29,15 @@ public class OAuthController {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
 
+    @Value("${apple.client-id}")
+    private String APPLE_CLIENT_ID;
+    @Value("${apple.redirect-uri}")
+    private String APPLE_REDIRECT_URI;
+    @Value("${apple.response_type}")
+    private String APPLE_RESPONSE_TYPE;
+    @Value("${apple.nonce}")
+    private String APPLE_NONCE;
+
     @Value("${kakao.client-id}")
     private String KAKAO_CLIENT_ID;
     @Value("${kakao.client-secret}")
@@ -56,10 +65,20 @@ public class OAuthController {
     private String GOOGLE_GRANT_TYPE;
 
     private final String MAIN_LOGIN_URL = "https://fit-tering.com/login";
+    private final String APPLE_AUTH_URL = "https://appleid.apple.com/auth/authorize";
     private final String KAKAO_AUTH_URL = "https://kauth.kakao.com/oauth/authorize";
     private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
     private final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
     private final String GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
+
+    @GetMapping("/login/oauth/apple")
+    public String loginAppleOAuth() {
+        return "redirect:" + APPLE_AUTH_URL
+                + "?client_id=" + APPLE_CLIENT_ID
+                + "&redirect_uri=" + APPLE_REDIRECT_URI
+                + "&response_type=" + APPLE_RESPONSE_TYPE
+                + "&nonce=" + APPLE_NONCE;
+    }
 
     @PostMapping("/login/apple")
     public String appleServiceRedirect(AppleServiceResponse appleServiceResponse) {

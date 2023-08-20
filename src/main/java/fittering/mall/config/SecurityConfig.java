@@ -43,7 +43,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/v1/login", "/api/v1/signup").permitAll()
                                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/api-docs/**").permitAll()
                                 .requestMatchers("/actuator/prometheus/**").permitAll()
-                                .requestMatchers("/login/oauth/google", "login/oauth/kakao").permitAll()
+                                .requestMatchers("/login/oauth/apple", "/login/oauth/google", "login/oauth/kakao").permitAll()
                                 .anyRequest().hasRole("USER")
 //                                .anyRequest().permitAll()
                 )
