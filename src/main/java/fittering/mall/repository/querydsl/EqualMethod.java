@@ -18,6 +18,7 @@ public class EqualMethod {
 
     private static final String MALE = "M";
     private static final String FEMALE = "F";
+    private static final String ALL_GENDER = "A";
 
     public static BooleanExpression userIdEq(Long userId) {
         return userId != null ? user.id.eq(userId) : null;
@@ -76,7 +77,7 @@ public class EqualMethod {
         if (!gender.equals(MALE) && !gender.equals(FEMALE)) {
             return Expressions.asBoolean(true).isTrue();
         }
-        return product.gender.eq(gender);
+        return product.gender.eq(gender).or(product.gender.eq(ALL_GENDER));
     }
 
     public static BooleanExpression productNameContains(String productName) {
