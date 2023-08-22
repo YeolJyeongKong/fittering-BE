@@ -1,6 +1,5 @@
 package fittering.mall.config.jwt;
 
-import fittering.mall.config.AcceptedUrl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -14,7 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
-import java.util.List;
+
+import static fittering.mall.config.AcceptedUrl.*;
 
 @Component
 @RequiredArgsConstructor
@@ -30,13 +30,17 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         if (token == null) {
             String requestURI = ((HttpServletRequest) request).getRequestURI();
-            List<String> acceptedUrls = AcceptedUrl.ACCEPTED_URL_LIST;
 
-            for (String acceptedUrl : acceptedUrls) {
+            for (String acceptedUrl : ACCEPTED_URL_LIST) {
                 if (requestURI.equals(acceptedUrl)) {
                     chain.doFilter(request, response);
                     return;
                 }
+            }
+
+            if (isAuthUrl(requestURI)) {
+                chain.doFilter(request, response);
+                return;
             }
 
             throw new JwtException("토큰이 빈 값입니다.");
@@ -49,5 +53,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         //다음 Filter 실행
         chain.doFilter(request, response);
+    }
+
+    private static boolean isAuthUrl(String requestURI) {
+        if (requestURI.startsWith(NO_AUTH_URL)) {
+            return requestURI.startsWith(AUTH_URL);
+        }
+        return false;
     }
 }
