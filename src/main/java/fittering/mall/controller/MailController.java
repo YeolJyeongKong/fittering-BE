@@ -15,6 +15,8 @@ import fittering.mall.domain.dto.service.MailDto;
 import fittering.mall.service.MailService;
 import fittering.mall.service.UserService;
 
+import static fittering.mall.controller.ControllerUtils.isInvalidEmail;
+
 @Tag(name = "메일", description = "비밀번호 찾기 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
@@ -31,7 +33,10 @@ public class MailController {
     })
     @PostMapping("/email/check")
     public ResponseEntity<?> checkEmail(@RequestParam("email") String email) {
-        if(!userService.emailExist(email)) {
+        if (isInvalidEmail(email)) {
+            return new ResponseEntity<>("올바른 이메일 형식이 아닙니다.", HttpStatus.BAD_REQUEST);
+        }
+        if (!userService.emailExist(email)) {
             return new ResponseEntity<>("일치하는 메일이 없습니다.", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("이메일을 사용하는 유저가 존재합니다.", HttpStatus.OK);
@@ -44,7 +49,10 @@ public class MailController {
     })
     @PostMapping("/password/send")
     public ResponseEntity<?> sendPassword(@RequestParam("email") String email) {
-        if(!userService.updatePasswordToken(email)) {
+        if (isInvalidEmail(email)) {
+            return new ResponseEntity<>("올바른 이메일 형식이 아닙니다.", HttpStatus.BAD_REQUEST);
+        }
+        if (!userService.updatePasswordToken(email)) {
             return new ResponseEntity<>("비밀번호 찾기는 1시간에 한 번 가능합니다.", HttpStatus.BAD_REQUEST);
         }
 

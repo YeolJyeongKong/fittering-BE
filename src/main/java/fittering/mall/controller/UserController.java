@@ -16,6 +16,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import fittering.mall.config.auth.PrincipalDetails;
 import fittering.mall.domain.entity.Product;
@@ -32,6 +35,8 @@ import fittering.mall.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static fittering.mall.controller.ControllerUtils.getValidationErrorResponse;
 
 @Tag(name = "유저", description = "유저 서비스 관련 API")
 @RestController
@@ -54,8 +59,12 @@ public class UserController {
     @Operation(summary = "마이페이지 수정")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = RequestUserDto.class)))
     @PostMapping("/users/mypage")
-    public ResponseEntity<?> edit(@RequestBody RequestUserDto requestUserDto,
-                                  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<?> edit(@RequestBody @Valid RequestUserDto requestUserDto,
+                                  @AuthenticationPrincipal PrincipalDetails principalDetails,
+                                  BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return getValidationErrorResponse(bindingResult);
+        }
         userService.infoUpdate(requestUserDto, principalDetails.getUser().getId());
         return new ResponseEntity<>(requestUserDto, HttpStatus.OK);
     }
@@ -66,8 +75,8 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "FAIL", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"현재 비밀번호 인증 실패\"")))
     })
     @PostMapping("/users/password/check/{password}/{newPassword}")
-    public ResponseEntity<?> checkPassword(@PathVariable("password") String password,
-                                           @PathVariable("newPassword") String newPassword,
+    public ResponseEntity<?> checkPassword(@PathVariable("password") @NotEmpty String password,
+                                           @PathVariable("newPassword") @NotEmpty String newPassword,
                                            @AuthenticationPrincipal PrincipalDetails principalDetails) {
         Long userId = principalDetails.getUser().getId();
         if(userService.passwordCheck(userId, password)) {
@@ -88,8 +97,12 @@ public class UserController {
     @Operation(summary = "체형 정보 수정")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MeasurementDto.class)))
     @PostMapping("/users/mysize")
-    public ResponseEntity<?> measurementEdit(@RequestBody RequestMeasurementDto requestMeasurementDto,
-                                             @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<?> measurementEdit(@RequestBody @Valid RequestMeasurementDto requestMeasurementDto,
+                                             @AuthenticationPrincipal PrincipalDetails principalDetails,
+                                             BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return getValidationErrorResponse(bindingResult);
+        }
         MeasurementDto measurementDto = MeasurementMapper.INSTANCE.toMeasurementDto(requestMeasurementDto);
         userService.measurementUpdate(measurementDto, principalDetails.getUser().getId());
         return new ResponseEntity<>(measurementDto, HttpStatus.OK);
@@ -116,7 +129,7 @@ public class UserController {
     @Operation(summary = "유저 즐겨찾기 상품 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"유저 즐겨찾기 상품 등록 완료\"")))
     @PostMapping("/users/favorite_goods/{productId}")
-    public ResponseEntity<?> saveFavoriteProduct(@PathVariable("productId") Long productId,
+    public ResponseEntity<?> saveFavoriteProduct(@PathVariable("productId") @NotEmpty Long productId,
                                                  @AuthenticationPrincipal PrincipalDetails principalDetails) {
         favoriteService.saveFavoriteProduct(principalDetails.getUser().getId(), productId);
         return new ResponseEntity<>("유저 즐겨찾기 상품 등록 완료", HttpStatus.OK);
@@ -125,7 +138,7 @@ public class UserController {
     @Operation(summary = "유저 즐겨찾기 상품 삭제")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"유저 즐겨찾기 상품 삭제 완료\"")))
     @DeleteMapping("/users/favorite_goods/{productId}")
-    public ResponseEntity<?> deleteFavoriteProduct(@PathVariable("productId") Long productId,
+    public ResponseEntity<?> deleteFavoriteProduct(@PathVariable("productId") @NotEmpty Long productId,
                                                    @AuthenticationPrincipal PrincipalDetails principalDetails) {
         favoriteService.deleteFavoriteProduct(principalDetails.getUser().getId(), productId);
         return new ResponseEntity<>("유저 즐겨찾기 상품 삭제 완료", HttpStatus.OK);
@@ -151,8 +164,12 @@ public class UserController {
     @Operation(summary = "체형 스마트 분석")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMeasurementDto.class))))
     @PostMapping("/users/recommendation/measurement")
-    public ResponseEntity<?> recommendMeasurement(@RequestBody RequestSmartMeasurementDto requestSmartMeasurementDto,
-                                                  @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public ResponseEntity<?> recommendMeasurement(@RequestBody @Valid RequestSmartMeasurementDto requestSmartMeasurementDto,
+                                                  @AuthenticationPrincipal PrincipalDetails principalDetails,
+                                                  BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return getValidationErrorResponse(bindingResult);
+        }
         //request: smartMeasurementDto
         //실루엣 이미지(정면/측면), 키, 몸무게, 성별
         //TODO: 체형 측정 API에서 체형 측정 결과를 받아오는 로직 필요
@@ -278,7 +295,7 @@ public class UserController {
     @Operation(summary = "유저 즐겨찾기 쇼핑몰 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"즐겨찾기 등록 완료\"")))
     @PostMapping("/favorites/{mallId}")
-    public ResponseEntity<?> setFavoriteMall(@PathVariable("mallId") Long mallId,
+    public ResponseEntity<?> setFavoriteMall(@PathVariable("mallId") @NotEmpty Long mallId,
                                              @AuthenticationPrincipal PrincipalDetails principalDetails) {
         favoriteService.saveFavoriteMall(principalDetails.getUser().getId(), mallId);
         return new ResponseEntity<>("즐겨찾기 등록 완료", HttpStatus.OK);
@@ -287,7 +304,7 @@ public class UserController {
     @Operation(summary = "유저 즐겨찾기 쇼핑몰 삭제")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"즐겨찾기 삭제 완료\"")))
     @DeleteMapping("/favorites/{mallId}")
-    public ResponseEntity<?> deleteFavoriteMall(@PathVariable("mallId") Long mallId,
+    public ResponseEntity<?> deleteFavoriteMall(@PathVariable("mallId") @NotEmpty Long mallId,
                                                 @AuthenticationPrincipal PrincipalDetails principalDetails) {
         favoriteService.deleteFavoriteMall(principalDetails.getUser().getId(), mallId);
         return new ResponseEntity<>("즐겨찾기 삭제 완료", HttpStatus.OK);

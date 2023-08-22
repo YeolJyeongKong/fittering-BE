@@ -45,8 +45,8 @@ public class SecurityConfig {
                                 .requestMatchers("/actuator/prometheus/**").permitAll()
                                 .requestMatchers("/login/oauth/apple", "/login/oauth/google", "login/oauth/kakao").permitAll()
                                 .requestMatchers("/login/apple", "/login/google", "/login/kakao").permitAll()
-                                .anyRequest().hasRole("USER")
-//                                .anyRequest().permitAll()
+//                                .anyRequest().hasRole("USER")
+                                .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
