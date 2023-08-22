@@ -1,9 +1,7 @@
 package fittering.mall.domain.dto.controller.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
@@ -12,14 +10,23 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestProductDetailDto {
+    @NonNull
     private Integer price;
+    @NonNull @Length(max = 50)
     private String name;
+    @NonNull @Length(max = 1)
     private String gender;
+    @NonNull
     private Integer type;
+    @NonNull
     private String image;
+    @NonNull
     private String origin;
+    @NonNull
     private String categoryName;
+    @NonNull
     private String subCategoryName;
+    @NonNull
     private String mallName;
     private List<RequestOuterDto> outerSizes;
     private List<RequestTopDto> topSizes;
