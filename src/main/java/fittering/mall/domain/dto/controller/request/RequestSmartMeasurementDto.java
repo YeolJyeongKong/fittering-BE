@@ -7,9 +7,14 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestSmartMeasurementDto {
+    @NonNull
     private String frontImage;
+    @NonNull
     private String sideImage;
+    @NonNull
     private Integer height;
+    @NonNull
     private Integer weight;
+    @NonNull
     private String gender;
 }

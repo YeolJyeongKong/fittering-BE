@@ -2,6 +2,7 @@ package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,7 +34,7 @@ public class User {
     @NonNull
     private String password;
 
-    @NonNull @Length(min = 7, max = 64)
+    @Email
     private String email;
 
     @NonNull @Length(max = 1)

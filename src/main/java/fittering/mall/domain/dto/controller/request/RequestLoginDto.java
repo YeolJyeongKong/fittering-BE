@@ -1,15 +1,15 @@
 package fittering.mall.domain.dto.controller.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Email;
+import lombok.*;
 
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestLoginDto {
+    @Email
     private String email;
+    @NonNull
     private String password;
 }

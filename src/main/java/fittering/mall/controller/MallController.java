@@ -11,11 +11,14 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import fittering.mall.config.auth.PrincipalDetails;
 import fittering.mall.service.FavoriteService;
@@ -24,10 +27,12 @@ import fittering.mall.service.RankService;
 
 import java.util.List;
 
+import static fittering.mall.controller.ControllerUtils.getValidationErrorResponse;
+
 @Tag(name = "쇼핑몰", description = "쇼핑몰 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/auth")
 public class MallController {
 
     private static final int MALL_RANL_SIZE = 4;
@@ -39,7 +44,11 @@ public class MallController {
     @Operation(summary = "쇼핑몰 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"쇼핑몰 등록 완료\"")))
     @PostMapping("/malls")
-    public ResponseEntity<?> save(@RequestBody RequestMallDto requestMallDto) {
+    public ResponseEntity<?> save(@RequestBody @Valid RequestMallDto requestMallDto,
+                                  BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return getValidationErrorResponse(bindingResult);
+        }
         mallService.save(MallMapper.INSTANCE.toMallDto(requestMallDto));
         return new ResponseEntity<>("쇼핑몰 등록 완료", HttpStatus.OK);
     }
@@ -47,7 +56,7 @@ public class MallController {
     @Operation(summary = "쇼핑몰 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallDto.class))))
     @GetMapping("/malls/{mallId}")
-    public ResponseEntity<?> mallRank(@PathVariable("mallId") Long mallId,
+    public ResponseEntity<?> mallRank(@PathVariable("mallId") @NotEmpty Long mallId,
                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
         ResponseMallDto responseMallDto = mallService.findById(mallId);
         rankService.updateViewOnMall(principalDetails.getUser().getId(), mallId);

@@ -14,12 +14,15 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import fittering.mall.config.auth.PrincipalDetails;
 import fittering.mall.domain.entity.*;
@@ -27,6 +30,7 @@ import fittering.mall.service.*;
 
 import java.util.List;
 
+import static fittering.mall.controller.ControllerUtils.getValidationErrorResponse;
 import static fittering.mall.domain.entity.Product.*;
 
 @Tag(name = "상품", description = "상품 서비스 관련 API")
@@ -44,8 +48,12 @@ public class ProductController {
 
     @Operation(summary = "상품 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"상품 등록 완료\"")))
-    @PostMapping("/products")
-    public ResponseEntity<?> save(@RequestBody RequestProductDetailDto requestProductDto) {
+    @PostMapping("/auth/products")
+    public ResponseEntity<?> save(@RequestBody @Valid RequestProductDetailDto requestProductDto,
+                                  BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return getValidationErrorResponse(bindingResult);
+        }
         Category category = categoryService.findByName(requestProductDto.getCategoryName());
         SubCategory subCategory = categoryService.findByNameOfSubCategory(requestProductDto.getSubCategoryName());
         Mall mall = mallService.findByName(requestProductDto.getMallName());
@@ -75,9 +83,9 @@ public class ProductController {
     @Operation(summary = "카테고리별 상품 조회 (대분류)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/categories/{categoryId}/{gender}/{filterId}")
-    public ResponseEntity<?> productWithCategory(@PathVariable("categoryId") Long categoryId,
-                                                 @PathVariable("gender") String gender,
-                                                 @PathVariable("filterId") Long filterId,
+    public ResponseEntity<?> productWithCategory(@PathVariable("categoryId") @NotEmpty Long categoryId,
+                                                 @PathVariable("gender") @NotEmpty String gender,
+                                                 @PathVariable("filterId") @NotEmpty Long filterId,
                                                  Pageable pageable) {
         Page<ResponseProductPreviewDto> products = productService.productWithCategory(categoryId, gender, filterId, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
@@ -86,9 +94,9 @@ public class ProductController {
     @Operation(summary = "카테고리별 상품 조회 (소분류)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/categories/sub/{subCategoryId}/{gender}/{filterId}")
-    public ResponseEntity<?> productWithSubCategory(@PathVariable("subCategoryId") Long subCategoryId,
-                                                    @PathVariable("gender") String gender,
-                                                    @PathVariable("filterId") Long filterId,
+    public ResponseEntity<?> productWithSubCategory(@PathVariable("subCategoryId") @NotEmpty Long subCategoryId,
+                                                    @PathVariable("gender") @NotEmpty String gender,
+                                                    @PathVariable("filterId") @NotEmpty Long filterId,
                                                     Pageable pageable) {
         Page<ResponseProductPreviewDto> products = productService.productWithSubCategory(subCategoryId, gender, filterId, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
@@ -105,10 +113,10 @@ public class ProductController {
     @Operation(summary = "쇼핑몰 카테고리별 상품 조회 (대분류)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/malls/{mallId}/{categoryId}/{gender}/{filterId}")
-    public ResponseEntity<?> productWithCategoryOfMall(@PathVariable("mallId") Long mallId,
-                                                       @PathVariable("categoryId") Long categoryId,
-                                                       @PathVariable("gender") String gender,
-                                                       @PathVariable("filterId") Long filterId,
+    public ResponseEntity<?> productWithCategoryOfMall(@PathVariable("mallId") @NotEmpty Long mallId,
+                                                       @PathVariable("categoryId") @NotEmpty Long categoryId,
+                                                       @PathVariable("gender") @NotEmpty String gender,
+                                                       @PathVariable("filterId") @NotEmpty Long filterId,
                                                        Pageable pageable) {
         Page<ResponseProductPreviewDto> products = productService.productWithCategoryOfMall(
                 mallId, categoryId, gender, filterId, pageable
@@ -119,10 +127,10 @@ public class ProductController {
     @Operation(summary = "쇼핑몰 카테고리별 상품 조회 (소분류)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/malls/{mallId}/{subCategoryId}/{gender}/{filterId}")
-    public ResponseEntity<?> productWithSubCategoryOfMall(@PathVariable("mallId") Long mallId,
-                                                          @PathVariable("subCategoryId") Long subCategoryId,
-                                                          @PathVariable("gender") String gender,
-                                                          @PathVariable("filterId") Long filterId,
+    public ResponseEntity<?> productWithSubCategoryOfMall(@PathVariable("mallId") @NotEmpty Long mallId,
+                                                          @PathVariable("subCategoryId") @NotEmpty Long subCategoryId,
+                                                          @PathVariable("gender") @NotEmpty String gender,
+                                                          @PathVariable("filterId") @NotEmpty Long filterId,
                                                           Pageable pageable) {
         Page<ResponseProductPreviewDto> products = productService.productWithSubCategoryOfMall(
                 mallId, subCategoryId, gender, filterId, pageable
@@ -133,7 +141,7 @@ public class ProductController {
     @Operation(summary = "쇼핑몰 내 카테고리별 상품 개수 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductCategoryDto.class))))
     @GetMapping("/malls/{mallId}/categories/count")
-    public ResponseEntity<?> productCountWithCategoryOfMall(@PathVariable("mallId") Long mallId) {
+    public ResponseEntity<?> productCountWithCategoryOfMall(@PathVariable("mallId") @NotEmpty Long mallId) {
         List<ResponseProductCategoryDto> categoryWithProductCounts = productService.productCountWithCategoryOfMall(mallId);
         return new ResponseEntity<>(categoryWithProductCounts, HttpStatus.OK);
     }
@@ -152,8 +160,8 @@ public class ProductController {
             @Content(schema = @Schema(implementation = ResponseDressDto.class)),
             @Content(schema = @Schema(implementation = ResponseBottomDto.class))
     })
-    @GetMapping("/products/{productId}")
-    public ResponseEntity<?> productDetail(@PathVariable("productId") Long productId,
+    @GetMapping("/auth/products/{productId}")
+    public ResponseEntity<?> productDetail(@PathVariable("productId") @NotEmpty Long productId,
                                            @AuthenticationPrincipal PrincipalDetails principalDetails) {
         Product product = productService.findById(productId);
         productService.updateView(productId);
@@ -186,7 +194,7 @@ public class ProductController {
     @Operation(summary = "실시간 랭킹순 상품 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/products/rank/{gender}")
-    public ResponseEntity<?> productOfTimeRank(@PathVariable("gender") String gender) {
+    public ResponseEntity<?> productOfTimeRank(@PathVariable("gender") @NotEmpty String gender) {
         List<ResponseProductPreviewDto> productsOfTimeRank = productService.productsOfTimeRank(gender);
         return new ResponseEntity<>(productsOfTimeRank, HttpStatus.OK);
     }

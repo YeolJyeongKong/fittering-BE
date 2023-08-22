@@ -1,16 +1,15 @@
 package fittering.mall.domain.dto.controller.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestMeasurementDto {
+    @NonNull
     private Integer height;
+    @NonNull
     private Integer weight;
     private Integer arm;
     private Integer leg;

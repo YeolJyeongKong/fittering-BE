@@ -1,9 +1,6 @@
 package fittering.mall.domain.dto.controller.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
@@ -11,8 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RequestOuterDto {
     private String name;
+    @NonNull
     private Double full;
     private Double shoulder;
+    @NonNull
     private Double chest;
+    @NonNull
     private Double sleeve;
 }

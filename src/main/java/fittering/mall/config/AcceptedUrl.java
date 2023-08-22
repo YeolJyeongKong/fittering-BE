@@ -13,4 +13,7 @@ public class AcceptedUrl {
             "/login/oauth/apple", "/login/oauth/google", "/login/oauth/kakao",
             "/login/apple", "/login/google", "/login/kakao"
     );
+
+    public final static String AUTH_URL = "/api/v1/auth";
+    public final static String NO_AUTH_URL = "/api/v1/";
 }
