@@ -32,7 +32,7 @@ import static fittering.mall.controller.ControllerUtils.getValidationErrorRespon
 @Tag(name = "쇼핑몰", description = "쇼핑몰 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/auth")
 public class MallController {
 
     private static final int MALL_RANL_SIZE = 4;

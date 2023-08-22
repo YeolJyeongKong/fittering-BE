@@ -23,7 +23,7 @@ import fittering.mall.service.SearchService;
 @Tag(name = "검색", description = "검색 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/auth")
 public class SearchController {
 
     private final SearchService searchService;

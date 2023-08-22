@@ -20,7 +20,7 @@ import static fittering.mall.controller.ControllerUtils.isInvalidEmail;
 @Tag(name = "메일", description = "비밀번호 찾기 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/auth")
 public class MailController {
 
     private final UserService userService;

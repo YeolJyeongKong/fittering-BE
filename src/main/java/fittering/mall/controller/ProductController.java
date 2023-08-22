@@ -48,7 +48,7 @@ public class ProductController {
 
     @Operation(summary = "상품 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"상품 등록 완료\"")))
-    @PostMapping("/products")
+    @PostMapping("/auth/products")
     public ResponseEntity<?> save(@RequestBody @Valid RequestProductDetailDto requestProductDto,
                                   BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -160,7 +160,7 @@ public class ProductController {
             @Content(schema = @Schema(implementation = ResponseDressDto.class)),
             @Content(schema = @Schema(implementation = ResponseBottomDto.class))
     })
-    @GetMapping("/products/{productId}")
+    @GetMapping("/auth/products/{productId}")
     public ResponseEntity<?> productDetail(@PathVariable("productId") @NotEmpty Long productId,
                                            @AuthenticationPrincipal PrincipalDetails principalDetails) {
         Product product = productService.findById(productId);

@@ -17,7 +17,7 @@ import fittering.mall.service.CategoryService;
 @Tag(name = "카테고리", description = "카테고리 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/auth")
 public class CategoryController {
 
     private final CategoryService categoryService;

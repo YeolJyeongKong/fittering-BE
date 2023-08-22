@@ -41,7 +41,7 @@ import static fittering.mall.controller.ControllerUtils.getValidationErrorRespon
 @Tag(name = "유저", description = "유저 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/auth")
 public class UserController {
 
     private final UserService userService;
