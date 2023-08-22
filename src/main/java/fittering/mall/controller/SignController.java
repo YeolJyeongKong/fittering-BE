@@ -46,7 +46,7 @@ public class SignController {
     }
 
     @Operation(summary = "회원가입")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = SignUpDto.class)))
+    @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = SignUpDto.class)))
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody @Valid RequestSignUpDto requestSignUpDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -60,6 +60,6 @@ public class SignController {
         }
 
         userService.save(UserMapper.INSTANCE.toSignUpDto(requestSignUpDto));
-        return new ResponseEntity<>(requestSignUpDto, HttpStatus.OK);
+        return new ResponseEntity<>(requestSignUpDto, HttpStatus.CREATED);
     }
 }
