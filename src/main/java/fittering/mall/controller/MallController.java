@@ -55,7 +55,7 @@ public class MallController {
     }
 
     @Operation(summary = "쇼핑몰 조회")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseMallDto.class)))
     @GetMapping("/malls/{mallId}")
     public ResponseEntity<?> mallRank(@PathVariable("mallId") @NotEmpty Long mallId,
                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
@@ -65,7 +65,7 @@ public class MallController {
     }
 
     @Operation(summary = "쇼핑몰 랭킹 조회")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallWithProductDto.class))))
     @GetMapping("/malls/rank")
     public ResponseEntity<?> mallRank(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         List<ResponseMallWithProductDto> malls = rankService.mallRank(principalDetails.getUser().getId());
@@ -93,7 +93,7 @@ public class MallController {
     }
 
     @Operation(summary = "즐겨찾기 쇼핑몰 상세 조회")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseMallDto.class)))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallWithProductDto.class))))
     @GetMapping("/malls/favorite_malls")
     public ResponseEntity<?> favoriteMall(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         List<ResponseMallWithProductDto> malls = favoriteService.userFavoriteMall(principalDetails.getUser().getId());
