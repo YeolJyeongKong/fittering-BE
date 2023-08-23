@@ -1,6 +1,6 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.response.ResponseMallDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
 import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
 import fittering.mall.domain.dto.service.MallDto;
 import fittering.mall.domain.dto.service.SignUpDto;
@@ -131,7 +131,7 @@ class RankServiceTest {
         Rank rank1 = rankService.save(user.getId(), mall.getId());
         Rank rank2 = rankService.save(user.getId(), mall2.getId());
 
-        List<ResponseMallDto> mallDtos = rankService.mallRank(user.getId());
+        List<ResponseMallWithProductDto> mallDtos = rankService.mallRank(user.getId());
 
         assertThat(mallDtos.get(0).getId()).isEqualTo(rank1.getMall().getId());
         assertThat(mallDtos.get(0).getName()).isEqualTo(rank1.getMall().getName());

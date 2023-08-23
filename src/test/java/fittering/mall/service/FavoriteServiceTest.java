@@ -1,6 +1,6 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.response.ResponseMallDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
 import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
 import fittering.mall.domain.dto.service.SignUpDto;
 import jakarta.transaction.Transactional;
@@ -59,10 +59,10 @@ class FavoriteServiceTest {
         savedFavorite.add(createMallDto(savedFavorite2));
         savedFavorite.add(createMallDto(savedFavorite3));
 
-        List<ResponseMallDto> findFavorites = favoriteService.userFavoriteMall(user.getId());
+        List<ResponseMallWithProductDto> findFavorites = favoriteService.userFavoriteMall(user.getId());
         for (int i=0; i<findFavorites.size(); i++) {
             MallDto savedMallDto = savedFavorite.get(i);
-            ResponseMallDto findMallDto = findFavorites.get(i);
+            ResponseMallWithProductDto findMallDto = findFavorites.get(i);
             checkMallDto(savedMallDto, findMallDto);
         }
 
@@ -70,7 +70,7 @@ class FavoriteServiceTest {
         favoriteService.deleteFavoriteMall(user.getId(), mall2.getId());
         favoriteService.deleteFavoriteMall(user.getId(), mall3.getId());
 
-        List<ResponseMallDto> deletedUserList = favoriteService.userFavoriteMall(user.getId());
+        List<ResponseMallWithProductDto> deletedUserList = favoriteService.userFavoriteMall(user.getId());
         assertThat(deletedUserList.size()).isEqualTo(0);
     }
 
@@ -145,7 +145,7 @@ class FavoriteServiceTest {
         assertThat(deletedProducts.getTotalElements()).isEqualTo(0);
     }
 
-    private static void checkMallDto(MallDto savedMallDto, ResponseMallDto findMallDto) {
+    private static void checkMallDto(MallDto savedMallDto, ResponseMallWithProductDto findMallDto) {
         assertThat(savedMallDto.getId()).isEqualTo(findMallDto.getId());
         assertThat(savedMallDto.getName()).isEqualTo(findMallDto.getName());
         assertThat(savedMallDto.getImage()).isEqualTo(findMallDto.getImage());

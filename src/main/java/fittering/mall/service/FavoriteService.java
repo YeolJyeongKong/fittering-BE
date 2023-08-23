@@ -1,6 +1,6 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.response.ResponseMallDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
 import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
 import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
 import fittering.mall.domain.mapper.MallMapper;
@@ -9,7 +9,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import fittering.mall.domain.RestPage;
@@ -36,10 +35,10 @@ public class FavoriteService {
     private final UserRepository userRepository;
 
     @Cacheable(value = "UserFavoriteMall", key = "#userId")
-    public List<ResponseMallDto> userFavoriteMall(Long userId) {
+    public List<ResponseMallWithProductDto> userFavoriteMall(Long userId) {
 
         List<Favorite> favoriteMalls = favoriteRepository.userFavoriteMall(userId);
-        List<ResponseMallDto> result = new ArrayList<>();
+        List<ResponseMallWithProductDto> result = new ArrayList<>();
 
         favoriteMalls.forEach(favorite -> {
             Mall mall = favorite.getMall();
@@ -58,7 +57,7 @@ public class FavoriteService {
                                                     .build());
             }
 
-            result.add(MallMapper.INSTANCE.toResponseMallDto(mall, 0));
+            result.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, 0));
         });
         return result;
     }

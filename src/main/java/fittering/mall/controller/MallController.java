@@ -2,6 +2,7 @@ package fittering.mall.controller;
 
 import fittering.mall.domain.dto.controller.request.RequestMallDto;
 import fittering.mall.domain.dto.controller.response.ResponseMallDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
 import fittering.mall.domain.dto.controller.response.ResponseMallPreviewDto;
 import fittering.mall.domain.mapper.MallMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,7 +68,7 @@ public class MallController {
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallDto.class))))
     @GetMapping("/malls/rank")
     public ResponseEntity<?> mallRank(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        List<ResponseMallDto> malls = rankService.mallRank(principalDetails.getUser().getId());
+        List<ResponseMallWithProductDto> malls = rankService.mallRank(principalDetails.getUser().getId());
         return new ResponseEntity<>(malls, HttpStatus.OK);
     }
 
@@ -95,7 +96,7 @@ public class MallController {
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseMallDto.class)))
     @GetMapping("/malls/favorite_malls")
     public ResponseEntity<?> favoriteMall(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        List<ResponseMallDto> malls = favoriteService.userFavoriteMall(principalDetails.getUser().getId());
+        List<ResponseMallWithProductDto> malls = favoriteService.userFavoriteMall(principalDetails.getUser().getId());
         return new ResponseEntity<>(malls, HttpStatus.OK);
     }
 }

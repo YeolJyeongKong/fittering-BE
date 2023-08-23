@@ -3,6 +3,7 @@ package fittering.mall.domain.mapper;
 import fittering.mall.domain.dto.controller.request.RequestMallDto;
 import fittering.mall.domain.dto.controller.request.RequestMallRankProductDto;
 import fittering.mall.domain.dto.controller.response.ResponseMallDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
 import fittering.mall.domain.dto.controller.response.ResponseMallPreviewDto;
 import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
 import fittering.mall.domain.dto.service.MallPreviewDto;
@@ -25,6 +26,7 @@ public interface MallMapper {
     MallRankProductDto toMallRankProductDto(RequestMallRankProductDto requestMallRankProductDto);
 
     ResponseMallDto toResponseMallDto(Mall mall, Integer view);
+    ResponseMallWithProductDto toResponseMallWithProductDto(Mall mall, Integer view);
     @Mappings({
             @Mapping(source = "product.id", target = "productId"),
             @Mapping(source = "product.image", target = "productImage")
