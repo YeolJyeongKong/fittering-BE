@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 }
             }
 
-            if (isAuthUrl(requestURI)) {
+            if (isNoAuthUrl(requestURI)) {
                 chain.doFilter(request, response);
                 return;
             }
@@ -55,9 +55,9 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         chain.doFilter(request, response);
     }
 
-    private static boolean isAuthUrl(String requestURI) {
+    private static boolean isNoAuthUrl(String requestURI) {
         if (requestURI.startsWith(NO_AUTH_URL)) {
-            return requestURI.startsWith(AUTH_URL);
+            return !requestURI.startsWith(AUTH_URL);
         }
         return false;
     }

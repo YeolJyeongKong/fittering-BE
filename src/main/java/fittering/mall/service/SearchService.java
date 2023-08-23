@@ -18,7 +18,7 @@ public class SearchService {
     private final ProductRepository productRepository;
     private final MallRepository mallRepository;
 
-    @Cacheable(value = "Search", key = "#productName + '_' + #gender")
+    @Cacheable(value = "Search", key = "#productName + '_' + #gender + '_' + #filterId")
     public RestPage<ResponseProductPreviewDto> products(String productName, String gender, Long filterId, Pageable pageable) {
         return new RestPage<>(productRepository.searchProduct(productName, gender, filterId, pageable));
     }
