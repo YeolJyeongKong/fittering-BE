@@ -1,6 +1,6 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.response.ResponseMallDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
 import fittering.mall.domain.dto.controller.response.ResponseMallPreviewDto;
 import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
 import fittering.mall.domain.mapper.MallMapper;
@@ -51,9 +51,9 @@ public class RankService {
                 .orElseThrow(() -> new NoResultException("rank doesn't exist"));
     }
 
-    public List<ResponseMallDto> mallRank(Long userId) {
+    public List<ResponseMallWithProductDto> mallRank(Long userId) {
         List<Rank> ranks = rankRepository.mallRank(userId);
-        List<ResponseMallDto> result = new ArrayList<>();
+        List<ResponseMallWithProductDto> result = new ArrayList<>();
 
         ranks.forEach(rank -> {
             Mall mall = rank.getMall();
@@ -72,7 +72,7 @@ public class RankService {
                                                     .build());
             }
 
-            result.add(MallMapper.INSTANCE.toResponseMallDto(mall, rank.getView()));
+            result.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, rank.getView()));
         });
         return result;
     }

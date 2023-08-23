@@ -1,6 +1,6 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.response.ResponseMallDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
 import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
 import fittering.mall.domain.dto.service.MallDto;
 import fittering.mall.domain.dto.service.SignUpDto;
@@ -131,7 +131,7 @@ class RankServiceTest {
         Rank rank1 = rankService.save(user.getId(), mall.getId());
         Rank rank2 = rankService.save(user.getId(), mall2.getId());
 
-        List<ResponseMallDto> mallDtos = rankService.mallRank(user.getId());
+        List<ResponseMallWithProductDto> mallDtos = rankService.mallRank(user.getId());
 
         assertThat(mallDtos.get(0).getId()).isEqualTo(rank1.getMall().getId());
         assertThat(mallDtos.get(0).getName()).isEqualTo(rank1.getMall().getName());
@@ -160,7 +160,9 @@ class RankServiceTest {
 
         rank1 = rankService.findById(rank1.getId());
         rank2 = rankService.findById(rank2.getId());
-        assertThat(rank1.getView()).isEqualTo(1L);
-        assertThat(rank2.getView()).isEqualTo(1L);
+        int firstView = Integer.parseInt(redisTemplate.opsForValue().get("Batch:Rank_view_" + rank1.getId()).toString());
+        int secondView = Integer.parseInt(redisTemplate.opsForValue().get("Batch:Rank_view_" + rank2.getId()).toString());
+        assertThat(firstView).isEqualTo(1L);
+        assertThat(secondView).isEqualTo(1L);
     }
 }
