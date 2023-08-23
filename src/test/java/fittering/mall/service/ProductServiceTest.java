@@ -151,22 +151,22 @@ class ProductServiceTest {
     void productWithCategory() {
         Page<ResponseProductPreviewDto> findProductByCategory =
                 productService.productWithCategory(topCategory.getId(), "M", 0L, PageRequest.of(0, 10));
-        compareProduct(product, findProductByCategory.getContent().get(0));
-        compareProduct(product2, findProductByCategory.getContent().get(1));
+        compareProduct(product, findProductByCategory.getContent().get(4));
+        compareProduct(product2, findProductByCategory.getContent().get(3));
         compareProduct(product3, findProductByCategory.getContent().get(2));
-        compareProduct(product4, findProductByCategory.getContent().get(3));
-        compareProduct(product5, findProductByCategory.getContent().get(4));
+        compareProduct(product4, findProductByCategory.getContent().get(1));
+        compareProduct(product5, findProductByCategory.getContent().get(0));
     }
 
     @Test
     void productWithCategoryOfMall() {
         Page<ResponseProductPreviewDto> findProductByCategoryOfMall =
                 productService.productWithCategoryOfMall(mall.getId(), topCategory.getId(), "M", 0L, PageRequest.of(0, 10));
-        compareProduct(product, findProductByCategoryOfMall.getContent().get(0));
-        compareProduct(product2, findProductByCategoryOfMall.getContent().get(1));
+        compareProduct(product, findProductByCategoryOfMall.getContent().get(4));
+        compareProduct(product2, findProductByCategoryOfMall.getContent().get(3));
         compareProduct(product3, findProductByCategoryOfMall.getContent().get(2));
-        compareProduct(product4, findProductByCategoryOfMall.getContent().get(3));
-        compareProduct(product5, findProductByCategoryOfMall.getContent().get(4));
+        compareProduct(product4, findProductByCategoryOfMall.getContent().get(1));
+        compareProduct(product5, findProductByCategoryOfMall.getContent().get(0));
     }
 
     @Test
@@ -439,7 +439,9 @@ class ProductServiceTest {
     void updateView() {
         productService.updateView(product.getId());
         Product findProduct = productService.findById(product.getId());
-        assertThat(findProduct.getView()).isEqualTo(1);
+//        assertThat(findProduct.getView()).isEqualTo(1);
+        int view = Integer.parseInt(redisTemplate.opsForValue().get("Batch:Product_view_" + findProduct.getId()).toString());
+        assertThat(view).isEqualTo(1);
     }
 
     @Test

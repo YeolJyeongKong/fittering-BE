@@ -68,7 +68,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = userService.save(new SignUpDto("test", "password", "test@test.com", "M", 1, 2, 3));
+        user = userService.save(new SignUpDto("testuser", "password", "t@test.com", "M", 1, 2, 3));
         category = categoryService.save("top");
         subCategory = categoryService.saveSubCategory("top", "shirt");
         mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
@@ -119,7 +119,7 @@ class UserServiceTest {
 
     @Test
     void infoUpdate() {
-        RequestUserDto userDto = new RequestUserDto("test@test.com", "testUser", "M", 1996, 12, 25);
+        RequestUserDto userDto = new RequestUserDto("t@test.com", "testUser", "M", 1996, 12, 25);
         userService.infoUpdate(userDto, user.getId());
 
         assertThat(user.getEmail()).isEqualTo(userDto.getEmail());
@@ -187,14 +187,14 @@ class UserServiceTest {
 
     @Test
     void usernameExist() {
-        assertThat(userService.usernameExist("test")).isTrue();
-        assertThat(userService.usernameExist("tes")).isFalse();
+        assertThat(userService.usernameExist("testuser")).isTrue();
+        assertThat(userService.usernameExist("testuse")).isFalse();
     }
 
     @Test
     void emailExist() {
-        assertThat(userService.emailExist("test@test.com")).isTrue();
-        assertThat(userService.emailExist("tes@tes.com")).isFalse();
+        assertThat(userService.emailExist("t@test.com")).isTrue();
+        assertThat(userService.emailExist("t@tes.com")).isFalse();
     }
 
     @Test

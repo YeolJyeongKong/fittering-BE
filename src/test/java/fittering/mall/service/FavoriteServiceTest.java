@@ -133,9 +133,9 @@ class FavoriteServiceTest {
 
         RestPage<ResponseProductPreviewDto> products = favoriteService.userFavoriteProduct(user.getId(), PageRequest.of(0, 10));
         assertThat(products.getTotalElements()).isEqualTo(3);
-        compareProduct(product, products.getContent().get(0));
+        compareProduct(product, products.getContent().get(2));
         compareProduct(product2, products.getContent().get(1));
-        compareProduct(product3, products.getContent().get(2));
+        compareProduct(product3, products.getContent().get(0));
 
         favoriteService.deleteFavoriteProduct(user.getId(), product.getId());
         favoriteService.deleteFavoriteProduct(user.getId(), product2.getId());

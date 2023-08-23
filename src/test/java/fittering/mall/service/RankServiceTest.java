@@ -160,7 +160,9 @@ class RankServiceTest {
 
         rank1 = rankService.findById(rank1.getId());
         rank2 = rankService.findById(rank2.getId());
-        assertThat(rank1.getView()).isEqualTo(1L);
-        assertThat(rank2.getView()).isEqualTo(1L);
+        int firstView = Integer.parseInt(redisTemplate.opsForValue().get("Batch:Rank_view_" + rank1.getId()).toString());
+        int secondView = Integer.parseInt(redisTemplate.opsForValue().get("Batch:Rank_view_" + rank2.getId()).toString());
+        assertThat(firstView).isEqualTo(1L);
+        assertThat(secondView).isEqualTo(1L);
     }
 }
