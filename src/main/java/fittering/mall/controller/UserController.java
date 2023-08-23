@@ -292,6 +292,14 @@ public class UserController {
         return productIds;
     }
 
+    @Operation(summary = "회원 탈퇴")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"회원 탈퇴 완료\"")))
+    @DeleteMapping("/users")
+    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        userService.delete(principalDetails.getUser().getId());
+        return new ResponseEntity<>("회원 탈퇴 완료", HttpStatus.OK);
+    }
+
     @Operation(summary = "유저 즐겨찾기 쇼핑몰 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"즐겨찾기 등록 완료\"")))
     @PostMapping("/favorites/{mallId}")
