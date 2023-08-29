@@ -11,11 +11,11 @@ import fittering.mall.domain.dto.repository.SavedMallPreviewDto;
 import fittering.mall.domain.dto.service.MallDto;
 import fittering.mall.domain.dto.service.MallRankProductDto;
 import fittering.mall.domain.entity.Mall;
-import fittering.mall.domain.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 @Mapper
 public interface MallMapper {
@@ -24,14 +24,9 @@ public interface MallMapper {
     Mall toMall(MallDto mallDto);
     MallDto toMallDto(RequestMallDto requestMallDto);
     MallRankProductDto toMallRankProductDto(RequestMallRankProductDto requestMallRankProductDto);
-
     ResponseMallDto toResponseMallDto(Mall mall, Integer view);
-    ResponseMallWithProductDto toResponseMallWithProductDto(Mall mall, Integer view);
-    @Mappings({
-            @Mapping(source = "product.id", target = "productId"),
-            @Mapping(source = "product.image", target = "productImage")
-    })
-    ResponseMallRankProductDto toResponseMallRankProductDto(Product product);
+    @Mapping(source = "products", target = "products")
+    ResponseMallWithProductDto toResponseMallWithProductDto(Mall mall, List<ResponseMallRankProductDto> products, Integer view);
     MallPreviewDto toMallPreviewDto(SavedMallPreviewDto savedMallPreviewDto);
     ResponseMallPreviewDto toResponseMallPreviewDto(MallPreviewDto mallPreviewDto);
 }
