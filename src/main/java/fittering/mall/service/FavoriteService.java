@@ -57,7 +57,7 @@ public class FavoriteService {
                                                     .build());
             }
 
-            result.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, 0));
+            result.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, 0));
         });
         return result;
     }

@@ -72,7 +72,7 @@ public class RankService {
                                                     .build());
             }
 
-            result.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, rank.getView()));
+            result.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, rank.getView()));
         });
         return result;
     }
