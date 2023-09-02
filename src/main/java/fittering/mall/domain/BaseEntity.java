@@ -30,4 +30,8 @@ public class BaseEntity {
     public AuditorAware<String> auditorProvider() {
         return () -> Optional.of("BaseEntity Auditor is working");
     }
+
+    public void updateTime(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
