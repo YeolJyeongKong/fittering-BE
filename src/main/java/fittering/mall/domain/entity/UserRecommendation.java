@@ -1,11 +1,10 @@
 package fittering.mall.domain.entity;
 
+import fittering.mall.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.*;
@@ -13,7 +12,7 @@ import static lombok.AccessLevel.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class UserRecommendation {
+public class UserRecommendation extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "user_recommendation_id")
@@ -27,12 +26,9 @@ public class UserRecommendation {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private LocalDateTime updatedAt;
-
     @Builder
-    public UserRecommendation(User user, Product product, LocalDateTime updatedAt) {
+    public UserRecommendation(User user, Product product) {
         this.user = user;
         this.product = product;
-        this.updatedAt = updatedAt;
     }
 }

@@ -1,5 +1,6 @@
 package fittering.mall.domain.entity;
 
+import fittering.mall.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class Dress {
+public class Dress extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "dress_id")

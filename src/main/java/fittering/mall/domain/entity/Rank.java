@@ -1,6 +1,7 @@
 package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fittering.mall.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @Table(name = "`rank`")
 @NoArgsConstructor(access = PROTECTED)
-public class Rank {
+public class Rank extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "rank_id")

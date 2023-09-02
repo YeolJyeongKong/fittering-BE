@@ -1,6 +1,7 @@
 package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fittering.mall.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -14,7 +15,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Getter
 @Builder
 @AllArgsConstructor
-public class Product {
+public class Product extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "product_id")

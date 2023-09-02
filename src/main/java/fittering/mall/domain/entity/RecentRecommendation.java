@@ -1,6 +1,7 @@
 package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fittering.mall.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class RecentRecommendation {
+public class RecentRecommendation extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "recent_recommendation_id")
@@ -36,6 +37,5 @@ public class RecentRecommendation {
     public RecentRecommendation(User user, Product product) {
         this.user = user;
         this.product = product;
-        updatedAt = LocalDateTime.now();
     }
 }

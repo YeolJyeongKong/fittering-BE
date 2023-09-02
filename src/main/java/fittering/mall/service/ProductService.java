@@ -171,7 +171,6 @@ public class ProductService {
         return userRecommendationRepository.save(UserRecommendation.builder()
                                                     .user(user)
                                                     .product(product)
-                                                    .updatedAt(LocalDateTime.now())
                                                     .build());
     }
 
@@ -209,5 +208,9 @@ public class ProductService {
 
     public List<ResponseProductPreviewDto> productsOfTimeRank(String gender) {
         return productRepository.timeRank(gender);
+    }
+
+    public LocalDateTime productsOfMaxUpdatedAt() {
+        return productRepository.maxUpdatedAt();
     }
 }

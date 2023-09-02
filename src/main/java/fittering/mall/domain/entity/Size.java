@@ -1,6 +1,7 @@
 package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fittering.mall.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -11,7 +12,7 @@ import static jakarta.persistence.FetchType.*;
 @Getter
 @Builder
 @AllArgsConstructor
-public class Size {
+public class Size extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "size_id")

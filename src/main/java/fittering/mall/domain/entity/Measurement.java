@@ -1,6 +1,7 @@
 package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fittering.mall.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Getter
 @Builder
 @AllArgsConstructor
-public class Measurement {
+public class Measurement extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "measurement_id")

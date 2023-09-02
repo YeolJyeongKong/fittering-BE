@@ -1,6 +1,7 @@
 package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fittering.mall.domain.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ import static jakarta.persistence.FetchType.*;
 @Getter
 @Builder
 @AllArgsConstructor
-public class User {
+public class User extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "user_id")
