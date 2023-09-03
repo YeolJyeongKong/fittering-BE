@@ -22,6 +22,7 @@ import static java.nio.charset.StandardCharsets.*;
 public class S3Service {
 
     private final AmazonS3 amazonS3;
+    private static final String IMAGE_CONTENT_TYPE = "image/*";
 
     @Value("${cloud.aws.s3.bucket.crawling}")
     private String crawlingBucket;
@@ -40,7 +41,7 @@ public class S3Service {
 
         InputStream fileInputStream = new ByteArrayInputStream(fileBytes);
         ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentType("image/*");
+        metadata.setContentType(IMAGE_CONTENT_TYPE);
         metadata.setContentLength(fileBytes.length);
         amazonS3.putObject(serverBucket, fileName, fileInputStream, metadata);
     }
