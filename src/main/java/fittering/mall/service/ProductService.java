@@ -5,6 +5,7 @@ import fittering.mall.config.kafka.domain.dto.CrawledProductDto;
 import fittering.mall.config.kafka.domain.dto.CrawledSizeDto;
 import fittering.mall.domain.dto.controller.response.*;
 import fittering.mall.domain.mapper.CategoryMapper;
+import fittering.mall.domain.mapper.MallMapper;
 import fittering.mall.domain.mapper.ProductMapper;
 import fittering.mall.domain.mapper.SizeMapper;
 import jakarta.persistence.NoResultException;
@@ -17,6 +18,7 @@ import fittering.mall.domain.RestPage;
 import fittering.mall.domain.entity.*;
 import fittering.mall.repository.*;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ public class ProductService {
     private final DressRepository dressRepository;
     private final BottomRepository bottomRepository;
     private final RedisService redisService;
+    private final S3Service s3Service;
 
     @Transactional
     public Product save(Product product) {
@@ -245,14 +248,22 @@ public class ProductService {
         SubCategory subCategory = subCategoryRepository.findById(productDto.getSub_category_id())
                 .orElseThrow(() -> new NoResultException("sub_category doesn't exist"));
         Mall mall = mallRepository.findById(productDto.getMall_id())
-                .orElseThrow(() -> new NoResultException("mall doesn't exist"));
+                .orElse(mallRepository.save(MallMapper.INSTANCE.toMall(mallDto)));
+
+        String thumbnail = imagePaths.get(0);
         Product product = save(ProductMapper.INSTANCE.toProduct(
-                productDto, imagePaths.get(0), 0, 0, category, subCategory, mall));
-        //description path 접근해서 txt 파일 얻어서 저장
-        String description = "";
-//        String description = getDescriptionFromDescriptionPath(productDto.getDescription_path());
-        imagePaths.add(0, description);
+                productDto, thumbnail, 0, 0, category, subCategory, mall));
+
+        imagePaths.set(0, productDto.getDescription_path());
         saveProductDescription(imagePaths, product);
+
+        imagePaths.forEach(imagePath -> {
+            try {
+                s3Service.moveS3ObjectToServerBucket(imagePath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         if (productDto.getType().equals(OUTER)) {
             getSizesOfOuter(sizeDtos, product);
