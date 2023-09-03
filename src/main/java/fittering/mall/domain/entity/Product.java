@@ -44,7 +44,6 @@ public class Product extends BaseEntity {
     @Transient public static final int TOP = 1;
     @Transient public static final int DRESS = 2;
     @Transient public static final int BOTTOM = 3;
-    @Transient private static final int TRUE = 1;
 
     @NonNull
     private String image;
@@ -59,7 +58,7 @@ public class Product extends BaseEntity {
     private Integer timeView;
 
     @NonNull
-    private Boolean disabled;
+    private Integer disabled;
 
     @JsonIgnore
     @ManyToOne(fetch = LAZY)
@@ -125,7 +124,7 @@ public class Product extends BaseEntity {
 
     public void updateInfo(Integer price, Integer disabled, LocalDateTime updated_at) {
         this.price = price;
-        this.disabled = disabled == TRUE;
+        this.disabled = disabled;
         super.updateTime(updated_at);
     }
 }
