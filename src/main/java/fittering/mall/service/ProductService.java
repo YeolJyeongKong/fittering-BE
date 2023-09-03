@@ -11,6 +11,7 @@ import fittering.mall.domain.mapper.SizeMapper;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,9 @@ public class ProductService {
     private final BottomRepository bottomRepository;
     private final RedisService redisService;
     private final S3Service s3Service;
+
+    @Value("${cloud.aws.cloudfront.url}")
+    private String CLOUDFRONT_URL;
 
     @Transactional
     public Product save(Product product) {
@@ -209,7 +213,7 @@ public class ProductService {
         List<ProductDescription> result = new ArrayList<>();
         productDescriptions.forEach(productDescriptionUrl -> {
             ProductDescription productDescription = ProductDescription.builder()
-                                                    .url(productDescriptionUrl)
+                                                    .url(CLOUDFRONT_URL + productDescriptionUrl)
                                                     .product(product)
                                                     .build();
             result.add(productDescriptionRepository.save(productDescription));
@@ -250,7 +254,7 @@ public class ProductService {
         Mall mall = mallRepository.findById(productDto.getMall_id())
                 .orElse(mallRepository.save(MallMapper.INSTANCE.toMall(mallDto)));
 
-        String thumbnail = imagePaths.get(0);
+        String thumbnail = CLOUDFRONT_URL + imagePaths.get(0);
         Product product = save(ProductMapper.INSTANCE.toProduct(
                 productDto, thumbnail, 0, 0, category, subCategory, mall));
 
