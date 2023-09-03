@@ -1,7 +1,11 @@
 package fittering.mall.service;
 
+import fittering.mall.config.kafka.domain.dto.CrawledMallDto;
+import fittering.mall.config.kafka.domain.dto.CrawledProductDto;
+import fittering.mall.config.kafka.domain.dto.CrawledSizeDto;
 import fittering.mall.domain.dto.controller.response.*;
 import fittering.mall.domain.mapper.CategoryMapper;
+import fittering.mall.domain.mapper.ProductMapper;
 import fittering.mall.domain.mapper.SizeMapper;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
@@ -14,8 +18,12 @@ import fittering.mall.domain.entity.*;
 import fittering.mall.repository.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static fittering.mall.domain.entity.Product.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +38,11 @@ public class ProductService {
     private final UserRecommendationRepository userRecommendationRepository;
     private final ProductDescriptionRepository productDescriptionRepository;
     private final SubCategoryRepository subCategoryRepository;
+    private final SizeRepository sizeRepository;
+    private final OuterRepository outerRepository;
+    private final TopRepository topRepository;
+    private final DressRepository dressRepository;
+    private final BottomRepository bottomRepository;
     private final RedisService redisService;
 
     @Transactional
@@ -212,5 +225,99 @@ public class ProductService {
 
     public LocalDateTime productsOfMaxUpdatedAt() {
         return productRepository.maxUpdatedAt();
+    }
+
+    public void updateCrawledProducts(CrawledProductDto productDto,
+                                      CrawledMallDto mallDto,
+                                      List<CrawledSizeDto> sizeDtos,
+                                      List<String> imagePaths) {
+        Optional<Product> optionalProduct = productRepository.findByName(productDto.getName());
+
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            LocalDateTime updatedAt = getLocalDateTimeFromString(productDto.getUpdated_at());
+            product.updateInfo(productDto.getPrice(), productDto.getDisabled(), updatedAt);
+            return;
+        }
+
+        Category category = categoryRepository.findById(productDto.getCategory_id())
+                .orElseThrow(() -> new NoResultException("category doesn't exist"));
+        SubCategory subCategory = subCategoryRepository.findById(productDto.getSub_category_id())
+                .orElseThrow(() -> new NoResultException("sub_category doesn't exist"));
+        Mall mall = mallRepository.findById(productDto.getMall_id())
+                .orElseThrow(() -> new NoResultException("mall doesn't exist"));
+        Product product = save(ProductMapper.INSTANCE.toProduct(
+                productDto, imagePaths.get(0), 0, 0, category, subCategory, mall));
+        //description path 접근해서 txt 파일 얻어서 저장
+        String description = "";
+//        String description = getDescriptionFromDescriptionPath(productDto.getDescription_path());
+        imagePaths.add(0, description);
+        saveProductDescription(imagePaths, product);
+
+        if (productDto.getType().equals(OUTER)) {
+            getSizesOfOuter(sizeDtos, product);
+            return;
+        }
+
+        if (productDto.getType().equals(TOP)) {
+            getSizesOfTop(sizeDtos, product);
+            return;
+        }
+
+        if (productDto.getType().equals(DRESS)) {
+            getSizesOfDress(sizeDtos, product);
+            return;
+        }
+
+        getSizesOfBottom(sizeDtos, product);
+    }
+
+    private static LocalDateTime getLocalDateTimeFromString(String updatedAt) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.parse(updatedAt, formatter);
+    }
+
+    private void getSizesOfOuter(List<CrawledSizeDto> outerSizeDtos, Product product) {
+        outerSizeDtos.forEach(outerSizeDto -> {
+            Outer outer = outerRepository.save(SizeMapper.INSTANCE.toOuter(outerSizeDto));
+            sizeRepository.save(Size.builder()
+                    .name(outerSizeDto.getName())
+                    .outer(outer)
+                    .product(product)
+                    .build());
+        });
+    }
+
+    private void getSizesOfTop(List<CrawledSizeDto> topSizeDtos, Product product) {
+        topSizeDtos.forEach(topSizeDto -> {
+            Top top = topRepository.save(SizeMapper.INSTANCE.toTop(topSizeDto));
+            sizeRepository.save(Size.builder()
+                    .name(topSizeDto.getName())
+                    .top(top)
+                    .product(product)
+                    .build());
+        });
+    }
+
+    private void getSizesOfDress(List<CrawledSizeDto> dressSizeDtos, Product product) {
+        dressSizeDtos.forEach(dressSizeDto -> {
+            Dress dress = dressRepository.save(SizeMapper.INSTANCE.toDress(dressSizeDto));
+            sizeRepository.save(Size.builder()
+                    .name(dressSizeDto.getName())
+                    .dress(dress)
+                    .product(product)
+                    .build());
+        });
+    }
+
+    private void getSizesOfBottom(List<CrawledSizeDto> bottomSizeDtos, Product product) {
+        bottomSizeDtos.forEach(bottomSizeDto -> {
+            Bottom bottom = bottomRepository.save(SizeMapper.INSTANCE.toBottom(bottomSizeDto));
+            sizeRepository.save(Size.builder()
+                    .name(bottomSizeDto.getName())
+                    .bottom(bottom)
+                    .product(product)
+                    .build());
+        });
     }
 }

@@ -1,5 +1,6 @@
 package fittering.mall.domain.mapper;
 
+import fittering.mall.config.kafka.domain.dto.CrawledProductDto;
 import fittering.mall.domain.dto.controller.request.RequestProductDetailDto;
 import fittering.mall.domain.entity.*;
 import org.mapstruct.Mapper;
@@ -22,6 +23,16 @@ public interface ProductMapper {
     })
     Product toProduct(RequestProductDetailDto requestProductDetailDto, Integer view, Integer timeView,
                       Category category, SubCategory subCategory, Mall mall);
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(source = "crawledProductDto.name", target = "name"),
+            @Mapping(source = "crawledProductDto.url", target = "origin"),
+            @Mapping(source = "category", target = "category"),
+            @Mapping(source = "subCategory", target = "subCategory"),
+            @Mapping(source = "mall", target = "mall")
+    })
+    Product toProduct(CrawledProductDto crawledProductDto, String image, Integer view,
+                      Integer timeView, Category category, SubCategory subCategory, Mall mall);
     @Mapping(source = "productDescription", target = "url")
     ProductDescription toProductDescription(String productDescription);
 }

@@ -1,5 +1,6 @@
 package fittering.mall.domain.mapper;
 
+import fittering.mall.config.kafka.domain.dto.CrawledSizeDto;
 import fittering.mall.domain.dto.controller.request.RequestBottomDto;
 import fittering.mall.domain.dto.controller.request.RequestDressDto;
 import fittering.mall.domain.dto.controller.request.RequestOuterDto;
@@ -19,6 +20,11 @@ public interface SizeMapper {
     SizeMapper INSTANCE = Mappers.getMapper(SizeMapper.class);
 
     Bottom toBottom(BottomDto bottomDto);
+    @Mappings({
+            @Mapping(source = "bottomDto.bottom_width", target = "bottomWidth"),
+            @Mapping(source = "bottomDto.hip_width", target = "hipWidth")
+    })
+    Bottom toBottom(CrawledSizeDto bottomDto);
     BottomDto toBottomDto(RequestBottomDto requestBottomDto);
     @Mappings({
         @Mapping(source = "favoriteCount", target = "favoriteCount"),
@@ -40,6 +46,12 @@ public interface SizeMapper {
     ResponseBottomDto toResponseBottomDto(BottomProductDto bottomProductDto);
     ResponseBottomSizeDto toResponseBottomSizeDto(BottomDto bottomDto);
     Dress toDress(DressDto dressDto);
+    @Mappings({
+            @Mapping(source = "dressDto.arm_hall", target = "armHall"),
+            @Mapping(source = "dressDto.sleeve_width", target = "sleeveWidth"),
+            @Mapping(source = "dressDto.bottom_width", target = "bottomWidth")
+    })
+    Dress toDress(CrawledSizeDto dressDto);
     DressDto toDressDto(RequestDressDto requestDressDto);
     @Mappings({
             @Mapping(source = "favoriteCount", target = "favoriteCount"),
@@ -61,6 +73,7 @@ public interface SizeMapper {
     ResponseDressDto toResponseDressDto(DressProductDto dressProductDto);
     ResponseDressSizeDto toResponseDressSizeDto(DressDto dressDto);
     Top toTop(TopDto topDto);
+    Top toTop(CrawledSizeDto topDto);
     TopDto toTopDto(RequestTopDto requestTopDto);
     @Mappings({
             @Mapping(source = "favoriteCount", target = "favoriteCount"),
@@ -82,6 +95,7 @@ public interface SizeMapper {
     ResponseTopDto toResponseTopDto(TopProductDto topProductDto);
     ResponseTopSizeDto toResponseTopSizeDto(TopDto topDto);
     Outer toOuter(OuterDto outerDto);
+    Outer toOuter(CrawledSizeDto outerDto);
     OuterDto toOuterDto(RequestOuterDto requestOuterDto);
     @Mappings({
             @Mapping(source = "favoriteCount", target = "favoriteCount"),

@@ -25,7 +25,7 @@ public class BaseEntity {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @CreatedDate
-    @Column(updatable = false, name = "created_at")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
