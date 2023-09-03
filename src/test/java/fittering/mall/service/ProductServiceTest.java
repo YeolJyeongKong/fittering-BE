@@ -76,6 +76,7 @@ class ProductServiceTest {
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         product2 = productService.save(Product.builder()
                 .price(10000)
@@ -89,6 +90,7 @@ class ProductServiceTest {
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         product3 = productService.save(Product.builder()
                 .price(10000)
@@ -102,6 +104,7 @@ class ProductServiceTest {
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         product4 = productService.save(Product.builder()
                 .price(10000)
@@ -115,6 +118,7 @@ class ProductServiceTest {
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         product5 = productService.save(Product.builder()
                 .price(10000)
@@ -128,6 +132,7 @@ class ProductServiceTest {
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
         descImgs2 = List.of(new ProductDescription(descImgsStr.get(0), product2));
@@ -183,6 +188,7 @@ class ProductServiceTest {
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         Product topProduct2 = productService.save(Product.builder()
                 .price(10000)
@@ -196,6 +202,7 @@ class ProductServiceTest {
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         Product bottomProduct = productService.save(Product.builder()
                 .price(10000)
@@ -209,6 +216,7 @@ class ProductServiceTest {
                 .category(bottomCategory)
                 .subCategory(bottomSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         Product bottomProduct2 = productService.save(Product.builder()
                 .price(10000)
@@ -222,6 +230,7 @@ class ProductServiceTest {
                 .category(bottomCategory)
                 .subCategory(bottomSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         Product bottomProduct3 = productService.save(Product.builder()
                 .price(10000)
@@ -235,6 +244,7 @@ class ProductServiceTest {
                 .category(bottomCategory)
                 .subCategory(bottomSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         Product bottomProduct4 = productService.save(Product.builder()
                 .price(10000)
@@ -248,6 +258,7 @@ class ProductServiceTest {
                 .category(bottomCategory)
                 .subCategory(bottomSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         List<ProductDescription> topDescriptionImgs = List.of(new ProductDescription(descImgsStr.get(0), topProduct));
         List<ProductDescription> topDescriptionImgs2 = List.of(new ProductDescription(descImgsStr.get(0), topProduct2));
@@ -275,6 +286,7 @@ class ProductServiceTest {
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         Product topProduct2 = productService.save(Product.builder()
                 .price(10000)
@@ -288,6 +300,7 @@ class ProductServiceTest {
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         List<ProductDescription> topDescriptionImgs = List.of(new ProductDescription(descImgsStr.get(0), topProduct));
         List<ProductDescription> topDescriptionImgs2 = List.of(new ProductDescription(descImgsStr.get(0), topProduct2));
@@ -305,6 +318,7 @@ class ProductServiceTest {
                 .category(bottomCategory)
                 .subCategory(bottomSubCategory)
                 .mall(mall2)
+                .disabled(0)
                 .build());
         Product bottomProduct2 = productService.save(Product.builder()
                 .price(10000)
@@ -318,6 +332,7 @@ class ProductServiceTest {
                 .category(bottomCategory)
                 .subCategory(bottomSubCategory)
                 .mall(mall2)
+                .disabled(0)
                 .build());
         Product bottomProduct3 = productService.save(Product.builder()
                 .price(10000)
@@ -331,6 +346,7 @@ class ProductServiceTest {
                 .category(bottomCategory)
                 .subCategory(bottomSubCategory)
                 .mall(mall2)
+                .disabled(0)
                 .build());
         Product bottomProduct4 = productService.save(Product.builder()
                 .price(10000)
@@ -344,6 +360,7 @@ class ProductServiceTest {
                 .category(bottomCategory)
                 .subCategory(bottomSubCategory)
                 .mall(mall2)
+                .disabled(0)
                 .build());
         List<ProductDescription> bottomDescriptionImgs = List.of(new ProductDescription(descImgsStr.get(0), bottomProduct));
         List<ProductDescription> bottomDescriptionImgs2 = List.of(new ProductDescription(descImgsStr.get(0), bottomProduct2));
@@ -418,6 +435,7 @@ class ProductServiceTest {
                 .category(bottomCategory)
                 .subCategory(bottomSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         List<ProductDescription> bottomDescriptionImgs = List.of(new ProductDescription(descImgsStr.get(0), bottomProduct));
 

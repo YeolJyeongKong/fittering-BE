@@ -73,6 +73,7 @@ class SearchServiceTest {
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         product2 = productService.save(Product.builder()
                 .price(10000)
@@ -86,6 +87,7 @@ class SearchServiceTest {
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         product3 = productService.save(Product.builder()
                 .price(10000)
@@ -99,6 +101,7 @@ class SearchServiceTest {
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         product4 = productService.save(Product.builder()
                 .price(10000)
@@ -112,6 +115,7 @@ class SearchServiceTest {
                 .category(topCategory)
                 .subCategory(topSubCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
         descImgs2 = List.of(new ProductDescription(descImgsStr.get(0), product2));

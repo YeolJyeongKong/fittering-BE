@@ -95,6 +95,7 @@ class FavoriteServiceTest {
                                                 .category(category)
                                                 .subCategory(subCategory)
                                                 .mall(mall)
+                                                .disabled(0)
                                                 .build());
         Product product2 = productService.save(Product.builder()
                                                 .price(10000)
@@ -108,6 +109,7 @@ class FavoriteServiceTest {
                                                 .category(category)
                                                 .subCategory(subCategory)
                                                 .mall(mall)
+                                                .disabled(0)
                                                 .build());
         Product product3 = productService.save(Product.builder()
                                                 .price(10000)
@@ -121,6 +123,7 @@ class FavoriteServiceTest {
                                                 .category(category)
                                                 .subCategory(subCategory)
                                                 .mall(mall)
+                                                .disabled(0)
                                                 .build());
 
         List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
