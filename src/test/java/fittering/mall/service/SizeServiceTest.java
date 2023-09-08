@@ -54,6 +54,7 @@ class SizeServiceTest {
                 .category(category)
                 .subCategory(subCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
 
@@ -88,6 +89,7 @@ class SizeServiceTest {
                 .category(category)
                 .subCategory(subCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
 
@@ -122,6 +124,7 @@ class SizeServiceTest {
                 .category(category)
                 .subCategory(subCategory)
                 .mall(mall)
+                .disabled(0)
                 .build());
         List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
 

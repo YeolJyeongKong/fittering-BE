@@ -8,6 +8,7 @@ import fittering.mall.domain.dto.service.TopProductDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ProductRepositoryCustom {
@@ -29,4 +30,5 @@ public interface ProductRepositoryCustom {
     Long findRecentRecommendation(Long recentRecommendationId);
     Long findUserRecommendation(Long userRecommendationId);
     List<ResponseProductPreviewDto> timeRank(String gender);
+    LocalDateTime maxUpdatedAt();
 }

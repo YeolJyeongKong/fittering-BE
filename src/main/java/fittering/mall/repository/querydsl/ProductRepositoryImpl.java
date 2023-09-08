@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import fittering.mall.domain.entity.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -575,6 +576,14 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .orderBy(product.timeView.desc())
                 .limit(TIME_RANK_PRODUCT_COUNT)
                 .fetch();
+    }
+
+    @Override
+    public LocalDateTime maxUpdatedAt() {
+        return queryFactory
+                .select(product.updatedAt.max())
+                .from(product)
+                .fetchOne();
     }
 
     public OrderSpecifier<? extends Number> filter(Long filterId) {

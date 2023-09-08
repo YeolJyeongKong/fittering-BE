@@ -58,6 +58,10 @@ dependencies {
 
 	implementation 'net.logstash.logback:logstash-logback-encoder:4.11'
 
+	implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'org.json:json:20230227'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
 	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 

@@ -1,10 +1,12 @@
 package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fittering.mall.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +16,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Getter
 @Builder
 @AllArgsConstructor
-public class Product {
+public class Product extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "product_id")
@@ -54,6 +56,9 @@ public class Product {
 
     @NonNull
     private Integer timeView;
+
+    @NonNull
+    private Integer disabled;
 
     @JsonIgnore
     @ManyToOne(fetch = LAZY)
@@ -115,5 +120,11 @@ public class Product {
 
     public void initializeTimeView() {
         timeView = 0;
+    }
+
+    public void updateInfo(Integer price, Integer disabled, LocalDateTime updated_at) {
+        this.price = price;
+        this.disabled = disabled;
+        super.updateTime(updated_at);
     }
 }

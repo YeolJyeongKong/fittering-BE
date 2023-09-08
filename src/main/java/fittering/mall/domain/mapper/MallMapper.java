@@ -1,5 +1,6 @@
 package fittering.mall.domain.mapper;
 
+import fittering.mall.config.kafka.domain.dto.CrawledMallDto;
 import fittering.mall.domain.dto.controller.request.RequestMallDto;
 import fittering.mall.domain.dto.controller.request.RequestMallRankProductDto;
 import fittering.mall.domain.dto.controller.response.ResponseMallDto;
@@ -22,6 +23,8 @@ public interface MallMapper {
     MallMapper INSTANCE = Mappers.getMapper(MallMapper.class);
 
     Mall toMall(MallDto mallDto);
+    @Mapping(target = "mallDto.id", ignore = true)
+    Mall toMall(CrawledMallDto mallDto);
     MallDto toMallDto(RequestMallDto requestMallDto);
     MallRankProductDto toMallRankProductDto(RequestMallRankProductDto requestMallRankProductDto);
     ResponseMallDto toResponseMallDto(Mall mall, Integer view);
