@@ -58,7 +58,7 @@ public class ProductController {
         SubCategory subCategory = categoryService.findByNameOfSubCategory(requestProductDto.getSubCategoryName());
         Mall mall = mallService.findByName(requestProductDto.getMallName());
         Product product = productService.save(ProductMapper.INSTANCE.toProduct(
-                requestProductDto, 0, 0, category, subCategory, mall));
+                requestProductDto, 0, 0, category, subCategory, mall, 0));
         productService.saveProductDescription(requestProductDto.getProductDescriptions(), product);
 
         if (requestProductDto.getType().equals(OUTER)) {
