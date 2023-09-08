@@ -22,14 +22,15 @@ public interface ProductMapper {
             @Mapping(source = "mall", target = "mall")
     })
     Product toProduct(RequestProductDetailDto requestProductDetailDto, Integer view, Integer timeView,
-                      Category category, SubCategory subCategory, Mall mall);
+                      Category category, SubCategory subCategory, Mall mall, Integer disabled);
     @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(source = "crawledProductDto.name", target = "name"),
             @Mapping(source = "crawledProductDto.url", target = "origin"),
             @Mapping(source = "category", target = "category"),
             @Mapping(source = "subCategory", target = "subCategory"),
-            @Mapping(source = "mall", target = "mall")
+            @Mapping(source = "mall", target = "mall"),
+            @Mapping(source = "disabled", target = "disabled"),
     })
     Product toProduct(CrawledProductDto crawledProductDto, String image, Integer view,
                       Integer timeView, Category category, SubCategory subCategory, Mall mall);
