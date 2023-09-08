@@ -19,7 +19,8 @@ public interface ProductMapper {
             @Mapping(source = "requestProductDetailDto.origin", target = "origin"),
             @Mapping(source = "category", target = "category"),
             @Mapping(source = "subCategory", target = "subCategory"),
-            @Mapping(source = "mall", target = "mall")
+            @Mapping(source = "mall", target = "mall"),
+            @Mapping(source = "disabled", target = "disabled")
     })
     Product toProduct(RequestProductDetailDto requestProductDetailDto, Integer view, Integer timeView,
                       Category category, SubCategory subCategory, Mall mall, Integer disabled);
@@ -30,7 +31,6 @@ public interface ProductMapper {
             @Mapping(source = "category", target = "category"),
             @Mapping(source = "subCategory", target = "subCategory"),
             @Mapping(source = "mall", target = "mall"),
-            @Mapping(source = "disabled", target = "disabled"),
     })
     Product toProduct(CrawledProductDto crawledProductDto, String image, Integer view,
                       Integer timeView, Category category, SubCategory subCategory, Mall mall);
