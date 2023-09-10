@@ -57,7 +57,6 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    @Cacheable(value = "Product", key = "#productId")
     public Product findById(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new NoResultException("product dosen't exist"));
