@@ -27,4 +27,5 @@ public class ResponseTopDto {
     private String popularGender;
     private Integer popularAgeRange;
     private List<ResponseTopSizeDto> sizes;
+    private List<ResponseProductDescriptionDto> descriptions;
 }
