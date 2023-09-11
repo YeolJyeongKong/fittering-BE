@@ -148,22 +148,26 @@ public class ProductService {
 
     @Cacheable(value = "ProductDetail", key = "#productId")
     public ResponseOuterDto outerProductDetail(Long productId) {
-        return SizeMapper.INSTANCE.toResponseOuterDto(productRepository.outerProductDetail(productId));
+        List<ResponseProductDescriptionDto> productDescriptions = getProductDescriptions(productId);
+        return SizeMapper.INSTANCE.toResponseOuterDto(productRepository.outerProductDetail(productId), productDescriptions);
     }
 
     @Cacheable(value = "ProductDetail", key = "#productId")
     public ResponseTopDto topProductDetail(Long productId) {
-        return SizeMapper.INSTANCE.toResponseTopDto(productRepository.topProductDetail(productId));
+        List<ResponseProductDescriptionDto> productDescriptions = getProductDescriptions(productId);
+        return SizeMapper.INSTANCE.toResponseTopDto(productRepository.topProductDetail(productId), productDescriptions);
     }
 
     @Cacheable(value = "ProductDetail", key = "#productId")
     public ResponseDressDto dressProductDetail(Long productId) {
-        return SizeMapper.INSTANCE.toResponseDressDto(productRepository.dressProductDetail(productId));
+        List<ResponseProductDescriptionDto> productDescriptions = getProductDescriptions(productId);
+        return SizeMapper.INSTANCE.toResponseDressDto(productRepository.dressProductDetail(productId), productDescriptions);
     }
 
     @Cacheable(value = "ProductDetail", key = "#productId")
     public ResponseBottomDto bottomProductDetail(Long productId) {
-        return SizeMapper.INSTANCE.toResponseBottomDto(productRepository.bottomProductDetail(productId));
+        List<ResponseProductDescriptionDto> productDescriptions = getProductDescriptions(productId);
+        return SizeMapper.INSTANCE.toResponseBottomDto(productRepository.bottomProductDetail(productId), productDescriptions);
     }
 
     public void updateView(Long productId) {
@@ -208,7 +212,7 @@ public class ProductService {
     }
 
     @Transactional
-    public List<ProductDescription> saveProductDescription(List<String> productDescriptions, Product product) {
+    public List<ProductDescription> saveProductDescriptions(List<String> productDescriptions, Product product) {
         List<ProductDescription> result = new ArrayList<>();
         productDescriptions.forEach(productDescriptionUrl -> {
             ProductDescription productDescription = ProductDescription.builder()
@@ -218,6 +222,15 @@ public class ProductService {
             result.add(productDescriptionRepository.save(productDescription));
         });
         return result;
+    }
+
+
+    public List<ResponseProductDescriptionDto> getProductDescriptions(Long productId) {
+        List<ResponseProductDescriptionDto> responseProductDescriptionDtos = new ArrayList<>();
+        productDescriptionRepository.getProductDescrtiptions(productId).forEach(productDescription ->
+                responseProductDescriptionDtos.add(ProductMapper.INSTANCE.toResponseProductDescriptionDto(productDescription))
+        );
+        return responseProductDescriptionDtos;
     }
 
     @Transactional
@@ -258,7 +271,7 @@ public class ProductService {
                 productDto, thumbnail, 0, 0, category, subCategory, mall));
 
         imagePaths.set(0, productDto.getDescription_path());
-        saveProductDescription(imagePaths, product);
+        saveProductDescriptions(imagePaths, product);
 
         imagePaths.forEach(imagePath -> {
             try {

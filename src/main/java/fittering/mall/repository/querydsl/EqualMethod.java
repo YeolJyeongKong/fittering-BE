@@ -8,6 +8,7 @@ import static fittering.mall.domain.entity.QCategory.category;
 import static fittering.mall.domain.entity.QFavorite.favorite;
 import static fittering.mall.domain.entity.QMall.mall;
 import static fittering.mall.domain.entity.QProduct.product;
+import static fittering.mall.domain.entity.QProductDescription.productDescription;
 import static fittering.mall.domain.entity.QRecent.recent;
 import static fittering.mall.domain.entity.QRecentRecommendation.recentRecommendation;
 import static fittering.mall.domain.entity.QSubCategory.subCategory;
@@ -26,6 +27,10 @@ public class EqualMethod {
 
     public static BooleanExpression productIdEq(Long productId) {
         return productId != null ? product.id.eq(productId) : null;
+    }
+
+    public static BooleanExpression productDescriptionIdEq(Long productDescriptionId) {
+        return productDescriptionId != null ? productDescription.id.eq(productDescriptionId) : null;
     }
 
     /**

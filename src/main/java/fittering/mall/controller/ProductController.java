@@ -2,9 +2,6 @@ package fittering.mall.controller;
 
 import fittering.mall.domain.dto.controller.request.RequestProductDetailDto;
 import fittering.mall.domain.dto.controller.response.*;
-import fittering.mall.domain.dto.service.DressProductDto;
-import fittering.mall.domain.dto.service.OuterProductDto;
-import fittering.mall.domain.dto.service.TopProductDto;
 import fittering.mall.domain.mapper.ProductMapper;
 import fittering.mall.domain.mapper.SizeMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,7 +56,7 @@ public class ProductController {
         Mall mall = mallService.findByName(requestProductDto.getMallName());
         Product product = productService.save(ProductMapper.INSTANCE.toProduct(
                 requestProductDto, 0, 0, category, subCategory, mall, 0));
-        productService.saveProductDescription(requestProductDto.getProductDescriptions(), product);
+        productService.saveProductDescriptions(requestProductDto.getProductDescriptions(), product);
 
         if (requestProductDto.getType().equals(OUTER)) {
             getSizesOfOuter(requestProductDto, product);

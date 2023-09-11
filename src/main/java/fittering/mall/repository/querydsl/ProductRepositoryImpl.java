@@ -283,6 +283,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .selectFrom(product)
                 .leftJoin(product.mall, mall)
                 .leftJoin(product.category, category)
+                .leftJoin(product.subCategory, subCategory)
                 .leftJoin(product.sizes, size)
                 .leftJoin(size.outer, outer)
                 .where(
@@ -341,6 +342,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .selectFrom(product)
                 .leftJoin(product.mall, mall)
                 .leftJoin(product.category, category)
+                .leftJoin(product.subCategory, subCategory)
                 .leftJoin(product.sizes, size)
                 .leftJoin(size.top, top)
                 .where(
@@ -399,6 +401,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .selectFrom(product)
                 .leftJoin(product.mall, mall)
                 .leftJoin(product.category, category)
+                .leftJoin(product.subCategory, subCategory)
                 .leftJoin(product.sizes, size)
                 .leftJoin(size.dress, dress)
                 .where(
@@ -475,6 +478,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .selectFrom(product)
                 .leftJoin(product.mall, mall)
                 .leftJoin(product.category, category)
+                .leftJoin(product.subCategory, subCategory)
                 .leftJoin(product.sizes, size)
                 .leftJoin(size.bottom, bottom)
                 .where(

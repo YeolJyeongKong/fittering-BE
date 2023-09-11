@@ -22,8 +22,10 @@ public class ResponseTopDto {
     private String mallImage;
     private String origin;
     private String category;
+    private String subCategory;
     private Integer view;
     private String popularGender;
     private Integer popularAgeRange;
     private List<ResponseTopSizeDto> sizes;
+    private List<ResponseProductDescriptionDto> descriptions;
 }
