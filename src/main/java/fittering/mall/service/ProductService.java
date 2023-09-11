@@ -208,7 +208,7 @@ public class ProductService {
     }
 
     @Transactional
-    public List<ProductDescription> saveProductDescription(List<String> productDescriptions, Product product) {
+    public List<ProductDescription> saveProductDescriptions(List<String> productDescriptions, Product product) {
         List<ProductDescription> result = new ArrayList<>();
         productDescriptions.forEach(productDescriptionUrl -> {
             ProductDescription productDescription = ProductDescription.builder()
@@ -258,7 +258,7 @@ public class ProductService {
                 productDto, thumbnail, 0, 0, category, subCategory, mall));
 
         imagePaths.set(0, productDto.getDescription_path());
-        saveProductDescription(imagePaths, product);
+        saveProductDescriptions(imagePaths, product);
 
         imagePaths.forEach(imagePath -> {
             try {
