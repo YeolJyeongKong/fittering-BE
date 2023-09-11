@@ -27,9 +27,9 @@ public interface MallMapper {
     Mall toMall(CrawledMallDto mallDto);
     MallDto toMallDto(RequestMallDto requestMallDto);
     MallRankProductDto toMallRankProductDto(RequestMallRankProductDto requestMallRankProductDto);
-    ResponseMallDto toResponseMallDto(Mall mall, Integer view);
+    ResponseMallDto toResponseMallDto(Mall mall, Integer view, Boolean isFavorite);
     @Mapping(source = "products", target = "products")
-    ResponseMallWithProductDto toResponseMallWithProductDto(Mall mall, List<ResponseMallRankProductDto> products, Integer view);
+    ResponseMallWithProductDto toResponseMallWithProductDto(Mall mall, List<ResponseMallRankProductDto> products, Integer view, Boolean isFavorite);
     MallPreviewDto toMallPreviewDto(SavedMallPreviewDto savedMallPreviewDto);
-    ResponseMallPreviewDto toResponseMallPreviewDto(MallPreviewDto mallPreviewDto);
+    ResponseMallPreviewDto toResponseMallPreviewDto(MallPreviewDto mallPreviewDto, Boolean isFavorite);
 }

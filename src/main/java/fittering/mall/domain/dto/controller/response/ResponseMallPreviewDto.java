@@ -13,4 +13,5 @@ public class ResponseMallPreviewDto {
     private Long id;
     private String name;
     private String image;
+    private Boolean isFavorite;
 }
