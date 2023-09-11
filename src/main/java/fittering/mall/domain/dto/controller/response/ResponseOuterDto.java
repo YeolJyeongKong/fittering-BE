@@ -27,4 +27,5 @@ public class ResponseOuterDto {
     private String popularGender;
     private Integer popularAgeRange;
     private List<ResponseOuterSizeDto> sizes;
+    private List<ResponseProductDescriptionDto> descriptions;
 }

@@ -44,7 +44,8 @@ public interface SizeMapper {
         @Mapping(source = "sizes", target = "sizes")
     })
     BottomProductDto toBottomProductDto(Long favoriteCount, Product product, String popularGender, Integer popularAgeRange, List<BottomDto> sizes);
-    ResponseBottomDto toResponseBottomDto(BottomProductDto bottomProductDto);
+    @Mapping(source = "productDescriptions", target = "descriptions")
+    ResponseBottomDto toResponseBottomDto(BottomProductDto bottomProductDto, List<ResponseProductDescriptionDto> productDescriptions);
     ResponseBottomSizeDto toResponseBottomSizeDto(BottomDto bottomDto);
     Dress toDress(DressDto dressDto);
     @Mappings({
@@ -72,7 +73,8 @@ public interface SizeMapper {
             @Mapping(source = "sizes", target = "sizes")
     })
     DressProductDto toDressProductDto(Long favoriteCount, Product product, String popularGender, Integer popularAgeRange, List<DressDto> sizes);
-    ResponseDressDto toResponseDressDto(DressProductDto dressProductDto);
+    @Mapping(source = "productDescriptions", target = "descriptions")
+    ResponseDressDto toResponseDressDto(DressProductDto dressProductDto, List<ResponseProductDescriptionDto> productDescriptions);
     ResponseDressSizeDto toResponseDressSizeDto(DressDto dressDto);
     Top toTop(TopDto topDto);
     Top toTop(CrawledSizeDto topDto);
@@ -95,7 +97,8 @@ public interface SizeMapper {
             @Mapping(source = "sizes", target = "sizes")
     })
     TopProductDto toTopProductDto(Long favoriteCount, Product product, String popularGender, Integer popularAgeRange, List<TopDto> sizes);
-    ResponseTopDto toResponseTopDto(TopProductDto topProductDto);
+    @Mapping(source = "productDescriptions", target = "descriptions")
+    ResponseTopDto toResponseTopDto(TopProductDto topProductDto, List<ResponseProductDescriptionDto> productDescriptions);
     ResponseTopSizeDto toResponseTopSizeDto(TopDto topDto);
     Outer toOuter(OuterDto outerDto);
     Outer toOuter(CrawledSizeDto outerDto);
@@ -118,6 +121,8 @@ public interface SizeMapper {
             @Mapping(source = "sizes", target = "sizes")
     })
     OuterProductDto toOuterProductDto(Long favoriteCount, Product product, String popularGender, Integer popularAgeRange, List<OuterDto> sizes);
-    ResponseOuterDto toResponseOuterDto(OuterProductDto outerProductDto);
+
+    @Mapping(source = "productDescriptions", target = "descriptions")
+    ResponseOuterDto toResponseOuterDto(OuterProductDto outerProductDto, List<ResponseProductDescriptionDto> productDescriptions);
     ResponseOuterSizeDto toResponseOuterSizeDto(OuterDto outerDto);
 }
