@@ -2,9 +2,6 @@ package fittering.mall.controller;
 
 import fittering.mall.domain.dto.controller.request.RequestProductDetailDto;
 import fittering.mall.domain.dto.controller.response.*;
-import fittering.mall.domain.dto.service.DressProductDto;
-import fittering.mall.domain.dto.service.OuterProductDto;
-import fittering.mall.domain.dto.service.TopProductDto;
 import fittering.mall.domain.mapper.ProductMapper;
 import fittering.mall.domain.mapper.SizeMapper;
 import io.swagger.v3.oas.annotations.Operation;
