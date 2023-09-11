@@ -15,7 +15,7 @@ import static fittering.mall.domain.entity.QFavorite.favorite;
 import static fittering.mall.domain.entity.QMall.mall;
 import static fittering.mall.domain.entity.QProduct.product;
 import static fittering.mall.domain.entity.QUser.user;
-import static fittering.mall.repository.querydsl.EqualMethod.userIdEq;
+import static fittering.mall.repository.querydsl.EqualMethod.*;
 
 public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
 
@@ -107,7 +107,10 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
     public void deleteByUserIdAndMallId(Long userId, Long mallId) {
         queryFactory
                 .delete(favorite)
-                .where(favorite.user.id.eq(userId).and(favorite.mall.id.eq(mallId)))
+                .where(
+                        favoriteUserIdEq(userId),
+                        favoriteMallIdEq(mallId)
+                )
                 .execute();
     }
 
@@ -115,7 +118,24 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
     public void deleteByUserIdAndProductId(Long userId, Long productId) {
         queryFactory
                 .delete(favorite)
-                .where(favorite.user.id.eq(userId).and(favorite.product.id.eq(productId)))
+                .where(
+                        favoriteUserIdEq(userId),
+                        favoriteProductIdEq(productId)
+                )
                 .execute();
+    }
+
+    @Override
+    public Boolean isUserFavoriteMall(Long userId, Long mallId) {
+        Long count = queryFactory
+                .select(favorite.count())
+                .from(favorite)
+                .where(
+                        favoriteUserIdEq(userId),
+                        favoriteMallIdEq(mallId)
+                )
+                .fetchOne();
+
+        return count != null && count > 0;
     }
 }

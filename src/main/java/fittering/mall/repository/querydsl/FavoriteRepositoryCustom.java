@@ -13,4 +13,5 @@ public interface FavoriteRepositoryCustom {
     List<ResponseProductPreviewDto> userFavoriteProductPreview(Long userId);
     void deleteByUserIdAndMallId(Long userId, Long mallId);
     void deleteByUserIdAndProductId(Long userId, Long productId);
+    Boolean isUserFavoriteMall(Long userId, Long mallId);
 }

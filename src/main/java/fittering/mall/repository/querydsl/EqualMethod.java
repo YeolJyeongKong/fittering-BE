@@ -61,6 +61,18 @@ public class EqualMethod {
         return favoriteId != null ? favorite.id.eq(favoriteId) : null;
     }
 
+    public static BooleanExpression favoriteUserIdEq(Long userId) {
+        return userId != null ? favorite.user.id.eq(userId) : null;
+    }
+
+    public static BooleanExpression favoriteMallIdEq(Long mallId) {
+        return mallId != null ? favorite.mall.id.eq(mallId) : null;
+    }
+
+    public static BooleanExpression favoriteProductIdEq(Long productId) {
+        return productId != null ? favorite.product.id.eq(productId) : null;
+    }
+
     public static BooleanExpression recentRecommendationIdEq(Long recentRecommendationId) {
         return recentRecommendationId != null ? recentRecommendation.id.eq(recentRecommendationId) : null;
     }
