@@ -4,6 +4,7 @@ import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
 import fittering.mall.domain.dto.controller.response.ResponseMallPreviewDto;
 import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
 import fittering.mall.domain.mapper.MallMapper;
+import fittering.mall.repository.*;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import fittering.mall.domain.dto.service.MallPreviewDto;
 import fittering.mall.domain.entity.*;
-import fittering.mall.repository.MallRepository;
-import fittering.mall.repository.ProductRepository;
-import fittering.mall.repository.RankRepository;
-import fittering.mall.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +28,7 @@ public class RankService {
     private final MallRepository mallRepository;
     private final RankRepository rankRepository;
     private final ProductRepository productRepository;
+    private final FavoriteRepository favoriteRepository;
     private final RedisService redisService;
 
     @Transactional
@@ -72,7 +70,8 @@ public class RankService {
                                                     .build());
             }
 
-            result.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, rank.getView()));
+            Boolean isFavorite = favoriteRepository.isUserFavoriteMall(userId, mall.getId());
+            result.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, rank.getView(), isFavorite));
         });
         return result;
     }
@@ -81,7 +80,8 @@ public class RankService {
         List<MallPreviewDto> mallPreviewDtos = rankRepository.mallRankPreview(userId, pageable, count);
         List<ResponseMallPreviewDto> result = new ArrayList<>();
         mallPreviewDtos.forEach(mallPreviewDto -> {
-            result.add(MallMapper.INSTANCE.toResponseMallPreviewDto(mallPreviewDto));
+            Boolean isFavorite = favoriteRepository.isUserFavoriteMall(userId, mallPreviewDto.getId());
+            result.add(MallMapper.INSTANCE.toResponseMallPreviewDto(mallPreviewDto, isFavorite));
         });
         return result;
     }

@@ -59,7 +59,7 @@ public class MallController {
     @GetMapping("/malls/{mallId}")
     public ResponseEntity<?> mallRank(@PathVariable("mallId") @NotEmpty Long mallId,
                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        ResponseMallDto responseMallDto = mallService.findById(mallId);
+        ResponseMallDto responseMallDto = mallService.findById(principalDetails.getUser().getId(), mallId);
         rankService.updateViewOnMall(principalDetails.getUser().getId(), mallId);
         return new ResponseEntity<>(responseMallDto, HttpStatus.OK);
     }
