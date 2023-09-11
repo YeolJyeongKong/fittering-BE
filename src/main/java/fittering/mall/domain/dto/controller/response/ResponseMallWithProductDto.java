@@ -17,5 +17,6 @@ public class ResponseMallWithProductDto {
     private String image;
     private String description;
     private Integer view;
+    private Boolean isFavorite;
     private List<ResponseMallRankProductDto> products;
 }

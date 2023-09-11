@@ -15,4 +15,5 @@ public class ResponseMallDto {
     private String url;
     private String image;
     private String description;
+    private Boolean isFavorite;
 }
