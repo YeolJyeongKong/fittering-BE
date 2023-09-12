@@ -23,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 @RequiredArgsConstructor
 @Component
 public class KafkaProducer {
@@ -40,17 +39,18 @@ public class KafkaProducer {
     @Value("${ML.API.PRODUCT.INFO}")
     private String CRAWLED_PRODUCT_INFO_API;
 
-    public void callCrawledProductCountAPI() throws JsonProcessingException {
+    public List<String> callCrawledProductCountAPI() throws JsonProcessingException {
         URI uri = UriComponentsBuilder.fromUriString(CRAWLED_PRODUCT_COUNT_API)
                 .build()
                 .toUri();
         String responseBody = restTemplate.getForObject(uri, String.class);
         int productsCount = getProductsCountFromBody(responseBody);
         LocalDateTime timeCriteria = productService.productsOfMaxUpdatedAt();
-        produceCrawledProducts(productsCount, timeCriteria);
+        return produceCrawledProducts(productsCount, timeCriteria);
     }
 
-    public void produceCrawledProducts(int productsCount, LocalDateTime timeCriteria) throws JsonProcessingException {
+    public List<String> produceCrawledProducts(int productsCount, LocalDateTime timeCriteria) throws JsonProcessingException {
+        List<String> allProductsJson = new ArrayList<>();
         int batchSize = productsCount % 100 == 0 ? productsCount / 100 : productsCount / 100 + 1;
         for (int i=0; i<batchSize; ++i) {
             URI uri = UriComponentsBuilder.fromUriString(CRAWLED_PRODUCT_INFO_API)
@@ -69,14 +69,18 @@ public class KafkaProducer {
             String jsonRequest = convertProductRequestToJson(request);
             HttpEntity<String> httpEntity = new HttpEntity<>(jsonRequest, headers);
             String responseBody = restTemplate.postForObject(uri, httpEntity, String.class);
+            List<String> productsJson = getProductsJsonFromBody(responseBody);
+            allProductsJson.addAll(productsJson);
 
             int sendCount = 0;
-            for (String productJson : getProductsJsonFromBody(responseBody)) {
+            for (String productJson : productsJson) {
                 sendCount = (sendCount + 1) % TOPIC_NUMBER;
                 String topic = CRAWLED_PRODUCT_TOPIC + sendCount;
                 kafkaTemplate.send(topic, productJson);
             }
         }
+
+        return allProductsJson;
     }
 
     private static String timeCriteriaToString(LocalDateTime timeCriteria) {
