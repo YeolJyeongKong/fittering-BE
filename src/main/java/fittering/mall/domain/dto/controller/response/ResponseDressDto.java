@@ -29,4 +29,6 @@ public class ResponseDressDto {
     private Boolean isFavorite;
     private List<ResponseDressSizeDto> sizes;
     private List<ResponseProductDescriptionDto> descriptions;
+    private List<Integer> popularAgeRangePercents;
+    private List<Integer> popularGenderPercents;
 }
