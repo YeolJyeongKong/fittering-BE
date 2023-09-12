@@ -138,4 +138,18 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
 
         return count != null && count > 0;
     }
+
+    @Override
+    public Boolean isUserFavoriteProduct(Long userId, Long productId) {
+        Long count = queryFactory
+                .select(favorite.count())
+                .from(favorite)
+                .where(
+                        favoriteUserIdEq(userId),
+                        favoriteProductIdEq(productId)
+                )
+                .fetchOne();
+
+        return count != null && count > 0;
+    }
 }
