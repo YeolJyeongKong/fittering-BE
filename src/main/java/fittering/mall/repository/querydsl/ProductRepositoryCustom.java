@@ -29,6 +29,8 @@ public interface ProductRepositoryCustom {
     Long findRecentCount(Long recentId);
     Long findRecentRecommendation(Long recentRecommendationId);
     Long findUserRecommendation(Long userRecommendationId);
+    List<Integer> findPopularAgeRangePercents(Long productId);
+    List<Integer> findPopularGenderPercents(Long productId);
     List<ResponseProductPreviewDto> timeRank(String gender);
     LocalDateTime maxUpdatedAt();
 }

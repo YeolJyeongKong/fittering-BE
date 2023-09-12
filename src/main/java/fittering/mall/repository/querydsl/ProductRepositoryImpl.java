@@ -16,6 +16,7 @@ import fittering.mall.domain.entity.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static fittering.mall.domain.entity.QBottom.bottom;
@@ -41,6 +42,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private static final int PRICE_ASC = 2;
     private static final int MOST_POPULAR_TARGET_COUNT = 1;
     private static final int TIME_RANK_PRODUCT_COUNT = 18;
+    private static final int AGE_RANGE_SIZE = 6;
+    private static final int GENDER_SIZE = 2;
     private JPAQueryFactory queryFactory;
 
     public ProductRepositoryImpl(EntityManager em) {
@@ -559,6 +562,70 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 )
                 .fetchOne();
         return nullableCount != null ? nullableCount : 0L;
+    }
+
+    @Override
+    public List<Integer> findPopularAgeRangePercents(Long productId) {
+        List<Tuple> popularAgeRangeInfo = queryFactory
+                .select(user.ageRange, favorite.count())
+                .from(favorite)
+                .leftJoin(favorite.user, user)
+                .leftJoin(favorite.product, product)
+                .where(
+                        productIdEq(productId)
+                )
+                .groupBy(user.ageRange)
+                .fetch();
+
+        int[] tempAgeRangeFavoriteCounts = new int[AGE_RANGE_SIZE];
+        int totalFavoriteCount = 0;
+        for (Tuple tuple : popularAgeRangeInfo) {
+            Integer ageRange = tuple.get(user.ageRange);
+            Integer favoriteCount = tuple.get(favorite.count()).intValue();
+            tempAgeRangeFavoriteCounts[ageRange] = favoriteCount;
+            totalFavoriteCount += favoriteCount;
+        }
+
+        List<Integer> popularAgeRangePercentages = new ArrayList<>();
+
+        for (int i=0; i<AGE_RANGE_SIZE; i++) {
+            double percentage = (double) tempAgeRangeFavoriteCounts[i] / totalFavoriteCount * 100;
+            popularAgeRangePercentages.add((int) percentage);
+        }
+
+        return popularAgeRangePercentages;
+    }
+
+    @Override
+    public List<Integer> findPopularGenderPercents(Long productId) {
+        List<Tuple> popularGenderFavoriteInfo = queryFactory
+                .select(user.gender, favorite.count())
+                .from(favorite)
+                .leftJoin(favorite.user, user)
+                .leftJoin(favorite.product, product)
+                .where(
+                        productIdEq(productId)
+                )
+                .groupBy(user.gender)
+                .fetch();
+
+        int[] tempGenderFavoriteCounts = new int[GENDER_SIZE];
+        int totalFavoriteCount = 0;
+        for (Tuple tuple : popularGenderFavoriteInfo) {
+            Integer genderIndex = tuple.get(user.gender).equals("M") ? 0 : 1;
+            Integer favoriteCount = tuple.get(favorite.count()).intValue();
+            tempGenderFavoriteCounts[genderIndex] = favoriteCount;
+            totalFavoriteCount += favoriteCount;
+        }
+
+        List<Integer> popularGenderPercentages = new ArrayList<>();
+
+        for (int i=0; i<GENDER_SIZE; i++) {
+            double percentage = (double) tempGenderFavoriteCounts[i] / totalFavoriteCount * 100;
+            popularGenderPercentages.add((int) percentage);
+        }
+
+        return popularGenderPercentages;
     }
 
     @Override

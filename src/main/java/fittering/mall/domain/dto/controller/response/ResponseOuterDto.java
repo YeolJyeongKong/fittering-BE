@@ -29,4 +29,6 @@ public class ResponseOuterDto {
     private Boolean isFavorite;
     private List<ResponseOuterSizeDto> sizes;
     private List<ResponseProductDescriptionDto> descriptions;
+    private List<Integer> popularAgeRangePercents;
+    private List<Integer> popularGenderPercents;
 }
