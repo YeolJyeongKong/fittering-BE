@@ -45,7 +45,8 @@ public interface SizeMapper {
     })
     BottomProductDto toBottomProductDto(Long favoriteCount, Product product, String popularGender, Integer popularAgeRange, List<BottomDto> sizes);
     @Mapping(source = "productDescriptions", target = "descriptions")
-    ResponseBottomDto toResponseBottomDto(BottomProductDto bottomProductDto, List<ResponseProductDescriptionDto> productDescriptions, Boolean isFavorite);
+    ResponseBottomDto toResponseBottomDto(BottomProductDto bottomProductDto, List<ResponseProductDescriptionDto> productDescriptions,
+                                          Boolean isFavorite, List<Integer> popularAgeRangePercents, List<Integer> popularGenderPercents);
     ResponseBottomSizeDto toResponseBottomSizeDto(BottomDto bottomDto);
     Dress toDress(DressDto dressDto);
     @Mappings({
@@ -74,7 +75,8 @@ public interface SizeMapper {
     })
     DressProductDto toDressProductDto(Long favoriteCount, Product product, String popularGender, Integer popularAgeRange, List<DressDto> sizes);
     @Mapping(source = "productDescriptions", target = "descriptions")
-    ResponseDressDto toResponseDressDto(DressProductDto dressProductDto, List<ResponseProductDescriptionDto> productDescriptions, Boolean isFavorite);
+    ResponseDressDto toResponseDressDto(DressProductDto dressProductDto, List<ResponseProductDescriptionDto> productDescriptions,
+                                        Boolean isFavorite, List<Integer> popularAgeRangePercents, List<Integer> popularGenderPercents);
     ResponseDressSizeDto toResponseDressSizeDto(DressDto dressDto);
     Top toTop(TopDto topDto);
     Top toTop(CrawledSizeDto topDto);
@@ -98,7 +100,8 @@ public interface SizeMapper {
     })
     TopProductDto toTopProductDto(Long favoriteCount, Product product, String popularGender, Integer popularAgeRange, List<TopDto> sizes);
     @Mapping(source = "productDescriptions", target = "descriptions")
-    ResponseTopDto toResponseTopDto(TopProductDto topProductDto, List<ResponseProductDescriptionDto> productDescriptions, Boolean isFavorite);
+    ResponseTopDto toResponseTopDto(TopProductDto topProductDto, List<ResponseProductDescriptionDto> productDescriptions,
+                                    Boolean isFavorite, List<Integer> popularAgeRangePercents, List<Integer> popularGenderPercents);
     ResponseTopSizeDto toResponseTopSizeDto(TopDto topDto);
     Outer toOuter(OuterDto outerDto);
     Outer toOuter(CrawledSizeDto outerDto);
@@ -123,6 +126,7 @@ public interface SizeMapper {
     OuterProductDto toOuterProductDto(Long favoriteCount, Product product, String popularGender, Integer popularAgeRange, List<OuterDto> sizes);
 
     @Mapping(source = "productDescriptions", target = "descriptions")
-    ResponseOuterDto toResponseOuterDto(OuterProductDto outerProductDto, List<ResponseProductDescriptionDto> productDescriptions, Boolean isFavorite);
+    ResponseOuterDto toResponseOuterDto(OuterProductDto outerProductDto, List<ResponseProductDescriptionDto> productDescriptions,
+                                        Boolean isFavorite, List<Integer> popularAgeRangePercents, List<Integer> popularGenderPercents);
     ResponseOuterSizeDto toResponseOuterSizeDto(OuterDto outerDto);
 }

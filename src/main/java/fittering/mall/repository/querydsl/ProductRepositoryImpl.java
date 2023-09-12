@@ -562,6 +562,60 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
+    public List<Integer> findPopularAgeRangePercents(Long productId) {
+        List<Long> ageRangeFavoriteCounts = queryFactory
+                .select(favorite.count())
+                .from(favorite)
+                .leftJoin(favorite.user, user)
+                .leftJoin(favorite.product, product)
+                .where(
+                        productIdEq(productId)
+                )
+                .groupBy(user.ageRange)
+                .fetch();
+
+        List<Integer> popularAgeRangePercentages = new ArrayList<>();
+
+        long totalFavoriteCount = ageRangeFavoriteCounts.stream()
+                .mapToLong(favoriteCount -> favoriteCount != null ? favoriteCount : 0L)
+                .sum();
+
+        for (Long favoriteCount : ageRangeFavoriteCounts) {
+            double percentage = (double) favoriteCount / totalFavoriteCount * 100;
+            popularAgeRangePercentages.add((int) percentage);
+        }
+
+        return popularAgeRangePercentages;
+    }
+
+    @Override
+    public List<Integer> findPopularGenderPercents(Long productId) {
+        List<Long> genderFavoriteCounts = queryFactory
+                .select(favorite.count())
+                .from(favorite)
+                .leftJoin(favorite.user, user)
+                .leftJoin(favorite.product, product)
+                .where(
+                        productIdEq(productId)
+                )
+                .groupBy(user.gender)
+                .fetch();
+
+        List<Integer> popularGenderPercentages = new ArrayList<>();
+
+        long totalFavoriteCount = genderFavoriteCounts.stream()
+                .mapToLong(favoriteCount -> favoriteCount != null ? favoriteCount : 0L)
+                .sum();
+
+        for (Long favoriteCount : genderFavoriteCounts) {
+            double percentage = (double) favoriteCount / totalFavoriteCount * 100;
+            popularGenderPercentages.add((int) percentage);
+        }
+
+        return popularGenderPercentages;
+    }
+
+    @Override
     public List<ResponseProductPreviewDto> timeRank(String gender) {
         return queryFactory
                 .select(new QResponseProductPreviewDto(

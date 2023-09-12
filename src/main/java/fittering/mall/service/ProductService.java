@@ -151,28 +151,40 @@ public class ProductService {
     public ResponseOuterDto outerProductDetail(Long userId, Long productId) {
         List<ResponseProductDescriptionDto> productDescriptions = getProductDescriptions(productId);
         Boolean isFavorite = favoriteRepository.isUserFavoriteProduct(userId, productId);
-        return SizeMapper.INSTANCE.toResponseOuterDto(productRepository.outerProductDetail(productId), productDescriptions, isFavorite);
+        List<Integer> popularAgeRangePercents = productRepository.findPopularAgeRangePercents(productId);
+        List<Integer> popularGenderPercents = productRepository.findPopularGenderPercents(productId);
+        return SizeMapper.INSTANCE.toResponseOuterDto(productRepository.outerProductDetail(productId), productDescriptions,
+                isFavorite, popularAgeRangePercents, popularGenderPercents);
     }
 
     @Cacheable(value = "ProductDetail", key = "#productId")
     public ResponseTopDto topProductDetail(Long userId, Long productId) {
         List<ResponseProductDescriptionDto> productDescriptions = getProductDescriptions(productId);
         Boolean isFavorite = favoriteRepository.isUserFavoriteProduct(userId, productId);
-        return SizeMapper.INSTANCE.toResponseTopDto(productRepository.topProductDetail(productId), productDescriptions, isFavorite);
+        List<Integer> popularAgeRangePercents = productRepository.findPopularAgeRangePercents(productId);
+        List<Integer> popularGenderPercents = productRepository.findPopularGenderPercents(productId);
+        return SizeMapper.INSTANCE.toResponseTopDto(productRepository.topProductDetail(productId), productDescriptions,
+                isFavorite, popularAgeRangePercents, popularGenderPercents);
     }
 
     @Cacheable(value = "ProductDetail", key = "#productId")
     public ResponseDressDto dressProductDetail(Long userId, Long productId) {
         List<ResponseProductDescriptionDto> productDescriptions = getProductDescriptions(productId);
         Boolean isFavorite = favoriteRepository.isUserFavoriteProduct(userId, productId);
-        return SizeMapper.INSTANCE.toResponseDressDto(productRepository.dressProductDetail(productId), productDescriptions, isFavorite);
+        List<Integer> popularAgeRangePercents = productRepository.findPopularAgeRangePercents(productId);
+        List<Integer> popularGenderPercents = productRepository.findPopularGenderPercents(productId);
+        return SizeMapper.INSTANCE.toResponseDressDto(productRepository.dressProductDetail(productId), productDescriptions,
+                isFavorite, popularAgeRangePercents, popularGenderPercents);
     }
 
     @Cacheable(value = "ProductDetail", key = "#productId")
     public ResponseBottomDto bottomProductDetail(Long userId, Long productId) {
         List<ResponseProductDescriptionDto> productDescriptions = getProductDescriptions(productId);
         Boolean isFavorite = favoriteRepository.isUserFavoriteProduct(userId, productId);
-        return SizeMapper.INSTANCE.toResponseBottomDto(productRepository.bottomProductDetail(productId), productDescriptions, isFavorite);
+        List<Integer> popularAgeRangePercents = productRepository.findPopularAgeRangePercents(productId);
+        List<Integer> popularGenderPercents = productRepository.findPopularGenderPercents(productId);
+        return SizeMapper.INSTANCE.toResponseBottomDto(productRepository.bottomProductDetail(productId), productDescriptions,
+                isFavorite, popularAgeRangePercents, popularGenderPercents);
     }
 
     public void updateView(Long productId) {
