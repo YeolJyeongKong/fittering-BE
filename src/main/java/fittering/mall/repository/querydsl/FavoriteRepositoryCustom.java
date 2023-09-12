@@ -14,4 +14,5 @@ public interface FavoriteRepositoryCustom {
     void deleteByUserIdAndMallId(Long userId, Long mallId);
     void deleteByUserIdAndProductId(Long userId, Long productId);
     Boolean isUserFavoriteMall(Long userId, Long mallId);
+    Boolean isUserFavoriteProduct(Long userId, Long productId);
 }

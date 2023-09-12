@@ -26,6 +26,7 @@ public class ResponseTopDto {
     private Integer view;
     private String popularGender;
     private Integer popularAgeRange;
+    private Boolean isFavorite;
     private List<ResponseTopSizeDto> sizes;
     private List<ResponseProductDescriptionDto> descriptions;
 }

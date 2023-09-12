@@ -46,6 +46,7 @@ public class ProductService {
     private final TopRepository topRepository;
     private final DressRepository dressRepository;
     private final BottomRepository bottomRepository;
+    private final FavoriteRepository favoriteRepository;
     private final RedisService redisService;
     private final S3Service s3Service;
 
@@ -147,27 +148,31 @@ public class ProductService {
     }
 
     @Cacheable(value = "ProductDetail", key = "#productId")
-    public ResponseOuterDto outerProductDetail(Long productId) {
+    public ResponseOuterDto outerProductDetail(Long userId, Long productId) {
         List<ResponseProductDescriptionDto> productDescriptions = getProductDescriptions(productId);
-        return SizeMapper.INSTANCE.toResponseOuterDto(productRepository.outerProductDetail(productId), productDescriptions);
+        Boolean isFavorite = favoriteRepository.isUserFavoriteProduct(userId, productId);
+        return SizeMapper.INSTANCE.toResponseOuterDto(productRepository.outerProductDetail(productId), productDescriptions, isFavorite);
     }
 
     @Cacheable(value = "ProductDetail", key = "#productId")
-    public ResponseTopDto topProductDetail(Long productId) {
+    public ResponseTopDto topProductDetail(Long userId, Long productId) {
         List<ResponseProductDescriptionDto> productDescriptions = getProductDescriptions(productId);
-        return SizeMapper.INSTANCE.toResponseTopDto(productRepository.topProductDetail(productId), productDescriptions);
+        Boolean isFavorite = favoriteRepository.isUserFavoriteProduct(userId, productId);
+        return SizeMapper.INSTANCE.toResponseTopDto(productRepository.topProductDetail(productId), productDescriptions, isFavorite);
     }
 
     @Cacheable(value = "ProductDetail", key = "#productId")
-    public ResponseDressDto dressProductDetail(Long productId) {
+    public ResponseDressDto dressProductDetail(Long userId, Long productId) {
         List<ResponseProductDescriptionDto> productDescriptions = getProductDescriptions(productId);
-        return SizeMapper.INSTANCE.toResponseDressDto(productRepository.dressProductDetail(productId), productDescriptions);
+        Boolean isFavorite = favoriteRepository.isUserFavoriteProduct(userId, productId);
+        return SizeMapper.INSTANCE.toResponseDressDto(productRepository.dressProductDetail(productId), productDescriptions, isFavorite);
     }
 
     @Cacheable(value = "ProductDetail", key = "#productId")
-    public ResponseBottomDto bottomProductDetail(Long productId) {
+    public ResponseBottomDto bottomProductDetail(Long userId, Long productId) {
         List<ResponseProductDescriptionDto> productDescriptions = getProductDescriptions(productId);
-        return SizeMapper.INSTANCE.toResponseBottomDto(productRepository.bottomProductDetail(productId), productDescriptions);
+        Boolean isFavorite = favoriteRepository.isUserFavoriteProduct(userId, productId);
+        return SizeMapper.INSTANCE.toResponseBottomDto(productRepository.bottomProductDetail(productId), productDescriptions, isFavorite);
     }
 
     public void updateView(Long productId) {

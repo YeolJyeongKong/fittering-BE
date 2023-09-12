@@ -166,22 +166,22 @@ public class ProductController {
         userService.saveRecentProduct(principalDetails.getUser().getId(), productId);
 
         if(product.getType().equals(OUTER)) {
-            ResponseOuterDto outerProduct = productService.outerProductDetail(productId);
+            ResponseOuterDto outerProduct = productService.outerProductDetail(principalDetails.getUser().getId(), productId);
             return new ResponseEntity<>(outerProduct, HttpStatus.OK);
         }
 
         if(product.getType().equals(TOP)) {
-            ResponseTopDto topProduct = productService.topProductDetail(productId);
+            ResponseTopDto topProduct = productService.topProductDetail(principalDetails.getUser().getId(), productId);
             return new ResponseEntity<>(topProduct, HttpStatus.OK);
         }
 
         if(product.getType().equals(DRESS)) {
-            ResponseDressDto dressProduct = productService.dressProductDetail(productId);
+            ResponseDressDto dressProduct = productService.dressProductDetail(principalDetails.getUser().getId(), productId);
             return new ResponseEntity<>(dressProduct, HttpStatus.OK);
         }
 
         if(product.getType().equals(BOTTOM)) {
-            ResponseBottomDto bottomProduct = productService.bottomProductDetail(productId);
+            ResponseBottomDto bottomProduct = productService.bottomProductDetail(principalDetails.getUser().getId(), productId);
             return new ResponseEntity<>(bottomProduct, HttpStatus.OK);
         }
 

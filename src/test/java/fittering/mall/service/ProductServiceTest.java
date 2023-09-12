@@ -407,7 +407,7 @@ class ProductServiceTest {
 
     @Test
     void topProductDetail() {
-        ResponseTopDto topProductDto = productService.topProductDetail(product.getId());
+        ResponseTopDto topProductDto = productService.topProductDetail(user.getId(), product.getId());
         assertThat(topProductDto.getProductImage()).isEqualTo(product.getImage());
         assertThat(topProductDto.getProductName()).isEqualTo(product.getName());
         assertThat(topProductDto.getProductGender()).isEqualTo(product.getGender());
@@ -439,7 +439,7 @@ class ProductServiceTest {
                 .build());
         List<ProductDescription> bottomDescriptionImgs = List.of(new ProductDescription(descImgsStr.get(0), bottomProduct));
 
-        ResponseBottomDto bottomProductDto = productService.bottomProductDetail(bottomProduct.getId());
+        ResponseBottomDto bottomProductDto = productService.bottomProductDetail(user.getId(), bottomProduct.getId());
         assertThat(bottomProductDto.getProductImage()).isEqualTo(bottomProduct.getImage());
         assertThat(bottomProductDto.getProductName()).isEqualTo(bottomProduct.getName());
         assertThat(bottomProductDto.getProductGender()).isEqualTo(bottomProduct.getGender());
