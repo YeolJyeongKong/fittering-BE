@@ -261,6 +261,7 @@ public class ProductService {
         return productRepository.maxUpdatedAt().orElse(DEFAULT_TIME);
     }
 
+    @Transactional
     public void updateCrawledProducts(CrawledProductDto productDto,
                                       CrawledMallDto mallDto,
                                       List<CrawledSizeDto> sizeDtos,
