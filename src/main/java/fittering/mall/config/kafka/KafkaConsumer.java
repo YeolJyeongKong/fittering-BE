@@ -121,37 +121,48 @@ public class KafkaConsumer {
         JSONArray sizes = element.getJSONArray("size");
         for (int i=0; i<sizes.length(); ++i) {
             JSONObject size = sizes.getJSONObject(i);
-            double full = size.getDouble("full");
-            double shoulder = size.getDouble("shoulder");
-            double chest = size.getDouble("chest");
-            double sleeve = size.getDouble("sleeve");
-            double waist = size.getDouble("waist");
-            double thigh = size.getDouble("thigh");
-            double rise = size.getDouble("rise");
-            double bottomWidth = size.getDouble("bottom_width");
-            double hipWidth = size.getDouble("hip_width");
-            double armHall = size.getDouble("arm_hall");
-            double hip = size.getDouble("hip");
-            double sleeveWidth = size.getDouble("sleeve_width");
+            Double full = getSizeFromJson(size, "full");
+            Double shoulder = getSizeFromJson(size, "shoulder");
+            Double chest = getSizeFromJson(size, "chest");
+            Double sleeve = getSizeFromJson(size, "sleeve");
+            Double waist = getSizeFromJson(size, "waist");
+            Double thigh = getSizeFromJson(size, "thigh");
+            Double rise = getSizeFromJson(size, "rise");
+            Double bottomWidth = getSizeFromJson(size, "bottom_width");
+            Double hipWidth = getSizeFromJson(size, "hip_width");
+            Double armHall = getSizeFromJson(size, "arm_hall");
+            Double hip = getSizeFromJson(size, "hip");
+            Double sleeveWidth = getSizeFromJson(size, "sleeve_width");
 
             String name = size.getString("name");
             sizeDtos.add(CrawledSizeDto.builder()
-                    .full(full == 0.0 ? null : full)
-                    .shoulder(shoulder == 0.0 ? null : shoulder)
-                    .chest(chest == 0.0 ? null : chest)
-                    .sleeve(sleeve == 0.0 ? null : sleeve)
-                    .waist(waist == 0.0 ? null : waist)
-                    .thigh(thigh == 0.0 ? null : thigh)
-                    .rise(rise == 0.0 ? null : rise)
-                    .bottom_width(bottomWidth == 0.0 ? null : bottomWidth)
-                    .hip_width(hipWidth == 0.0 ? null : hipWidth)
-                    .arm_hall(armHall == 0.0 ? null : armHall)
-                    .hip(hip == 0.0 ? null : hip)
-                    .sleeve_width(sleeveWidth == 0.0 ? null : sleeveWidth)
+                    .full(full)
+                    .shoulder(shoulder)
+                    .chest(chest)
+                    .sleeve(sleeve)
+                    .waist(waist)
+                    .thigh(thigh)
+                    .rise(rise)
+                    .bottom_width(bottomWidth)
+                    .hip_width(hipWidth)
+                    .arm_hall(armHall)
+                    .hip(hip)
+                    .sleeve_width(sleeveWidth)
                     .name(name)
                     .build());
         }
         return sizeDtos;
+    }
+
+    private static Double getSizeFromJson(JSONObject size, String key) {
+        if (size.isNull(key)) {
+            return null;
+        }
+        if (size.has(key)) {
+            double sizeValue = size.getDouble(key);
+            return Double.isNaN(sizeValue) ? null : sizeValue;
+        }
+        return null;
     }
 
     private List<String> createImagePaths(JSONObject element) {
