@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepositoryCustom {
     ResponseProductPreviewDto productById(Long productId);
@@ -32,5 +33,5 @@ public interface ProductRepositoryCustom {
     List<Integer> findPopularAgeRangePercents(Long productId);
     List<Integer> findPopularGenderPercents(Long productId);
     List<ResponseProductPreviewDto> timeRank(String gender);
-    LocalDateTime maxUpdatedAt();
+    Optional<LocalDateTime> maxUpdatedAt();
 }

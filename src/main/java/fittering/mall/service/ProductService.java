@@ -33,6 +33,8 @@ import static fittering.mall.domain.entity.Product.*;
 public class ProductService {
 
     private static final int MAX_PREVIEW_PRODUCT_COUNT = 4;
+    private static final LocalDateTime DEFAULT_TIME = LocalDateTime.of(2000, 1, 1, 0, 0, 0, 0);
+
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
@@ -256,7 +258,7 @@ public class ProductService {
     }
 
     public LocalDateTime productsOfMaxUpdatedAt() {
-        return productRepository.maxUpdatedAt();
+        return productRepository.maxUpdatedAt().orElse(DEFAULT_TIME);
     }
 
     public void updateCrawledProducts(CrawledProductDto productDto,

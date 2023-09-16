@@ -650,11 +650,12 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public LocalDateTime maxUpdatedAt() {
-        return queryFactory
+    public Optional<LocalDateTime> maxUpdatedAt() {
+        LocalDateTime maxUpdatedTime = queryFactory
                 .select(product.updatedAt.max())
                 .from(product)
                 .fetchOne();
+        return Optional.ofNullable(maxUpdatedTime);
     }
 
     public OrderSpecifier<? extends Number> filter(Long filterId) {
