@@ -29,10 +29,6 @@ public class EqualMethod {
         return productId != null ? product.id.eq(productId) : null;
     }
 
-    public static BooleanExpression productDescriptionIdEq(Long productDescriptionId) {
-        return productDescriptionId != null ? productDescription.id.eq(productDescriptionId) : null;
-    }
-
     /**
      * @param mallId
      * null     : 쇼핑몰 구분X
