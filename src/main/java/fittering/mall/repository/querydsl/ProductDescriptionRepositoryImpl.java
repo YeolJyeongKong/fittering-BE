@@ -8,7 +8,7 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 
 import static fittering.mall.domain.entity.QProductDescription.productDescription;
-import static fittering.mall.repository.querydsl.EqualMethod.productDescriptionIdEq;
+import static fittering.mall.repository.querydsl.EqualMethod.productIdEq;
 
 public class ProductDescriptionRepositoryImpl implements ProductDescriptionRepositoryCustom {
 
@@ -26,7 +26,7 @@ public class ProductDescriptionRepositoryImpl implements ProductDescriptionRepos
                 ))
                 .from(productDescription)
                 .where(
-                        productDescriptionIdEq(productId)
+                        productIdEq(productId)
                 )
                 .fetch();
     }
