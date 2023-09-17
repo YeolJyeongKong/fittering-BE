@@ -27,6 +27,7 @@ import java.util.List;
 @Component
 public class KafkaProducer {
 
+    private final int BATCH_SIZE = 100;
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ProductService productService;
     private final RestTemplate restTemplate;
@@ -51,14 +52,14 @@ public class KafkaProducer {
 
     public List<String> produceCrawledProducts(int productsCount, LocalDateTime timeCriteria) throws JsonProcessingException {
         List<String> allProductsJson = new ArrayList<>();
-        int batchSize = productsCount % 100 == 0 ? productsCount / 100 : productsCount / 100 + 1;
-        for (int i=0; i<batchSize; ++i) {
+        int batchIndex = productsCount % BATCH_SIZE == 0 ? productsCount / BATCH_SIZE : productsCount / BATCH_SIZE + 1;
+        for (int i=0; i<batchIndex; ++i) {
             URI uri = UriComponentsBuilder.fromUriString(CRAWLED_PRODUCT_INFO_API)
                     .build()
                     .toUri();
 
-            int startId = i*100 + 1;
-            int endId = i != batchSize-1 ? (i+1) * 100 : productsCount;
+            int startId = i * BATCH_SIZE + 1;
+            int endId = i < batchIndex-1 ? (i+1) * BATCH_SIZE : productsCount;
             KafkaProductRequest request = KafkaProductRequest.builder()
                     .range(List.of(startId, endId))
                     .updated_at(timeCriteriaToString(timeCriteria))

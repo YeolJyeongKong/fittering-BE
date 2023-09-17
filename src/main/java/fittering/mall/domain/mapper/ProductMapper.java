@@ -29,6 +29,7 @@ public interface ProductMapper {
     @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(source = "crawledProductDto.name", target = "name"),
+            @Mapping(source = "image", target = "image"),
             @Mapping(source = "crawledProductDto.url", target = "origin"),
             @Mapping(source = "category", target = "category"),
             @Mapping(source = "subCategory", target = "subCategory"),

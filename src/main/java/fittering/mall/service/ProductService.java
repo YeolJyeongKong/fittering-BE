@@ -33,6 +33,8 @@ import static fittering.mall.domain.entity.Product.*;
 public class ProductService {
 
     private static final int MAX_PREVIEW_PRODUCT_COUNT = 4;
+    private static final LocalDateTime DEFAULT_TIME = LocalDateTime.of(2000, 1, 1, 0, 0, 0, 0);
+
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
@@ -256,9 +258,10 @@ public class ProductService {
     }
 
     public LocalDateTime productsOfMaxUpdatedAt() {
-        return productRepository.maxUpdatedAt();
+        return productRepository.maxUpdatedAt().orElse(DEFAULT_TIME);
     }
 
+    @Transactional
     public void updateCrawledProducts(CrawledProductDto productDto,
                                       CrawledMallDto mallDto,
                                       List<CrawledSizeDto> sizeDtos,
@@ -276,8 +279,8 @@ public class ProductService {
                 .orElseThrow(() -> new NoResultException("category doesn't exist"));
         SubCategory subCategory = subCategoryRepository.findById(productDto.getSub_category_id())
                 .orElseThrow(() -> new NoResultException("sub_category doesn't exist"));
-        Mall mall = mallRepository.findById(productDto.getMall_id())
-                .orElse(mallRepository.save(MallMapper.INSTANCE.toMall(mallDto)));
+        Mall mall = mallRepository.findByName(mallDto.getName())
+                .orElseGet(() -> mallRepository.save(MallMapper.INSTANCE.toMall(mallDto)));
 
         String thumbnail = CLOUDFRONT_URL + imagePaths.get(0);
         Product product = save(ProductMapper.INSTANCE.toProduct(
