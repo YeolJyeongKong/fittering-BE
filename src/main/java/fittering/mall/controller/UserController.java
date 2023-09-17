@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +33,10 @@ import fittering.mall.domain.entity.Product;
 import fittering.mall.service.FavoriteService;
 import fittering.mall.service.ProductService;
 import fittering.mall.service.UserService;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +48,13 @@ import static fittering.mall.controller.ControllerUtils.getValidationErrorRespon
 @RequestMapping("/api/v1/auth")
 public class UserController {
 
+    @Value("${ML.API.MEASURE}")
+    private String ML_MEASURE_API;
+
     private final UserService userService;
     private final ProductService productService;
     private final FavoriteService favoriteService;
+    private final RestTemplate restTemplate;
 
     @Operation(summary = "마이페이지 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseUserDto.class)))
@@ -165,15 +173,15 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMeasurementDto.class))))
     @PostMapping("/users/recommendation/measurement")
     public ResponseEntity<?> recommendMeasurement(@RequestBody @Valid RequestSmartMeasurementDto requestSmartMeasurementDto,
-                                                  @AuthenticationPrincipal PrincipalDetails principalDetails,
                                                   BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return getValidationErrorResponse(bindingResult);
         }
-        //request: smartMeasurementDto
-        //실루엣 이미지(정면/측면), 키, 몸무게, 성별
-        //TODO: 체형 측정 API에서 체형 측정 결과를 받아오는 로직 필요
-        ResponseMeasurementDto responseMeasurementDto = null; //response
+
+        URI uri = UriComponentsBuilder.fromUriString(ML_MEASURE_API)
+                .build()
+                .toUri();
+        ResponseMeasurementDto responseMeasurementDto = restTemplate.postForObject(uri, requestSmartMeasurementDto, ResponseMeasurementDto.class);
         return new ResponseEntity<>(responseMeasurementDto, HttpStatus.OK);
     }
 
