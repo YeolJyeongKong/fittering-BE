@@ -1,10 +1,12 @@
 package fittering.mall.controller;
 
 import fittering.mall.domain.dto.controller.request.RequestMeasurementDto;
+import fittering.mall.domain.dto.controller.request.RequestRecommendProductDto;
 import fittering.mall.domain.dto.controller.request.RequestSmartMeasurementDto;
 import fittering.mall.domain.dto.controller.request.RequestUserDto;
 import fittering.mall.domain.dto.controller.response.ResponseMeasurementDto;
 import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.domain.dto.controller.response.ResponseRecommendProductDto;
 import fittering.mall.domain.dto.controller.response.ResponseUserDto;
 import fittering.mall.domain.dto.service.MeasurementDto;
 import fittering.mall.domain.mapper.MeasurementMapper;
@@ -50,6 +52,8 @@ public class UserController {
 
     @Value("${ML.API.MEASURE}")
     private String ML_MEASURE_API;
+    @Value("${ML.API.RECOMMEND.PRODUCT}")
+    private String ML_PRODUCT_RECOMMENDATION_API;
 
     private final UserService userService;
     private final ProductService productService;
@@ -185,17 +189,6 @@ public class UserController {
         return new ResponseEntity<>(responseMeasurementDto, HttpStatus.OK);
     }
 
-    /**
-     * <추천 상품 기능 설명>
-     * Request  : 해당 유저의 모든 최근 본 상품 정보들
-     * Response : List<productId>
-     * API 주소 : /api/recommendation
-     *
-     * DB에 추천 상품 정보가 없을 때만 추천 상품 API를 통해 product IDs를 얻어옴
-     * 이외에는 DB에 저장된 추천 상품 정보를 가져옴
-     * > 일정 주기를 두고 "초기화" == ML 학습 주기를 기준
-     *   으로 하기로 했는데 재학습을 하지 않는다는 말이 있어서 일단 보류
-     */
     @Operation(summary = "추천 상품 조회 (미리보기)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/users/recommendation/preview")
@@ -224,14 +217,12 @@ public class UserController {
             return productIds;
         }
 
-        List<ResponseProductPreviewDto> recentProducts = userService.recentProductPreview(userId); //request
-        /**
-         * TODO: 추천 상품 API에서 데이터를 받아오는 로직 추가 필요
-         * - 해당 API에서 가져오는 상품 개수가 10개라고 가정
-         * - 각 recentRecommendation 객체는 userId 1개, productId 1개를 가지므로
-         *   10개의 recentRecommendation 객체 생성
-         */
-        productIds = new ArrayList<>(); //response
+        URI uri = UriComponentsBuilder.fromUriString(ML_PRODUCT_RECOMMENDATION_API)
+                .build()
+                .toUri();
+        RequestRecommendProductDto requestRecommendProductDto = userService.recentProductIds(userId);
+        ResponseRecommendProductDto responseMeasurementDto = restTemplate.postForObject(uri, requestRecommendProductDto, ResponseRecommendProductDto.class);
+        productIds = responseMeasurementDto.getProduct_ids();
 
         productIds.forEach(productId -> {
             productService.saveRecentRecommendation(userId, productId);

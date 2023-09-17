@@ -6,4 +6,5 @@ import fittering.mall.domain.dto.service.UserDto;
 public interface UserRepositoryCustom {
     UserDto info(Long userId);
     MeasurementDto measurementInfo(Long userId);
+    String findGenderById(Long userId);
 }

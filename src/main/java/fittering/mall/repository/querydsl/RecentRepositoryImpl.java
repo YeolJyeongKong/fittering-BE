@@ -117,4 +117,17 @@ public class RecentRepositoryImpl implements RecentRepositoryCustom {
                 )
                 .execute();
     }
+
+    @Override
+    public List<Long> recentProductIds(Long userId) {
+        return queryFactory
+                .select(product.id)
+                .from(recent)
+                .leftJoin(recent.user, user)
+                .leftJoin(recent.product, product)
+                .where(
+                        userIdEq(userId)
+                )
+                .fetch();
+    }
 }

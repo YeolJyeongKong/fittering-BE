@@ -64,4 +64,15 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                 .fetchOne();
         return MeasurementMapper.INSTANCE.toMeasurementDto(savedMeasurementDto);
     }
+
+    @Override
+    public String findGenderById(Long userId) {
+        return queryFactory
+                .select(user.gender)
+                .from(user)
+                .where(
+                        userIdEq(userId)
+                )
+                .fetchOne();
+    }
 }
