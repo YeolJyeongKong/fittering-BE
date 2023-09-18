@@ -1,7 +1,9 @@
 package fittering.mall.service;
 
 import fittering.mall.domain.dto.controller.response.ResponseMallDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallNameAndIdDto;
 import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.domain.dto.service.MallNameAndIdDto;
 import fittering.mall.domain.mapper.MallMapper;
 import fittering.mall.repository.FavoriteRepository;
 import jakarta.persistence.NoResultException;
@@ -14,6 +16,7 @@ import fittering.mall.domain.entity.Product;
 import fittering.mall.repository.MallRepository;
 import fittering.mall.repository.ProductRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -50,5 +53,14 @@ public class MallService {
 
     public List<ResponseProductPreviewDto> findProducts(String mallName) {
         return mallRepository.findProducts(mallName);
+    }
+
+    public List<ResponseMallNameAndIdDto> findMallNameAndIdList() {
+        List<ResponseMallNameAndIdDto> responseMallNameAndIdList = new ArrayList<>();
+        List<MallNameAndIdDto> mallNameAndIdList = mallRepository.findMallNameAndIdList();
+        mallNameAndIdList.forEach(mallNameAndId -> {
+            responseMallNameAndIdList.add(MallMapper.INSTANCE.toResponseMallNameAndIdDto(mallNameAndId));
+        });
+        return responseMallNameAndIdList;
     }
 }

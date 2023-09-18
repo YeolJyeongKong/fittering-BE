@@ -2,7 +2,10 @@ package fittering.mall.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import fittering.mall.domain.dto.controller.response.QResponseProductPreviewDto;
+import fittering.mall.domain.dto.controller.response.ResponseMallNameAndIdDto;
 import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.domain.dto.service.MallNameAndIdDto;
+import fittering.mall.domain.dto.service.QMallNameAndIdDto;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
@@ -61,6 +64,17 @@ public class MallRepositoryImpl implements MallRepositoryCustom {
                 .where(
                         mall.name.contains(keyword)
                 )
+                .fetch();
+    }
+
+    @Override
+    public List<MallNameAndIdDto> findMallNameAndIdList() {
+        return queryFactory
+                .select(new QMallNameAndIdDto(
+                        mall.id,
+                        mall.name
+                ))
+                .from(mall)
                 .fetch();
     }
 }

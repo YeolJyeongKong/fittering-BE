@@ -1,9 +1,7 @@
 package fittering.mall.controller;
 
 import fittering.mall.domain.dto.controller.request.RequestMallDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallPreviewDto;
+import fittering.mall.domain.dto.controller.response.*;
 import fittering.mall.domain.mapper.MallMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -62,6 +60,14 @@ public class MallController {
         ResponseMallDto responseMallDto = mallService.findById(principalDetails.getUser().getId(), mallId);
         rankService.updateViewOnMall(principalDetails.getUser().getId(), mallId);
         return new ResponseEntity<>(responseMallDto, HttpStatus.OK);
+    }
+
+    @Operation(summary = "쇼핑몰 이름 및 ID 리스트 조회")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallNameAndIdDto.class))))
+    @GetMapping("/malls/list")
+    public ResponseEntity<?> mallList() {
+        List<ResponseMallNameAndIdDto> mallList = mallService.findMallNameAndIdList();
+        return new ResponseEntity<>(mallList, HttpStatus.OK);
     }
 
     @Operation(summary = "쇼핑몰 랭킹 조회")
