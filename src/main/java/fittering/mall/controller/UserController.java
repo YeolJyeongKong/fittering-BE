@@ -1,11 +1,7 @@
 package fittering.mall.controller;
 
-import fittering.mall.domain.dto.controller.request.RequestMeasurementDto;
-import fittering.mall.domain.dto.controller.request.RequestSmartMeasurementDto;
-import fittering.mall.domain.dto.controller.request.RequestUserDto;
-import fittering.mall.domain.dto.controller.response.ResponseMeasurementDto;
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
-import fittering.mall.domain.dto.controller.response.ResponseUserDto;
+import fittering.mall.domain.dto.controller.request.*;
+import fittering.mall.domain.dto.controller.response.*;
 import fittering.mall.domain.dto.service.MeasurementDto;
 import fittering.mall.domain.mapper.MeasurementMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +29,10 @@ import fittering.mall.domain.entity.Product;
 import fittering.mall.service.FavoriteService;
 import fittering.mall.service.ProductService;
 import fittering.mall.service.UserService;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +44,17 @@ import static fittering.mall.controller.ControllerUtils.getValidationErrorRespon
 @RequestMapping("/api/v1/auth")
 public class UserController {
 
+    @Value("${ML.API.MEASURE}")
+    private String ML_MEASURE_API;
+    @Value("${ML.API.RECOMMEND.PRODUCT}")
+    private String ML_PRODUCT_RECOMMENDATION_API;
+    @Value("${ML.API.RECOMMEND.USER}")
+    private String ML_PRODUCT_RECOMMENDATION_WITH_MEASUREMENT_API;
+
     private final UserService userService;
     private final ProductService productService;
     private final FavoriteService favoriteService;
+    private final RestTemplate restTemplate;
 
     @Operation(summary = "마이페이지 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseUserDto.class)))
@@ -165,29 +173,18 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMeasurementDto.class))))
     @PostMapping("/users/recommendation/measurement")
     public ResponseEntity<?> recommendMeasurement(@RequestBody @Valid RequestSmartMeasurementDto requestSmartMeasurementDto,
-                                                  @AuthenticationPrincipal PrincipalDetails principalDetails,
                                                   BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return getValidationErrorResponse(bindingResult);
         }
-        //request: smartMeasurementDto
-        //실루엣 이미지(정면/측면), 키, 몸무게, 성별
-        //TODO: 체형 측정 API에서 체형 측정 결과를 받아오는 로직 필요
-        ResponseMeasurementDto responseMeasurementDto = null; //response
+
+        URI uri = UriComponentsBuilder.fromUriString(ML_MEASURE_API)
+                .build()
+                .toUri();
+        ResponseMeasurementDto responseMeasurementDto = restTemplate.postForObject(uri, requestSmartMeasurementDto, ResponseMeasurementDto.class);
         return new ResponseEntity<>(responseMeasurementDto, HttpStatus.OK);
     }
 
-    /**
-     * <추천 상품 기능 설명>
-     * Request  : 해당 유저의 모든 최근 본 상품 정보들
-     * Response : List<productId>
-     * API 주소 : /api/recommendation
-     *
-     * DB에 추천 상품 정보가 없을 때만 추천 상품 API를 통해 product IDs를 얻어옴
-     * 이외에는 DB에 저장된 추천 상품 정보를 가져옴
-     * > 일정 주기를 두고 "초기화" == ML 학습 주기를 기준
-     *   으로 하기로 했는데 재학습을 하지 않는다는 말이 있어서 일단 보류
-     */
     @Operation(summary = "추천 상품 조회 (미리보기)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/users/recommendation/preview")
@@ -216,14 +213,12 @@ public class UserController {
             return productIds;
         }
 
-        List<ResponseProductPreviewDto> recentProducts = userService.recentProductPreview(userId); //request
-        /**
-         * TODO: 추천 상품 API에서 데이터를 받아오는 로직 추가 필요
-         * - 해당 API에서 가져오는 상품 개수가 10개라고 가정
-         * - 각 recentRecommendation 객체는 userId 1개, productId 1개를 가지므로
-         *   10개의 recentRecommendation 객체 생성
-         */
-        productIds = new ArrayList<>(); //response
+        URI uri = UriComponentsBuilder.fromUriString(ML_PRODUCT_RECOMMENDATION_API)
+                .build()
+                .toUri();
+        RequestRecommendProductDto requestRecommendProductDto = userService.recentProductIds(userId);
+        ResponseRecommendProductDto responseMeasurementDto = restTemplate.postForObject(uri, requestRecommendProductDto, ResponseRecommendProductDto.class);
+        productIds = responseMeasurementDto.getProduct_ids();
 
         productIds.forEach(productId -> {
             productService.saveRecentRecommendation(userId, productId);
@@ -232,17 +227,6 @@ public class UserController {
         return productIds;
     }
 
-    /**
-     * <비슷한 체형 고객 pick 기능 설명>
-     * Request  : 해당 유저의 체형 정보(Measurement)
-     * Response : List<productId>
-     * API 주소 : /api/recommendation/pick
-     *
-     * DB에 추천 상품 정보가 없을 때만 추천 상품 API를 통해 product IDs를 얻어옴
-     * 이외에는 DB에 저장된 추천 상품 정보를 가져옴
-     * > 일정 주기를 두고 "초기화" == ML 학습 주기를 기준
-     *   으로 하기로 했는데 재학습을 하지 않는다는 말이 있어서 일단 보류
-     */
     @Operation(summary = "비슷한 체형 고객 pick 조회 (미리보기)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/users/recommendation/pick/preview")
@@ -271,19 +255,14 @@ public class UserController {
             return productIds;
         }
 
-        ResponseMeasurementDto measurement = userService.measurementInfo(userId); //request
-
-        if (measurementIsNull(measurement)) {
-            return new ArrayList<>();
-        }
-
-        /**
-         * TODO: 비슷한 체형 고객 pick API에서 데이터를 받아오는 로직 추가 필요
-         * - 해당 API에서 가져오는 상품 개수가 10개라고 가정
-         * - 각 userRecommenation 객체는 userId 1개, productId 1개를 가지므로
-         *   10개의 userRecommendation 객체 생성
-         */
-        productIds = new ArrayList<>(); //response
+        URI uri = UriComponentsBuilder.fromUriString(ML_PRODUCT_RECOMMENDATION_WITH_MEASUREMENT_API)
+                .build()
+                .toUri();
+        RequestRecommendProductOnUserDto requestRecommendProductOnUserDto = RequestRecommendProductOnUserDto.builder()
+                .user_id(userId)
+                .build();
+        ResponseRecommendProductOnUserDto responseRecommendProductOnUserDto = restTemplate.postForObject(uri, requestRecommendProductOnUserDto, ResponseRecommendProductOnUserDto.class);
+        productIds = responseRecommendProductOnUserDto.getProduct_ids();
 
         productIds.forEach(productId -> {
             productService.saveUserRecommendation(userId, productId);
@@ -322,9 +301,5 @@ public class UserController {
         for (Product recommendedProduct : recommendedProducts) {
             productIds.add(recommendedProduct.getId());
         }
-    }
-
-    private static boolean measurementIsNull(ResponseMeasurementDto measurement) {
-        return measurement.getHeight() == null || measurement.getWeight() == null;
     }
 }

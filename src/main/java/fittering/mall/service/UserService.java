@@ -1,5 +1,6 @@
 package fittering.mall.service;
 
+import fittering.mall.domain.dto.controller.request.RequestRecommendProductDto;
 import fittering.mall.domain.dto.controller.request.RequestUserDto;
 import fittering.mall.domain.dto.controller.response.ResponseMeasurementDto;
 import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
@@ -104,6 +105,15 @@ public class UserService {
 
     public Page<ResponseProductPreviewDto> recentProduct(Long userId, Pageable pageable) {
         return recentRepository.recentProduct(userId, pageable);
+    }
+
+    public RequestRecommendProductDto recentProductIds(Long userId) {
+        List<Long> productIds = recentRepository.recentProductIds(userId);
+        String gender = userRepository.findGenderById(userId);
+        return RequestRecommendProductDto.builder()
+                .product_ids(productIds)
+                .gender(gender)
+                .build();
     }
 
     @Transactional

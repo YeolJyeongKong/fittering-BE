@@ -137,15 +137,12 @@ public class ProductService {
     }
 
     public List<ResponseProductPreviewDto> recommendProduct(List<Long> productIds, boolean preview) {
-
         List<ResponseProductPreviewDto> result = new ArrayList<>();
-
         for (int i = 0; i < productIds.size(); i++) {
             if (preview && i >= MAX_PREVIEW_PRODUCT_COUNT) break;
             Long productId = productIds.get(i);
             result.add(productRepository.productById(productId));
         }
-
         return result;
     }
 
