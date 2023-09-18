@@ -34,7 +34,6 @@ public class FavoriteService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-    @Cacheable(value = "UserFavoriteMall", key = "#userId")
     public List<ResponseMallWithProductDto> userFavoriteMall(Long userId) {
 
         List<Favorite> favoriteMalls = favoriteRepository.userFavoriteMall(userId);
@@ -74,7 +73,6 @@ public class FavoriteService {
                                         .build());
     }
 
-    @CacheEvict(value = "UserFavoriteMall", key = "#userId")
     @Transactional
     public void deleteFavoriteMall(Long userId, Long mallId) {
         favoriteRepository.deleteByUserIdAndMallId(userId, mallId);
