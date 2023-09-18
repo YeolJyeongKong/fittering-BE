@@ -1,9 +1,7 @@
 package fittering.mall.controller;
 
 import fittering.mall.domain.dto.controller.request.RequestMallDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallPreviewDto;
+import fittering.mall.domain.dto.controller.response.*;
 import fittering.mall.domain.mapper.MallMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -33,7 +31,7 @@ import static fittering.mall.controller.ControllerUtils.getValidationErrorRespon
 @Tag(name = "쇼핑몰", description = "쇼핑몰 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v1")
 public class MallController {
 
     private static final int MALL_RANL_SIZE = 4;
@@ -44,7 +42,7 @@ public class MallController {
 
     @Operation(summary = "쇼핑몰 등록")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"쇼핑몰 등록 완료\"")))
-    @PostMapping("/malls")
+    @PostMapping("/auth/malls")
     public ResponseEntity<?> save(@RequestBody @Valid RequestMallDto requestMallDto,
                                   BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -56,7 +54,7 @@ public class MallController {
 
     @Operation(summary = "쇼핑몰 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseMallDto.class)))
-    @GetMapping("/malls/{mallId}")
+    @GetMapping("/auth/malls/{mallId}")
     public ResponseEntity<?> mallRank(@PathVariable("mallId") @NotEmpty Long mallId,
                                       @AuthenticationPrincipal PrincipalDetails principalDetails) {
         ResponseMallDto responseMallDto = mallService.findById(principalDetails.getUser().getId(), mallId);
@@ -64,9 +62,17 @@ public class MallController {
         return new ResponseEntity<>(responseMallDto, HttpStatus.OK);
     }
 
+    @Operation(summary = "쇼핑몰 이름 및 ID 리스트 조회")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallNameAndIdDto.class))))
+    @GetMapping("/malls/list")
+    public ResponseEntity<?> mallList() {
+        List<ResponseMallNameAndIdDto> mallList = mallService.findMallNameAndIdList();
+        return new ResponseEntity<>(mallList, HttpStatus.OK);
+    }
+
     @Operation(summary = "쇼핑몰 랭킹 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallWithProductDto.class))))
-    @GetMapping("/malls/rank")
+    @GetMapping("/auth/malls/rank")
     public ResponseEntity<?> mallRank(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         List<ResponseMallWithProductDto> malls = rankService.mallRank(principalDetails.getUser().getId());
         return new ResponseEntity<>(malls, HttpStatus.OK);
@@ -74,7 +80,7 @@ public class MallController {
 
     @Operation(summary = "쇼핑몰 랭킹 조회 (미리보기)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseMallPreviewDto.class)))
-    @GetMapping("/malls/rank/preview")
+    @GetMapping("/auth/malls/rank/preview")
     public ResponseEntity<?> mallRankPreview(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                              Pageable pageable) {
         List<ResponseMallPreviewDto> malls = rankService.mallRankPreview(principalDetails.getUser().getId(),
@@ -84,7 +90,7 @@ public class MallController {
 
     @Operation(summary = "모바일 환경 쇼핑몰 랭킹 조회 (미리보기)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseMallPreviewDto.class)))
-    @GetMapping("/malls/rank/preview/mobile")
+    @GetMapping("/auth/malls/rank/preview/mobile")
     public ResponseEntity<?> mallRankPreviewMobile(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                                    Pageable pageable) {
         List<ResponseMallPreviewDto> malls = rankService.mallRankPreview(principalDetails.getUser().getId(),
@@ -94,7 +100,7 @@ public class MallController {
 
     @Operation(summary = "즐겨찾기 쇼핑몰 상세 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallWithProductDto.class))))
-    @GetMapping("/malls/favorite_malls")
+    @GetMapping("/auth/malls/favorite_malls")
     public ResponseEntity<?> favoriteMall(@AuthenticationPrincipal PrincipalDetails principalDetails) {
         List<ResponseMallWithProductDto> malls = favoriteService.userFavoriteMall(principalDetails.getUser().getId());
         return new ResponseEntity<>(malls, HttpStatus.OK);

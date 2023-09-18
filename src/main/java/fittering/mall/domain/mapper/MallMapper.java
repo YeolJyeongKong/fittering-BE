@@ -3,10 +3,8 @@ package fittering.mall.domain.mapper;
 import fittering.mall.config.kafka.domain.dto.CrawledMallDto;
 import fittering.mall.domain.dto.controller.request.RequestMallDto;
 import fittering.mall.domain.dto.controller.request.RequestMallRankProductDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallPreviewDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
+import fittering.mall.domain.dto.controller.response.*;
+import fittering.mall.domain.dto.service.MallNameAndIdDto;
 import fittering.mall.domain.dto.service.MallPreviewDto;
 import fittering.mall.domain.dto.repository.SavedMallPreviewDto;
 import fittering.mall.domain.dto.service.MallDto;
@@ -32,4 +30,5 @@ public interface MallMapper {
     ResponseMallWithProductDto toResponseMallWithProductDto(Mall mall, List<ResponseMallRankProductDto> products, Integer view, Boolean isFavorite);
     MallPreviewDto toMallPreviewDto(SavedMallPreviewDto savedMallPreviewDto);
     ResponseMallPreviewDto toResponseMallPreviewDto(MallPreviewDto mallPreviewDto, Boolean isFavorite);
+    ResponseMallNameAndIdDto toResponseMallNameAndIdDto(MallNameAndIdDto mallNameAndIdDto);
 }
