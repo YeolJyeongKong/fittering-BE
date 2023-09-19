@@ -26,13 +26,31 @@ public class S3Service {
 
     @Value("${cloud.aws.s3.bucket.crawling}")
     private String crawlingBucket;
-
     @Value("${cloud.aws.s3.bucket.server}")
     private String serverBucket;
+    @Value("${cloud.aws.s3.bucket.body}")
+    private String bodyBucket;
+    @Value("${cloud.aws.s3.bucket.silhouette}")
+    private String silhouetteBucket;
 
-    public void moveS3ObjectToServerBucket(String storedFileName) throws IOException {
-        S3Object o = amazonS3.getObject(new GetObjectRequest(crawlingBucket, storedFileName));
-        S3ObjectInputStream objectInputStream = o.getObjectContent();
+    public void moveObject(String storedFileName, String bucket) throws IOException {
+        if (bucket.equals("crawling")) {
+            moveObjectWithBucket(storedFileName, crawlingBucket);
+        }
+        if (bucket.equals("server")) {
+            moveObjectWithBucket(storedFileName, serverBucket);
+        }
+        if (bucket.equals("body")) {
+            moveObjectWithBucket(storedFileName, bodyBucket);
+        }
+        if (bucket.equals("silhouette")) {
+            moveObjectWithBucket(storedFileName, silhouetteBucket);
+        }
+    }
+
+    public void moveObjectWithBucket(String storedFileName, String bucket) throws IOException {
+        S3Object savedObject = amazonS3.getObject(new GetObjectRequest(crawlingBucket, storedFileName));
+        S3ObjectInputStream objectInputStream = savedObject.getObjectContent();
         byte[] fileBytes = IOUtils.toByteArray(objectInputStream);
         String fileName = URLEncoder.encode(storedFileName, UTF_8)
                 .replaceAll("\\+", "%20")
@@ -45,4 +63,6 @@ public class S3Service {
         metadata.setContentLength(fileBytes.length);
         amazonS3.putObject(serverBucket, fileName, fileInputStream, metadata);
     }
+
+
 }
