@@ -276,9 +276,26 @@ public class ProductService {
                 .orElseThrow(() -> new NoResultException("category doesn't exist"));
         SubCategory subCategory = subCategoryRepository.findById(productDto.getSub_category_id())
                 .orElseThrow(() -> new NoResultException("sub_category doesn't exist"));
-        Mall mall = mallRepository.findByName(mallDto.getName())
-                .orElseGet(() -> mallRepository.save(MallMapper.INSTANCE.toMall(mallDto)));
+        Optional<Mall> optionalMall = mallRepository.findByName(mallDto.getName());
 
+        if (optionalMall.isPresent()) {
+            Mall mall = optionalMall.get();
+            synchronizeProduct(productDto, sizeDtos, imagePaths, category, subCategory, mall);
+            return;
+        }
+
+        CrawledMallDto newMallDto = CrawledMallDto.builder()
+                .mall_id(mallDto.getMall_id())
+                .name(mallDto.getName())
+                .url(mallDto.getUrl())
+                .description(mallDto.getDescription())
+                .image(CLOUDFRONT_URL + mallDto.getImage())
+                .build();
+        Mall mall = mallRepository.save(MallMapper.INSTANCE.toMall(newMallDto));
+        synchronizeProduct(productDto, sizeDtos, imagePaths, category, subCategory, mall);
+    }
+
+    private void synchronizeProduct(CrawledProductDto productDto, List<CrawledSizeDto> sizeDtos, List<String> imagePaths, Category category, SubCategory subCategory, Mall mall) {
         String thumbnail = CLOUDFRONT_URL + imagePaths.get(0);
         Product product = save(ProductMapper.INSTANCE.toProduct(
                 productDto, thumbnail, 0, 0, category, subCategory, mall));
