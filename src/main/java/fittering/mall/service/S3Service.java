@@ -9,11 +9,13 @@ import com.amazonaws.util.IOUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 
 import static java.nio.charset.StandardCharsets.*;
 
@@ -64,5 +66,30 @@ public class S3Service {
         amazonS3.putObject(serverBucket, fileName, fileInputStream, metadata);
     }
 
+    public String saveObject(MultipartFile file, String bucket) throws IOException {
+        if (bucket.equals("crawling")) {
+            return saveObjectWithBucket(file, crawlingBucket);
+        }
+        if (bucket.equals("server")) {
+            return saveObjectWithBucket(file, serverBucket);
+        }
+        if (bucket.equals("body")) {
+            return saveObjectWithBucket(file, bodyBucket);
+        }
+        if (bucket.equals("silhouette")) {
+            return saveObjectWithBucket(file, silhouetteBucket);
+        }
+        return null;
+    }
 
+    public String saveObjectWithBucket(MultipartFile file, String bucket) throws IOException {
+        String fileName = LocalDateTime.now().toString();
+        byte[] fileBytes = file.getBytes();
+        InputStream fileInputStream = new ByteArrayInputStream(fileBytes);
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(IMAGE_CONTENT_TYPE);
+        metadata.setContentLength(fileBytes.length);
+        amazonS3.putObject(bucket, fileName, fileInputStream, metadata);
+        return fileName;
+    }
 }
