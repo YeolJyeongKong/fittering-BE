@@ -303,13 +303,13 @@ public class ProductService {
         imagePaths.set(0, productDto.getDescription_path());
         saveProductDescriptions(imagePaths, product);
 
-        imagePaths.forEach(imagePath -> {
-            try {
-                s3Service.moveS3ObjectToServerBucket(imagePath);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+//        imagePaths.forEach(imagePath -> {
+//            try {
+//                s3Service.moveS3ObjectToServerBucket(imagePath);
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
 
         if (productDto.getType().equals(OUTER)) {
             getSizesOfOuter(sizeDtos, product);
