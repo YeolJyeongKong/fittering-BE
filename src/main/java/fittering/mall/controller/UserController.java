@@ -4,6 +4,7 @@ import fittering.mall.domain.dto.controller.request.*;
 import fittering.mall.domain.dto.controller.response.*;
 import fittering.mall.domain.dto.service.MeasurementDto;
 import fittering.mall.domain.mapper.MeasurementMapper;
+import fittering.mall.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,8 +31,10 @@ import fittering.mall.service.FavoriteService;
 import fittering.mall.service.ProductService;
 import fittering.mall.service.UserService;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,10 +53,15 @@ public class UserController {
     private String ML_PRODUCT_RECOMMENDATION_API;
     @Value("${ML.API.RECOMMEND.USER}")
     private String ML_PRODUCT_RECOMMENDATION_WITH_MEASUREMENT_API;
+    @Value("${ML.API.SILHOUETTE}")
+    private String ML_SILHOUETTE_API;
+    @Value("${cloud.aws.cloudfront.silhouette}")
+    private String CLOUDFRONT_SILHOUETTE_URL;
 
     private final UserService userService;
     private final ProductService productService;
     private final FavoriteService favoriteService;
+    private final S3Service s3Service;
     private final RestTemplate restTemplate;
 
     @Operation(summary = "마이페이지 조회")
@@ -114,6 +122,30 @@ public class UserController {
         MeasurementDto measurementDto = MeasurementMapper.INSTANCE.toMeasurementDto(requestMeasurementDto);
         userService.measurementUpdate(measurementDto, principalDetails.getUser().getId());
         return new ResponseEntity<>(measurementDto, HttpStatus.OK);
+    }
+
+    @Operation(summary = "체형 실루엣 이미지 제공")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseSilhouetteUrlDto.class)))
+    @GetMapping("/users/mysize/silhouette")
+    public ResponseEntity<?> silhouetteFromBody(@RequestParam("front") MultipartFile frontFile,
+                                                @RequestParam("side") MultipartFile sideFile) throws IOException {
+        String frontFileName = s3Service.saveObject(frontFile, "body");
+        String sideFileName = s3Service.saveObject(sideFile, "body");
+
+        URI uri = UriComponentsBuilder.fromUriString(ML_SILHOUETTE_API)
+                .build()
+                .toUri();
+        RequestSilhouetteApiDto requestSilhouetteApiDto = RequestSilhouetteApiDto.builder()
+                .front(frontFileName)
+                .side(sideFileName)
+                .build();
+        ResponseSilhouetteApiDto responseSilhouetteApiDto = restTemplate.postForObject(uri, requestSilhouetteApiDto, ResponseSilhouetteApiDto.class);
+
+        ResponseSilhouetteUrlDto responseSilhouetteUrlDto = ResponseSilhouetteUrlDto.builder()
+                .front(CLOUDFRONT_SILHOUETTE_URL + responseSilhouetteApiDto.getFront())
+                .side(CLOUDFRONT_SILHOUETTE_URL + responseSilhouetteApiDto.getSide())
+                .build();
+        return new ResponseEntity<>(responseSilhouetteUrlDto, HttpStatus.OK);
     }
 
     @Operation(summary = "유저 즐겨찾기 상품 조회")
