@@ -90,14 +90,14 @@ public class ProductService {
     @Cacheable(value = "Product", key = "'count'")
     public List<ResponseProductCategoryDto> multipleProductCountWithCategory() {
 
-        List<ResponseProductCategoryDto> result = new ArrayList<>();
+        List<ResponseProductCategoryDto> productCategoryDtos = new ArrayList<>();
 
         categoryRepository.findAll().forEach(category -> {
             ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
                     category.getName(),
                     productRepository.productCountWithCategory(category.getId())
             );
-            result.add(categoryDto);
+            productCategoryDtos.add(categoryDto);
         });
 
         subCategoryRepository.findAll().forEach(subCategory -> {
@@ -105,24 +105,24 @@ public class ProductService {
                     subCategory.getName(),
                     productRepository.productCountWithSubCategory(subCategory.getId())
             );
-            result.add(categoryDto);
+            productCategoryDtos.add(categoryDto);
         });
 
-        return result;
+        return productCategoryDtos;
     }
 
     @Cacheable(value = "MallProduct", key = "#mallId + '_' + 'count'")
     public List<ResponseProductCategoryDto> productCountWithCategoryOfMall(Long mallId) {
         Mall mall = mallRepository.findById(mallId)
                 .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-        List<ResponseProductCategoryDto> result = new ArrayList<>();
+        List<ResponseProductCategoryDto> productCategoryDtos = new ArrayList<>();
 
         categoryRepository.findAll().forEach(category -> {
             ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
                     category.getName(),
                     productRepository.productCountWithCategoryOfMall(mall.getName(), category.getId())
             );
-            result.add(categoryDto);
+            productCategoryDtos.add(categoryDto);
         });
 
         subCategoryRepository.findAll().forEach(subCategory -> {
@@ -130,20 +130,20 @@ public class ProductService {
                     subCategory.getName(),
                     productRepository.productCountWithSubCategoryOfMall(mall.getName(), subCategory.getId())
             );
-            result.add(categoryDto);
+            productCategoryDtos.add(categoryDto);
         });
 
-        return result;
+        return productCategoryDtos;
     }
 
     public List<ResponseProductPreviewDto> recommendProduct(List<Long> productIds, boolean preview) {
-        List<ResponseProductPreviewDto> result = new ArrayList<>();
+        List<ResponseProductPreviewDto> productDtos = new ArrayList<>();
         for (int i = 0; i < productIds.size(); i++) {
             if (preview && i >= MAX_PREVIEW_PRODUCT_COUNT) break;
             Long productId = productIds.get(i);
-            result.add(productRepository.productById(productId));
+            productDtos.add(productRepository.productById(productId));
         }
-        return result;
+        return productDtos;
     }
 
     public ResponseOuterDto outerProductDetail(Long userId, Long productId) {
@@ -210,30 +210,30 @@ public class ProductService {
     }
 
     public List<Product> productWithRecentRecommendation(Long userId) {
-        List<Product> result = new ArrayList<>();
+        List<Product> recommendedProducts = new ArrayList<>();
         recentRecommendationRepository.findByUserId(userId).forEach(recentRecommendation ->
-                result.add(recentRecommendation.getProduct()));
-        return result;
+                recommendedProducts.add(recentRecommendation.getProduct()));
+        return recommendedProducts;
     }
 
     public List<Product> productWithUserRecommendation(Long userId) {
-        List<Product> result = new ArrayList<>();
+        List<Product> recommendedProducts = new ArrayList<>();
         userRecommendationRepository.findByUserId(userId).forEach(userRecommendation ->
-                result.add(userRecommendation.getProduct()));
-        return result;
+                recommendedProducts.add(userRecommendation.getProduct()));
+        return recommendedProducts;
     }
 
     @Transactional
     public List<ProductDescription> saveProductDescriptions(List<String> productDescriptions, Product product) {
-        List<ProductDescription> result = new ArrayList<>();
+        List<ProductDescription> savedProductDescriptions = new ArrayList<>();
         productDescriptions.forEach(productDescriptionUrl -> {
             ProductDescription productDescription = ProductDescription.builder()
                                                     .url(CLOUDFRONT_URL + productDescriptionUrl)
                                                     .product(product)
                                                     .build();
-            result.add(productDescriptionRepository.save(productDescription));
+            savedProductDescriptions.add(productDescriptionRepository.save(productDescription));
         });
-        return result;
+        return savedProductDescriptions;
     }
 
 

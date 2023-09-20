@@ -24,6 +24,7 @@ public class RankService {
     private static final int INITIAL_VIEW = 0;
     private static final int FIRST_VIEW = 1;
     private static final int MAX_PRODUCT_COUNT = 5;
+
     private final UserRepository userRepository;
     private final MallRepository mallRepository;
     private final RankRepository rankRepository;

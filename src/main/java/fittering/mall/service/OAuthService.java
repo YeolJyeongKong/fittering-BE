@@ -19,14 +19,15 @@ import static fittering.mall.domain.entity.User.getAgeRange;
 @RequiredArgsConstructor
 public class OAuthService {
 
-    private final AppUtils appUtils;
-    private final UserRepository userRepository;
-    private final MeasurementRepository measurementRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
     private static final String DEFAULT_GENDER = "M";
     private static final Integer DEFAULT_YEAR = 2023;
     private static final Integer DEFAULT_MONTH = 1;
     private static final Integer DEFAULT_DAY = 1;
+
+    private final AppUtils appUtils;
+    private final UserRepository userRepository;
+    private final MeasurementRepository measurementRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public User saveUser(String email, String provider) {
         Measurement measurement = measurementRepository.save(new Measurement());
