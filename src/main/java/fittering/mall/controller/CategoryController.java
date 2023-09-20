@@ -31,11 +31,11 @@ public class CategoryController {
     }
 
     @Operation(summary = "세부 카테고리 등록")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"카테고리 등록 완료\"")))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"서브 카테고리 등록 완료\"")))
     @PostMapping("/categories/sub/{categoryName}/{subCategoryName}")
     public ResponseEntity<?> saveSubCategory(@PathVariable("categoryName") @NotEmpty @Size(max = 10) String categoryName,
                                              @PathVariable("subCategoryName") @NotEmpty @Size(max = 10) String subCategoryName) {
         categoryService.saveSubCategory(categoryName, subCategoryName);
-        return new ResponseEntity<>("카테고리 등록 완료", HttpStatus.OK);
+        return new ResponseEntity<>("서브 카테고리 등록 완료", HttpStatus.OK);
     }
 }
