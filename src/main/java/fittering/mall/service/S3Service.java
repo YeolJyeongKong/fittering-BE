@@ -66,24 +66,24 @@ public class S3Service {
         amazonS3.putObject(serverBucket, fileName, fileInputStream, metadata);
     }
 
-    public String saveObject(MultipartFile file, String bucket) throws IOException {
+    public String saveObject(MultipartFile file, Long userId, String bucket) throws IOException {
         if (bucket.equals("crawling")) {
-            return saveObjectWithBucket(file, crawlingBucket);
+            return saveObjectWithBucket(file, userId, crawlingBucket);
         }
         if (bucket.equals("server")) {
-            return saveObjectWithBucket(file, serverBucket);
+            return saveObjectWithBucket(file, userId, serverBucket);
         }
         if (bucket.equals("body")) {
-            return saveObjectWithBucket(file, bodyBucket);
+            return saveObjectWithBucket(file, userId, bodyBucket);
         }
         if (bucket.equals("silhouette")) {
-            return saveObjectWithBucket(file, silhouetteBucket);
+            return saveObjectWithBucket(file, userId, silhouetteBucket);
         }
         return null;
     }
 
-    public String saveObjectWithBucket(MultipartFile file, String bucket) throws IOException {
-        String fileName = LocalDateTime.now().toString();
+    public String saveObjectWithBucket(MultipartFile file, Long userId, String bucket) throws IOException {
+        String fileName = userId + "_" + LocalDateTime.now();
         byte[] fileBytes = file.getBytes();
         InputStream fileInputStream = new ByteArrayInputStream(fileBytes);
         ObjectMetadata metadata = new ObjectMetadata();

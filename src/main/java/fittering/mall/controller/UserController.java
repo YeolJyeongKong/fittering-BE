@@ -128,9 +128,11 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseSilhouetteUrlDto.class)))
     @GetMapping("/users/mysize/silhouette")
     public ResponseEntity<?> silhouetteFromBody(@RequestParam("front") MultipartFile frontFile,
-                                                @RequestParam("side") MultipartFile sideFile) throws IOException {
-        String frontFileName = s3Service.saveObject(frontFile, "body");
-        String sideFileName = s3Service.saveObject(sideFile, "body");
+                                                @RequestParam("side") MultipartFile sideFile,
+                                                @AuthenticationPrincipal PrincipalDetails principalDetails) throws IOException {
+        Long userId = principalDetails.getUser().getId();
+        String frontFileName = s3Service.saveObject(frontFile, userId, "body");
+        String sideFileName = s3Service.saveObject(sideFile, userId, "body");
 
         URI uri = UriComponentsBuilder.fromUriString(ML_SILHOUETTE_API)
                 .build()
