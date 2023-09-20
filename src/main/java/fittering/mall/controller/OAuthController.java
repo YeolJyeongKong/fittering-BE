@@ -63,20 +63,16 @@ public class OAuthController {
     @Value("${google.grant-type}")
     private String GOOGLE_GRANT_TYPE;
 
-    private final String MAIN_LOGIN_URL = "https://fit-tering.com/login";
-    private final String APPLE_AUTH_URL = "https://appleid.apple.com/auth/authorize";
-    private final String KAKAO_AUTH_URL = "https://kauth.kakao.com/oauth/authorize";
-    private final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
-    private final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
-    private final String GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
+    private static final String MAIN_LOGIN_URL = "https://fit-tering.com/login";
+    private static final String APPLE_AUTH_URL = "https://appleid.apple.com/auth/authorize";
+    private static final String KAKAO_AUTH_URL = "https://kauth.kakao.com/oauth/authorize";
+    private static final String KAKAO_TOKEN_URL = "https://kauth.kakao.com/oauth/token";
+    private static final String GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
+    private static final String GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 
     @GetMapping("/login/oauth/apple")
     public String loginAppleOAuth() {
-        return "redirect:" + APPLE_AUTH_URL
-                + "?client_id=" + APPLE_CLIENT_ID
-                + "&redirect_uri=" + APPLE_REDIRECT_URI
-                + "&response_type=" + APPLE_RESPONSE_TYPE
-                + "&nonce=" + APPLE_NONCE;
+        return loginUrl(APPLE_AUTH_URL, APPLE_CLIENT_ID, APPLE_REDIRECT_URI, APPLE_RESPONSE_TYPE, APPLE_NONCE);
     }
 
     @GetMapping("/login/apple")
@@ -90,20 +86,14 @@ public class OAuthController {
 
         if (user == null) {
             User newUser = oAuthService.saveUser(email, "apple");
-            return "redirect:" + MAIN_LOGIN_URL
-                    + "?token=" + jwtTokenProvider.createToken(newUser.getEmail(), newUser.getRoles());
+            return redirectWithToken(MAIN_LOGIN_URL, jwtTokenProvider.createToken(newUser.getEmail(), newUser.getRoles()));
         }
-        return "redirect:" + MAIN_LOGIN_URL
-                + "?token=" + jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
+        return redirectWithToken(MAIN_LOGIN_URL, jwtTokenProvider.createToken(user.getEmail(), user.getRoles()));
     }
 
     @GetMapping("/login/oauth/kakao")
     public String loginKakaoOAuth() {
-        return "redirect:" + KAKAO_AUTH_URL
-                + "?client_id=" + KAKAO_CLIENT_ID
-                + "&redirect_uri=" + KAKAO_REDIRECT_URI
-                + "&response_type=" + KAKAO_RESPONSE_TYPE
-                + "&scope=" + KAKAO_SCOPE;
+        return loginUrl(KAKAO_AUTH_URL, KAKAO_CLIENT_ID, KAKAO_REDIRECT_URI, KAKAO_RESPONSE_TYPE, KAKAO_SCOPE);
     }
 
     @GetMapping("/login/kakao")
@@ -125,20 +115,14 @@ public class OAuthController {
 
         if (user == null) {
             User newUser = oAuthService.saveUser(email, "kakao");
-            return "redirect:" + MAIN_LOGIN_URL
-                    + "?token=" + jwtTokenProvider.createToken(newUser.getEmail(), newUser.getRoles());
+            return redirectWithToken(MAIN_LOGIN_URL, jwtTokenProvider.createToken(newUser.getEmail(), newUser.getRoles()));
         }
-        return "redirect:" + MAIN_LOGIN_URL
-                + "?token=" + jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
+        return redirectWithToken(MAIN_LOGIN_URL, jwtTokenProvider.createToken(user.getEmail(), user.getRoles()));
     }
 
     @GetMapping("/login/oauth/google")
     public String loginGoogleOAuth() {
-        return "redirect:" + GOOGLE_AUTH_URL
-                + "?client_id=" + GOOGLE_CLIENT_ID
-                + "&redirect_uri=" + GOOGLE_REDIRECT_URI
-                + "&response_type=" + GOOGLE_RESPONSE_TYPE
-                + "&scope=" + GOOGLE_SCOPE;
+        return loginUrl(GOOGLE_AUTH_URL, GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI, GOOGLE_RESPONSE_TYPE, GOOGLE_SCOPE);
     }
 
     @GetMapping("/login/google")
@@ -160,10 +144,21 @@ public class OAuthController {
 
         if (user == null) {
             User newUser = oAuthService.saveUser(email, "google");
-            return "redirect:" + MAIN_LOGIN_URL
-                    + "?token=" + jwtTokenProvider.createToken(newUser.getEmail(), newUser.getRoles());
+            return redirectWithToken(MAIN_LOGIN_URL, jwtTokenProvider.createToken(newUser.getEmail(), newUser.getRoles()));
         }
-        return "redirect:" + MAIN_LOGIN_URL
-                + "?token=" + jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
+        return redirectWithToken(MAIN_LOGIN_URL, jwtTokenProvider.createToken(user.getEmail(), user.getRoles()));
+    }
+
+    private static String loginUrl(String authUrl, String clientId, String redirectUri, String responseType, String nonce) {
+        return "redirect:" + authUrl
+                + "?client_id=" + clientId
+                + "&redirect_uri=" + redirectUri
+                + "&response_type=" + responseType
+                + "&nonce=" + nonce;
+    }
+
+    private static String redirectWithToken(String mainUrl, String token) {
+        return "redirect:" + mainUrl
+                + "?token=" + token;
     }
 }

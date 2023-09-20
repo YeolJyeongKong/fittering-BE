@@ -38,6 +38,7 @@ import static fittering.mall.domain.entity.User.getAgeRange;
 public class UserService {
 
     private static final int TEMP_PASSWORD_LENGTH = 10;
+
     private final UserRepository userRepository;
     private final MeasurementRepository measurementRepository;
     private final RecentRepository recentRepository;

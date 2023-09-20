@@ -37,7 +37,7 @@ public class FavoriteService {
     public List<ResponseMallWithProductDto> userFavoriteMall(Long userId) {
 
         List<Favorite> favoriteMalls = favoriteRepository.userFavoriteMall(userId);
-        List<ResponseMallWithProductDto> result = new ArrayList<>();
+        List<ResponseMallWithProductDto> userFavoriteMallDtos = new ArrayList<>();
 
         favoriteMalls.forEach(favorite -> {
             Mall mall = favorite.getMall();
@@ -56,9 +56,9 @@ public class FavoriteService {
                                                     .build());
             }
 
-            result.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, 0, true));
+            userFavoriteMallDtos.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, 0, true));
         });
-        return result;
+        return userFavoriteMallDtos;
     }
 
     @Transactional

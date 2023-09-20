@@ -102,16 +102,8 @@ public class Product extends BaseEntity {
     protected Product() {
     }
 
-    public void updateView() {
-        view++;
-    }
-
     public void updateView(Integer view) {
         this.view += view;
-    }
-
-    public void updateTimeView() {
-        timeView++;
     }
 
     public void updateTimeView(Integer timeView) {

@@ -188,7 +188,7 @@ public class ProductController {
         return new ResponseEntity<>("정의된 타입 없음", HttpStatus.BAD_REQUEST);
     }
 
-    @Operation(summary = "실시간 랭킹순 상품 조회")
+    @Operation(summary = "오늘의 랭킹순 상품 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/products/rank/{gender}")
     public ResponseEntity<?> productOfTimeRank(@PathVariable("gender") @NotEmpty String gender) {

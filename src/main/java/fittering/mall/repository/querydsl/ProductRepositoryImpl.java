@@ -72,7 +72,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     @Override
     public Page<ResponseProductPreviewDto> productWithCategory(Long mallId, Long categoryId, String gender,
                                                                Long filterId, Pageable pageable) {
-
         List<ResponseProductPreviewDto> content = queryFactory
                 .select(new QResponseProductPreviewDto(
                         product.id.as("productId"),
@@ -116,7 +115,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     @Override
     public Page<ResponseProductPreviewDto> productWithSubCategory(Long mallId, Long subCategoryId, String gender,
                                                           Long filterId, Pageable pageable) {
-
         List<ResponseProductPreviewDto> content = queryFactory
                 .select(new QResponseProductPreviewDto(
                         product.id.as("productId"),
@@ -159,7 +157,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     @Override
     public Page<ResponseProductPreviewDto> searchProduct(String productName, String gender, Long filterId, Pageable pageable) {
-
         List<ResponseProductPreviewDto> content = queryFactory
                 .select(new QResponseProductPreviewDto(
                         product.id.as("productId"),

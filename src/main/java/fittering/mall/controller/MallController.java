@@ -34,8 +34,9 @@ import static fittering.mall.controller.ControllerUtils.getValidationErrorRespon
 @RequestMapping("/api/v1")
 public class MallController {
 
-    private static final int MALL_RANL_SIZE = 4;
+    private static final int MALL_RANK_SIZE = 4;
     private static final int MOBILE_MALL_RANK_SIZE = 3;
+
     private final MallService mallService;
     private final RankService rankService;
     private final FavoriteService favoriteService;
@@ -84,7 +85,7 @@ public class MallController {
     public ResponseEntity<?> mallRankPreview(@AuthenticationPrincipal PrincipalDetails principalDetails,
                                              Pageable pageable) {
         List<ResponseMallPreviewDto> malls = rankService.mallRankPreview(principalDetails.getUser().getId(),
-                                                                         pageable, MALL_RANL_SIZE);
+                                                                         pageable, MALL_RANK_SIZE);
         return new ResponseEntity<>(malls, HttpStatus.OK);
     }
 
