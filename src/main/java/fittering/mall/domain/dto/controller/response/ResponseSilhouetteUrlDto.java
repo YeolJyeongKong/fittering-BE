@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseSilhouetteUrlDto {
-    private String front;
-    private String side;
+    private String url;
 }
