@@ -52,7 +52,7 @@ public class RankService {
 
     public List<ResponseMallWithProductDto> mallRank(Long userId) {
         List<Rank> ranks = rankRepository.mallRank(userId);
-        List<ResponseMallWithProductDto> result = new ArrayList<>();
+        List<ResponseMallWithProductDto> mallRankDtos = new ArrayList<>();
 
         ranks.forEach(rank -> {
             Mall mall = rank.getMall();
@@ -72,19 +72,19 @@ public class RankService {
             }
 
             Boolean isFavorite = favoriteRepository.isUserFavoriteMall(userId, mall.getId());
-            result.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, rank.getView(), isFavorite));
+            mallRankDtos.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, rank.getView(), isFavorite));
         });
-        return result;
+        return mallRankDtos;
     }
 
     public List<ResponseMallPreviewDto> mallRankPreview(Long userId, Pageable pageable, int count) {
         List<MallPreviewDto> mallPreviewDtos = rankRepository.mallRankPreview(userId, pageable, count);
-        List<ResponseMallPreviewDto> result = new ArrayList<>();
+        List<ResponseMallPreviewDto> mallRankDtos = new ArrayList<>();
         mallPreviewDtos.forEach(mallPreviewDto -> {
             Boolean isFavorite = favoriteRepository.isUserFavoriteMall(userId, mallPreviewDto.getId());
-            result.add(MallMapper.INSTANCE.toResponseMallPreviewDto(mallPreviewDto, isFavorite));
+            mallRankDtos.add(MallMapper.INSTANCE.toResponseMallPreviewDto(mallPreviewDto, isFavorite));
         });
-        return result;
+        return mallRankDtos;
     }
 
     @Transactional

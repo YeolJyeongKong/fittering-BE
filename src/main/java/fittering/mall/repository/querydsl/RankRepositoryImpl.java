@@ -43,11 +43,11 @@ public class RankRepositoryImpl implements RankRepositoryCustom {
                 .limit(count)
                 .fetch();
 
-        List<MallPreviewDto> result = new ArrayList<>();
+        List<MallPreviewDto> mallRankPreviewDtos = new ArrayList<>();
         savedMallPreviewDtos.forEach(savedMallPreviewDto -> {
-            result.add(MallMapper.INSTANCE.toMallPreviewDto(savedMallPreviewDto));
+            mallRankPreviewDtos.add(MallMapper.INSTANCE.toMallPreviewDto(savedMallPreviewDto));
         });
-        return result;
+        return mallRankPreviewDtos;
     }
 
     @Override
