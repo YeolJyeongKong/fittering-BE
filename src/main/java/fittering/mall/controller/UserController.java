@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -47,6 +48,9 @@ import static fittering.mall.controller.ControllerUtils.getValidationErrorRespon
 @RequestMapping("/api/v1/auth")
 public class UserController {
 
+    private static final String FRONT_SILHOUETTE_KEY_SUFFIX = ":front";
+    private static final String SIDE_SILHOUETTE_KEY_SUFFIX = ":side";
+
     @Value("${ML.API.MEASURE}")
     private String ML_MEASURE_API;
     @Value("${ML.API.RECOMMEND.PRODUCT}")
@@ -63,6 +67,7 @@ public class UserController {
     private final FavoriteService favoriteService;
     private final S3Service s3Service;
     private final RestTemplate restTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Operation(summary = "마이페이지 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseUserDto.class)))
@@ -127,25 +132,25 @@ public class UserController {
     @Operation(summary = "체형 실루엣 이미지 제공")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseSilhouetteUrlDto.class)))
     @GetMapping("/users/mysize/silhouette")
-    public ResponseEntity<?> silhouetteFromBody(@RequestParam("front") MultipartFile frontFile,
-                                                @RequestParam("side") MultipartFile sideFile,
+    public ResponseEntity<?> silhouetteFromBody(@RequestParam("bodyFile") MultipartFile bodyFile,
+                                                @RequestParam("type") String type,
                                                 @AuthenticationPrincipal PrincipalDetails principalDetails) throws IOException {
         Long userId = principalDetails.getUser().getId();
-        String frontFileName = s3Service.saveObject(frontFile, userId, "body");
-        String sideFileName = s3Service.saveObject(sideFile, userId, "body");
+        boolean isFront = type.equals("FRONT");
+        String savedFileName = s3Service.saveObject(bodyFile, userId, "body");
+
+        saveSilhouetteFileNameInCache(userId, isFront, savedFileName);
 
         URI uri = UriComponentsBuilder.fromUriString(ML_SILHOUETTE_API)
                 .build()
                 .toUri();
         RequestSilhouetteApiDto requestSilhouetteApiDto = RequestSilhouetteApiDto.builder()
-                .front(frontFileName)
-                .side(sideFileName)
+                .image_fname(savedFileName)
                 .build();
         ResponseSilhouetteApiDto responseSilhouetteApiDto = restTemplate.postForObject(uri, requestSilhouetteApiDto, ResponseSilhouetteApiDto.class);
 
         ResponseSilhouetteUrlDto responseSilhouetteUrlDto = ResponseSilhouetteUrlDto.builder()
-                .front(CLOUDFRONT_SILHOUETTE_URL + responseSilhouetteApiDto.getFront())
-                .side(CLOUDFRONT_SILHOUETTE_URL + responseSilhouetteApiDto.getSide())
+                .url(CLOUDFRONT_SILHOUETTE_URL + responseSilhouetteApiDto.getImage_fname())
                 .build();
         return new ResponseEntity<>(responseSilhouetteUrlDto, HttpStatus.OK);
     }
@@ -335,5 +340,21 @@ public class UserController {
         for (Product recommendedProduct : recommendedProducts) {
             productIds.add(recommendedProduct.getId());
         }
+    }
+
+    private void saveSilhouetteFileNameInCache(Long userId, boolean isFront, String savedFileName) {
+        if (isFront) {
+            redisTemplate.opsForValue().set(userId + FRONT_SILHOUETTE_KEY_SUFFIX, savedFileName);
+            return;
+        }
+        redisTemplate.opsForValue().set(userId + SIDE_SILHOUETTE_KEY_SUFFIX, savedFileName);
+    }
+
+    private void deleteSilhouetteFileNameInCache(Long userId, boolean isFront) {
+        if (isFront) {
+            redisTemplate.delete(userId + FRONT_SILHOUETTE_KEY_SUFFIX);
+            return;
+        }
+        redisTemplate.delete(userId + SIDE_SILHOUETTE_KEY_SUFFIX);
     }
 }
