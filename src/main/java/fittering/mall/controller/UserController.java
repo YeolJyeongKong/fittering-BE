@@ -131,7 +131,7 @@ public class UserController {
 
     @Operation(summary = "체형 실루엣 이미지 제공")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseSilhouetteUrlDto.class)))
-    @GetMapping("/users/mysize/silhouette")
+    @PostMapping("/users/mysize/silhouette")
     public ResponseEntity<?> silhouetteFromBody(@RequestParam("bodyFile") MultipartFile bodyFile,
                                                 @RequestParam("type") String type,
                                                 @AuthenticationPrincipal PrincipalDetails principalDetails) throws IOException {
