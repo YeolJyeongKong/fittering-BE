@@ -9,11 +9,13 @@ import com.amazonaws.util.IOUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 
 import static java.nio.charset.StandardCharsets.*;
 
@@ -26,13 +28,31 @@ public class S3Service {
 
     @Value("${cloud.aws.s3.bucket.crawling}")
     private String crawlingBucket;
-
     @Value("${cloud.aws.s3.bucket.server}")
     private String serverBucket;
+    @Value("${cloud.aws.s3.bucket.body}")
+    private String bodyBucket;
+    @Value("${cloud.aws.s3.bucket.silhouette}")
+    private String silhouetteBucket;
 
-    public void moveS3ObjectToServerBucket(String storedFileName) throws IOException {
-        S3Object o = amazonS3.getObject(new GetObjectRequest(crawlingBucket, storedFileName));
-        S3ObjectInputStream objectInputStream = o.getObjectContent();
+    public void moveObject(String storedFileName, String bucket) throws IOException {
+        if (bucket.equals("crawling")) {
+            moveObjectWithBucket(storedFileName, crawlingBucket);
+        }
+        if (bucket.equals("server")) {
+            moveObjectWithBucket(storedFileName, serverBucket);
+        }
+        if (bucket.equals("body")) {
+            moveObjectWithBucket(storedFileName, bodyBucket);
+        }
+        if (bucket.equals("silhouette")) {
+            moveObjectWithBucket(storedFileName, silhouetteBucket);
+        }
+    }
+
+    public void moveObjectWithBucket(String storedFileName, String bucket) throws IOException {
+        S3Object savedObject = amazonS3.getObject(new GetObjectRequest(crawlingBucket, storedFileName));
+        S3ObjectInputStream objectInputStream = savedObject.getObjectContent();
         byte[] fileBytes = IOUtils.toByteArray(objectInputStream);
         String fileName = URLEncoder.encode(storedFileName, UTF_8)
                 .replaceAll("\\+", "%20")
@@ -44,5 +64,32 @@ public class S3Service {
         metadata.setContentType(IMAGE_CONTENT_TYPE);
         metadata.setContentLength(fileBytes.length);
         amazonS3.putObject(serverBucket, fileName, fileInputStream, metadata);
+    }
+
+    public String saveObject(MultipartFile file, Long userId, String bucket) throws IOException {
+        if (bucket.equals("crawling")) {
+            return saveObjectWithBucket(file, userId, crawlingBucket);
+        }
+        if (bucket.equals("server")) {
+            return saveObjectWithBucket(file, userId, serverBucket);
+        }
+        if (bucket.equals("body")) {
+            return saveObjectWithBucket(file, userId, bodyBucket);
+        }
+        if (bucket.equals("silhouette")) {
+            return saveObjectWithBucket(file, userId, silhouetteBucket);
+        }
+        return null;
+    }
+
+    public String saveObjectWithBucket(MultipartFile file, Long userId, String bucket) throws IOException {
+        String fileName = userId + "_" + LocalDateTime.now();
+        byte[] fileBytes = file.getBytes();
+        InputStream fileInputStream = new ByteArrayInputStream(fileBytes);
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(IMAGE_CONTENT_TYPE);
+        metadata.setContentLength(fileBytes.length);
+        amazonS3.putObject(bucket, fileName, fileInputStream, metadata);
+        return fileName;
     }
 }

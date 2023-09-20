@@ -4,6 +4,7 @@ import fittering.mall.domain.dto.controller.request.*;
 import fittering.mall.domain.dto.controller.response.*;
 import fittering.mall.domain.dto.service.MeasurementDto;
 import fittering.mall.domain.mapper.MeasurementMapper;
+import fittering.mall.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,8 +32,10 @@ import fittering.mall.service.FavoriteService;
 import fittering.mall.service.ProductService;
 import fittering.mall.service.UserService;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,17 +48,26 @@ import static fittering.mall.controller.ControllerUtils.getValidationErrorRespon
 @RequestMapping("/api/v1/auth")
 public class UserController {
 
+    private static final String FRONT_SILHOUETTE_KEY_SUFFIX = ":front";
+    private static final String SIDE_SILHOUETTE_KEY_SUFFIX = ":side";
+
     @Value("${ML.API.MEASURE}")
     private String ML_MEASURE_API;
     @Value("${ML.API.RECOMMEND.PRODUCT}")
     private String ML_PRODUCT_RECOMMENDATION_API;
     @Value("${ML.API.RECOMMEND.USER}")
     private String ML_PRODUCT_RECOMMENDATION_WITH_MEASUREMENT_API;
+    @Value("${ML.API.SILHOUETTE}")
+    private String ML_SILHOUETTE_API;
+    @Value("${cloud.aws.cloudfront.silhouette}")
+    private String CLOUDFRONT_SILHOUETTE_URL;
 
     private final UserService userService;
     private final ProductService productService;
     private final FavoriteService favoriteService;
+    private final S3Service s3Service;
     private final RestTemplate restTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Operation(summary = "마이페이지 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseUserDto.class)))
@@ -114,6 +127,32 @@ public class UserController {
         MeasurementDto measurementDto = MeasurementMapper.INSTANCE.toMeasurementDto(requestMeasurementDto);
         userService.measurementUpdate(measurementDto, principalDetails.getUser().getId());
         return new ResponseEntity<>(measurementDto, HttpStatus.OK);
+    }
+
+    @Operation(summary = "체형 실루엣 이미지 제공")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseSilhouetteUrlDto.class)))
+    @PostMapping("/users/mysize/silhouette")
+    public ResponseEntity<?> silhouetteFromBody(@RequestParam("bodyFile") MultipartFile bodyFile,
+                                                @RequestParam("type") String type,
+                                                @AuthenticationPrincipal PrincipalDetails principalDetails) throws IOException {
+        Long userId = principalDetails.getUser().getId();
+        boolean isFront = type.equals("FRONT");
+        String savedFileName = s3Service.saveObject(bodyFile, userId, "body");
+
+        saveSilhouetteFileNameInCache(userId, isFront, savedFileName);
+
+        URI uri = UriComponentsBuilder.fromUriString(ML_SILHOUETTE_API)
+                .build()
+                .toUri();
+        RequestSilhouetteApiDto requestSilhouetteApiDto = RequestSilhouetteApiDto.builder()
+                .image_fname(savedFileName)
+                .build();
+        ResponseSilhouetteApiDto responseSilhouetteApiDto = restTemplate.postForObject(uri, requestSilhouetteApiDto, ResponseSilhouetteApiDto.class);
+
+        ResponseSilhouetteUrlDto responseSilhouetteUrlDto = ResponseSilhouetteUrlDto.builder()
+                .url(CLOUDFRONT_SILHOUETTE_URL + responseSilhouetteApiDto.getImage_fname())
+                .build();
+        return new ResponseEntity<>(responseSilhouetteUrlDto, HttpStatus.OK);
     }
 
     @Operation(summary = "유저 즐겨찾기 상품 조회")
@@ -301,5 +340,21 @@ public class UserController {
         for (Product recommendedProduct : recommendedProducts) {
             productIds.add(recommendedProduct.getId());
         }
+    }
+
+    private void saveSilhouetteFileNameInCache(Long userId, boolean isFront, String savedFileName) {
+        if (isFront) {
+            redisTemplate.opsForValue().set(userId + FRONT_SILHOUETTE_KEY_SUFFIX, savedFileName);
+            return;
+        }
+        redisTemplate.opsForValue().set(userId + SIDE_SILHOUETTE_KEY_SUFFIX, savedFileName);
+    }
+
+    private void deleteSilhouetteFileNameInCache(Long userId, boolean isFront) {
+        if (isFront) {
+            redisTemplate.delete(userId + FRONT_SILHOUETTE_KEY_SUFFIX);
+            return;
+        }
+        redisTemplate.delete(userId + SIDE_SILHOUETTE_KEY_SUFFIX);
     }
 }
