@@ -20,6 +20,7 @@ import static fittering.mall.repository.querydsl.EqualMethod.userIdEq;
 public class RecentRepositoryImpl implements RecentRepositoryCustom {
 
     private static final int MAX_PRODUCT_PREVIEW_COUNT = 6;
+
     private JPAQueryFactory queryFactory;
 
     public RecentRepositoryImpl(EntityManager em) {

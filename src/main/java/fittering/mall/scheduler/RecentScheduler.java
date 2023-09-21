@@ -15,6 +15,6 @@ public class RecentScheduler {
 
     @Scheduled(fixedDelay = day)
     public void updateRecentLastInitializedAt() {
-        userService.updateRecentLastInitializedAt();
+        userService.updateRecentLastInitializedAtOfUsers();
     }
 }

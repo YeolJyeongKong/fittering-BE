@@ -45,18 +45,7 @@ public class FavoriteService {
             List<Product> products = mall.getProducts();
             List<ResponseMallRankProductDto> productDtos = new ArrayList<>();
 
-            int productCount = 0;
-            for (Product productProxy : products) {
-                if (isEnoughProducts(productCount)) break;
-                productCount++;
-                Product product = productRepository.findById(productProxy.getId())
-                        .orElseThrow(() -> new NoResultException("product dosen't exist"));
-                productDtos.add(ResponseMallRankProductDto.builder()
-                                                    .productId(product.getId())
-                                                    .productImage(product.getImage())
-                                                    .build());
-            }
-
+            getProductDtos(products, productDtos);
             userFavoriteMallDtos.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, 0, true));
         });
         return userFavoriteMallDtos;
@@ -104,7 +93,21 @@ public class FavoriteService {
         favoriteRepository.deleteByUserIdAndProductId(userId, productId);
     }
 
-    private boolean isEnoughProducts(int count) {
+    private void getProductDtos(List<Product> products, List<ResponseMallRankProductDto> productDtos) {
+        int productCount = 0;
+        for (Product productProxy : products) {
+            if (isEnoughProducts(productCount)) break;
+            productCount++;
+            Product product = productRepository.findById(productProxy.getId())
+                    .orElseThrow(() -> new NoResultException("product dosen't exist"));
+            productDtos.add(ResponseMallRankProductDto.builder()
+                    .productId(product.getId())
+                    .productImage(product.getImage())
+                    .build());
+        }
+    }
+
+    private static boolean isEnoughProducts(int count) {
         return count >= MAX_PRODUCT_COUNT;
     }
 }

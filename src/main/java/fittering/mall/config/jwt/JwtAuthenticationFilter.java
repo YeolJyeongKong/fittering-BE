@@ -29,21 +29,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
 
         if (token == null) {
-            String requestURI = ((HttpServletRequest) request).getRequestURI();
-
-            for (String acceptedUrl : ACCEPTED_URL_LIST) {
-                if (requestURI.equals(acceptedUrl)) {
-                    chain.doFilter(request, response);
-                    return;
-                }
-            }
-
-            if (isNoAuthUrl(requestURI)) {
-                chain.doFilter(request, response);
-                return;
-            }
-
-            throw new JwtException("토큰이 빈 값입니다.");
+            checkAuthWithNoToken(request, response, chain);
+            return;
         }
 
         if (jwtTokenProvider.validateToken(token)) {
@@ -53,6 +40,24 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
         //다음 Filter 실행
         chain.doFilter(request, response);
+    }
+
+    private static void checkAuthWithNoToken(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        String requestURI = ((HttpServletRequest) request).getRequestURI();
+
+        for (String acceptedUrl : ACCEPTED_URL_LIST) {
+            if (requestURI.equals(acceptedUrl)) {
+                chain.doFilter(request, response);
+                return;
+            }
+        }
+
+        if (isNoAuthUrl(requestURI)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        throw new JwtException("토큰이 빈 값입니다.");
     }
 
     private static boolean isNoAuthUrl(String requestURI) {

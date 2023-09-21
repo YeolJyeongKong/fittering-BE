@@ -44,6 +44,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private static final int TIME_RANK_PRODUCT_COUNT = 18;
     private static final int AGE_RANGE_SIZE = 6;
     private static final int GENDER_SIZE = 2;
+
     private JPAQueryFactory queryFactory;
 
     public ProductRepositoryImpl(EntityManager em) {

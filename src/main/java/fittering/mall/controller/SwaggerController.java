@@ -23,7 +23,7 @@ public class SwaggerController {
         return origin + current;
     }
 
-    static String toText(InputStream in) {
+    private static String toText(InputStream in) {
         return new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))
                 .lines().collect(Collectors.joining("\n"));
     }

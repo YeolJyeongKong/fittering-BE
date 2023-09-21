@@ -74,11 +74,7 @@ public class KafkaProducer {
             allProductsJson.addAll(productsJson);
 
             int sendCount = 0;
-            for (String productJson : productsJson) {
-                sendCount = (sendCount + 1) % TOPIC_NUMBER;
-                String topic = CRAWLED_PRODUCT_TOPIC + sendCount;
-                kafkaTemplate.send(topic, productJson);
-            }
+            sendProductJson(productsJson, sendCount);
         }
 
         return allProductsJson;
@@ -109,5 +105,13 @@ public class KafkaProducer {
     private static String convertProductRequestToJson(KafkaProductRequest request) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(request);
+    }
+
+    private void sendProductJson(List<String> productsJson, int sendCount) {
+        for (String productJson : productsJson) {
+            sendCount = (sendCount + 1) % TOPIC_NUMBER;
+            String topic = CRAWLED_PRODUCT_TOPIC + sendCount;
+            kafkaTemplate.send(topic, productJson);
+        }
     }
 }

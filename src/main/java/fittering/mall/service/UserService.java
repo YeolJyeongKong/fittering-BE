@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import fittering.mall.domain.entity.*;
 import fittering.mall.repository.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -183,14 +182,7 @@ public class UserService {
         user.getRoles().clear();
 
         user.getFavorites().forEach(favorite -> {
-            if (favorite.getProduct() != null) {
-                Product product = productRepository.findById(favorite.getProduct().getId()).get();
-                product.getFavorites().remove(favorite);
-                return;
-            }
-
-            Mall mall = mallRepository.findById(favorite.getMall().getId()).get();
-            mall.getFavorites().remove(favorite);
+            removeFavoriteOfOtherEntity(favorite);
         });
 
         favoriteRepository.deleteByUserId(userId);
@@ -217,19 +209,9 @@ public class UserService {
     }
 
     @Transactional
-    public void updateRecentLastInitializedAt() {
+    public void updateRecentLastInitializedAtOfUsers() {
         userRepository.findAll().forEach(user -> {
-            if (user.getRecentLastInitializedAt() == null) {
-                user.updateRecentLastInitializedAt();
-                return;
-            }
-
-            LocalDateTime initializeAt = user.getRecentLastInitializedAt();
-            LocalDateTime now = LocalDateTime.now();
-            if (ChronoUnit.WEEKS.between(initializeAt, now) >= 1) {
-                user.updateRecentLastInitializedAt();
-                recentRepository.initializeRecents(user.getId());
-            }
+            updateRecentLastInitializedAtOfUser(user);
         });
     }
 
@@ -245,5 +227,30 @@ public class UserService {
         userRepository.findAll().forEach(user -> {
             recentRecommendationRepository.deleteByUserId(user.getId());
         });
+    }
+
+    private void updateRecentLastInitializedAtOfUser(User user) {
+        if (user.getRecentLastInitializedAt() == null) {
+            user.updateRecentLastInitializedAt();
+            return;
+        }
+
+        LocalDateTime initializeAt = user.getRecentLastInitializedAt();
+        LocalDateTime now = LocalDateTime.now();
+        if (ChronoUnit.WEEKS.between(initializeAt, now) >= 1) {
+            user.updateRecentLastInitializedAt();
+            recentRepository.initializeRecents(user.getId());
+        }
+    }
+
+    private void removeFavoriteOfOtherEntity(Favorite favorite) {
+        if (favorite.getProduct() != null) {
+            Product product = productRepository.findById(favorite.getProduct().getId()).get();
+            product.getFavorites().remove(favorite);
+            return;
+        }
+
+        Mall mall = mallRepository.findById(favorite.getMall().getId()).get();
+        mall.getFavorites().remove(favorite);
     }
 }
