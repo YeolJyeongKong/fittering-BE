@@ -1,5 +1,6 @@
 package fittering.mall.service;
 
+import fittering.mall.domain.collection.Products;
 import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
 import fittering.mall.domain.dto.service.SignUpDto;
 import org.junit.jupiter.api.AfterEach;
@@ -131,7 +132,9 @@ class SearchServiceTest {
     @Test
     void products() {
         RestPage<ResponseProductPreviewDto> shirtProducts = searchService.products("셔츠", "M", 0L, PageRequest.of(0, 10));
-        List<Product> products = List.of(product, product2, product3);
+        Products products = Products.builder()
+                .products(List.of(product, product2, product3))
+                .build();
         for (int i=0, j=products.size()-1; i<products.size() && j>=0; i++, j--) {
             Product product = products.get(i);
             ResponseProductPreviewDto shirtProduct = shirtProducts.getContent().get(j);

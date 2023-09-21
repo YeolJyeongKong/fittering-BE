@@ -3,6 +3,7 @@ package fittering.mall.service;
 import fittering.mall.config.kafka.domain.dto.CrawledMallDto;
 import fittering.mall.config.kafka.domain.dto.CrawledProductDto;
 import fittering.mall.config.kafka.domain.dto.CrawledSizeDto;
+import fittering.mall.domain.collection.Products;
 import fittering.mall.domain.dto.controller.response.*;
 import fittering.mall.domain.mapper.CategoryMapper;
 import fittering.mall.domain.mapper.MallMapper;
@@ -208,15 +209,15 @@ public class ProductService {
                                                     .build());
     }
 
-    public List<Product> productWithRecentRecommendation(Long userId) {
-        List<Product> recommendedProducts = new ArrayList<>();
+    public Products productWithRecentRecommendation(Long userId) {
+        Products recommendedProducts = new Products();
         recentRecommendationRepository.findByUserId(userId).forEach(recentRecommendation ->
                 recommendedProducts.add(recentRecommendation.getProduct()));
         return recommendedProducts;
     }
 
-    public List<Product> productWithUserRecommendation(Long userId) {
-        List<Product> recommendedProducts = new ArrayList<>();
+    public Products productWithUserRecommendation(Long userId) {
+        Products recommendedProducts = new Products();
         userRecommendationRepository.findByUserId(userId).forEach(userRecommendation ->
                 recommendedProducts.add(userRecommendation.getProduct()));
         return recommendedProducts;

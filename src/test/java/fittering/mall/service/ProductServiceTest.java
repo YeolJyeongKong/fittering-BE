@@ -1,5 +1,6 @@
 package fittering.mall.service;
 
+import fittering.mall.domain.collection.Products;
 import fittering.mall.domain.dto.controller.response.ResponseBottomDto;
 import fittering.mall.domain.dto.controller.response.ResponseProductCategoryDto;
 import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
@@ -470,7 +471,7 @@ class ProductServiceTest {
         productService.saveRecentRecommendation(user.getId(), product4.getId());
         productService.saveRecentRecommendation(user.getId(), product5.getId());
 
-        List<Product> products = productService.productWithRecentRecommendation(user.getId());
+        Products products = productService.productWithRecentRecommendation(user.getId());
         assertThat(products.size()).isEqualTo(5);
         compareProduct(product, products.get(0));
         compareProduct(product2, products.get(1));
@@ -487,7 +488,7 @@ class ProductServiceTest {
         productService.saveUserRecommendation(user.getId(), product4.getId());
         productService.saveUserRecommendation(user.getId(), product5.getId());
 
-        List<Product> products = productService.productWithUserRecommendation(user.getId());
+        Products products = productService.productWithUserRecommendation(user.getId());
         assertThat(products.size()).isEqualTo(5);
         compareProduct(product, products.get(0));
         compareProduct(product2, products.get(1));
