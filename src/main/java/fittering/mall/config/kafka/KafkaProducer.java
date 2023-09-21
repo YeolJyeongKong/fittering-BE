@@ -73,8 +73,7 @@ public class KafkaProducer {
             List<String> productsJson = getProductsJsonFromBody(responseBody);
             allProductsJson.addAll(productsJson);
 
-            int sendCount = 0;
-            sendProductJson(productsJson, sendCount);
+            sendProductJson(productsJson);
         }
 
         return allProductsJson;
@@ -107,7 +106,8 @@ public class KafkaProducer {
         return mapper.writeValueAsString(request);
     }
 
-    private void sendProductJson(List<String> productsJson, int sendCount) {
+    private void sendProductJson(List<String> productsJson) {
+        int sendCount = 0;
         for (String productJson : productsJson) {
             sendCount = (sendCount + 1) % TOPIC_NUMBER;
             String topic = CRAWLED_PRODUCT_TOPIC + sendCount;
