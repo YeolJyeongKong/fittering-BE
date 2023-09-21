@@ -229,6 +229,19 @@ public class UserService {
         });
     }
 
+    public boolean isValidEmailAndPassword(String email, String password) {
+        User user = findByEmail(email);
+        if (user == null) {
+            return false;
+        }
+        return passwordEncoder.matches(password, user.getPassword());
+    }
+
+    public boolean isSameUser(Long userId, String email) {
+        User user = findById(userId);
+        return user.getEmail().equals(email);
+    }
+
     private void updateRecentLastInitializedAtOfUser(User user) {
         if (user.getRecentLastInitializedAt() == null) {
             user.updateRecentLastInitializedAt();

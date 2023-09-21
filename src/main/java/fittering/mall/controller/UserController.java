@@ -309,9 +309,20 @@ public class UserController {
     @Operation(summary = "회원 탈퇴")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"회원 탈퇴 완료\"")))
     @DeleteMapping("/users")
-    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        userService.delete(principalDetails.getUser().getId());
-        return new ResponseEntity<>("회원 탈퇴 완료", HttpStatus.OK);
+    public ResponseEntity<?> deleteUser(@RequestBody @Valid RequestUserCheckDto requestUserCheckDto,
+                                        @AuthenticationPrincipal PrincipalDetails principalDetails,
+                                        BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return getValidationErrorResponse(bindingResult);
+        }
+        String email = requestUserCheckDto.getEmail();
+        String password = requestUserCheckDto.getPassword();
+        Long currentUserid = principalDetails.getUser().getId();
+        if (userService.isValidEmailAndPassword(email, password) && userService.isSameUser(currentUserid, email)) {
+            userService.delete(principalDetails.getUser().getId());
+            return new ResponseEntity<>("회원 탈퇴 완료", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("회원 탈퇴 실패", HttpStatus.BAD_REQUEST);
     }
 
     @Operation(summary = "유저 즐겨찾기 쇼핑몰 등록")
@@ -330,10 +341,6 @@ public class UserController {
                                                 @AuthenticationPrincipal PrincipalDetails principalDetails) {
         favoriteService.deleteFavoriteMall(principalDetails.getUser().getId(), mallId);
         return new ResponseEntity<>("즐겨찾기 삭제 완료", HttpStatus.OK);
-    }
-
-    private static void getRecommendedProductIds(List<Long> productIds, Products recommendedProducts) {
-
     }
 
     private void saveSilhouetteFileNameInCache(Long userId, boolean isFront, String savedFileName) {
