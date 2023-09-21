@@ -1,13 +1,13 @@
 package fittering.mall.domain.mapper;
 
 import fittering.mall.config.kafka.domain.dto.CrawledSizeDto;
-import fittering.mall.domain.dto.controller.request.RequestBottomDto;
-import fittering.mall.domain.dto.controller.request.RequestDressDto;
-import fittering.mall.domain.dto.controller.request.RequestOuterDto;
-import fittering.mall.domain.dto.controller.request.RequestTopDto;
-import fittering.mall.domain.dto.controller.response.*;
-import fittering.mall.domain.dto.service.*;
+import fittering.mall.controller.dto.request.RequestBottomDto;
+import fittering.mall.controller.dto.request.RequestDressDto;
+import fittering.mall.controller.dto.request.RequestOuterDto;
+import fittering.mall.controller.dto.request.RequestTopDto;
+import fittering.mall.controller.dto.response.*;
 import fittering.mall.domain.entity.*;
+import fittering.mall.service.dto.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

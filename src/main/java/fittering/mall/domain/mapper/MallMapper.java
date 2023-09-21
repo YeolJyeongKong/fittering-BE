@@ -1,14 +1,14 @@
 package fittering.mall.domain.mapper;
 
 import fittering.mall.config.kafka.domain.dto.CrawledMallDto;
-import fittering.mall.domain.dto.controller.request.RequestMallDto;
-import fittering.mall.domain.dto.controller.request.RequestMallRankProductDto;
-import fittering.mall.domain.dto.controller.response.*;
-import fittering.mall.domain.dto.service.MallNameAndIdDto;
-import fittering.mall.domain.dto.service.MallPreviewDto;
-import fittering.mall.domain.dto.repository.SavedMallPreviewDto;
-import fittering.mall.domain.dto.service.MallDto;
-import fittering.mall.domain.dto.service.MallRankProductDto;
+import fittering.mall.controller.dto.request.RequestMallDto;
+import fittering.mall.controller.dto.request.RequestMallRankProductDto;
+import fittering.mall.controller.dto.response.*;
+import fittering.mall.service.dto.MallNameAndIdDto;
+import fittering.mall.service.dto.MallPreviewDto;
+import fittering.mall.repository.dto.SavedMallPreviewDto;
+import fittering.mall.service.dto.MallDto;
+import fittering.mall.service.dto.MallRankProductDto;
 import fittering.mall.domain.entity.Mall;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

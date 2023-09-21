@@ -27,11 +27,7 @@ import java.util.List;
 @Component
 public class KafkaProducer {
 
-    private final int BATCH_SIZE = 100;
-    private final KafkaTemplate<String, String> kafkaTemplate;
-    private final ProductService productService;
-    private final RestTemplate restTemplate;
-
+    private static final int BATCH_SIZE = 100;
     private static final String CRAWLED_PRODUCT_TOPIC = "crawling-topic-";
     private static final int TOPIC_NUMBER = 5;
 
@@ -39,6 +35,10 @@ public class KafkaProducer {
     private String CRAWLED_PRODUCT_COUNT_API;
     @Value("${ML.API.PRODUCT.INFO}")
     private String CRAWLED_PRODUCT_INFO_API;
+
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ProductService productService;
+    private final RestTemplate restTemplate;
 
     public List<String> callCrawledProductCountAPI() throws JsonProcessingException {
         URI uri = UriComponentsBuilder.fromUriString(CRAWLED_PRODUCT_COUNT_API)
@@ -73,12 +73,7 @@ public class KafkaProducer {
             List<String> productsJson = getProductsJsonFromBody(responseBody);
             allProductsJson.addAll(productsJson);
 
-            int sendCount = 0;
-            for (String productJson : productsJson) {
-                sendCount = (sendCount + 1) % TOPIC_NUMBER;
-                String topic = CRAWLED_PRODUCT_TOPIC + sendCount;
-                kafkaTemplate.send(topic, productJson);
-            }
+            sendProductJson(productsJson);
         }
 
         return allProductsJson;
@@ -109,5 +104,14 @@ public class KafkaProducer {
     private static String convertProductRequestToJson(KafkaProductRequest request) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(request);
+    }
+
+    private void sendProductJson(List<String> productsJson) {
+        int sendCount = 0;
+        for (String productJson : productsJson) {
+            sendCount = (sendCount + 1) % TOPIC_NUMBER;
+            String topic = CRAWLED_PRODUCT_TOPIC + sendCount;
+            kafkaTemplate.send(topic, productJson);
+        }
     }
 }

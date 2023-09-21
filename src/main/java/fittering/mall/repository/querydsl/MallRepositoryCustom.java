@@ -1,7 +1,7 @@
 package fittering.mall.repository.querydsl;
 
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
-import fittering.mall.domain.dto.service.MallNameAndIdDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
+import fittering.mall.service.dto.MallNameAndIdDto;
 
 import java.util.List;
 

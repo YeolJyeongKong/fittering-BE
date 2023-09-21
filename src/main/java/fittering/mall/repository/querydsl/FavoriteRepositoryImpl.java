@@ -1,8 +1,8 @@
 package fittering.mall.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import fittering.mall.domain.dto.controller.response.QResponseProductPreviewDto;
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.controller.dto.response.QResponseProductPreviewDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

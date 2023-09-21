@@ -1,13 +1,13 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.request.RequestRecommendProductDto;
-import fittering.mall.domain.dto.controller.request.RequestUserDto;
-import fittering.mall.domain.dto.controller.response.ResponseMeasurementDto;
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
-import fittering.mall.domain.dto.controller.response.ResponseUserDto;
-import fittering.mall.domain.dto.service.LoginDto;
-import fittering.mall.domain.dto.service.MeasurementDto;
-import fittering.mall.domain.dto.service.SignUpDto;
+import fittering.mall.controller.dto.request.RequestRecommendProductDto;
+import fittering.mall.controller.dto.request.RequestUserDto;
+import fittering.mall.controller.dto.response.ResponseMeasurementDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
+import fittering.mall.controller.dto.response.ResponseUserDto;
+import fittering.mall.service.dto.LoginDto;
+import fittering.mall.service.dto.MeasurementDto;
+import fittering.mall.service.dto.SignUpDto;
 import fittering.mall.domain.mapper.MeasurementMapper;
 import fittering.mall.domain.mapper.UserMapper;
 import jakarta.persistence.NoResultException;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import fittering.mall.domain.entity.*;
 import fittering.mall.repository.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -183,14 +182,7 @@ public class UserService {
         user.getRoles().clear();
 
         user.getFavorites().forEach(favorite -> {
-            if (favorite.getProduct() != null) {
-                Product product = productRepository.findById(favorite.getProduct().getId()).get();
-                product.getFavorites().remove(favorite);
-                return;
-            }
-
-            Mall mall = mallRepository.findById(favorite.getMall().getId()).get();
-            mall.getFavorites().remove(favorite);
+            removeFavoriteOfOtherEntity(favorite);
         });
 
         favoriteRepository.deleteByUserId(userId);
@@ -217,19 +209,9 @@ public class UserService {
     }
 
     @Transactional
-    public void updateRecentLastInitializedAt() {
+    public void updateRecentLastInitializedAtOfUsers() {
         userRepository.findAll().forEach(user -> {
-            if (user.getRecentLastInitializedAt() == null) {
-                user.updateRecentLastInitializedAt();
-                return;
-            }
-
-            LocalDateTime initializeAt = user.getRecentLastInitializedAt();
-            LocalDateTime now = LocalDateTime.now();
-            if (ChronoUnit.WEEKS.between(initializeAt, now) >= 1) {
-                user.updateRecentLastInitializedAt();
-                recentRepository.initializeRecents(user.getId());
-            }
+            updateRecentLastInitializedAtOfUser(user);
         });
     }
 
@@ -245,5 +227,30 @@ public class UserService {
         userRepository.findAll().forEach(user -> {
             recentRecommendationRepository.deleteByUserId(user.getId());
         });
+    }
+
+    private void updateRecentLastInitializedAtOfUser(User user) {
+        if (user.getRecentLastInitializedAt() == null) {
+            user.updateRecentLastInitializedAt();
+            return;
+        }
+
+        LocalDateTime initializeAt = user.getRecentLastInitializedAt();
+        LocalDateTime now = LocalDateTime.now();
+        if (ChronoUnit.WEEKS.between(initializeAt, now) >= 1) {
+            user.updateRecentLastInitializedAt();
+            recentRepository.initializeRecents(user.getId());
+        }
+    }
+
+    private void removeFavoriteOfOtherEntity(Favorite favorite) {
+        if (favorite.getProduct() != null) {
+            Product product = productRepository.findById(favorite.getProduct().getId()).get();
+            product.getFavorites().remove(favorite);
+            return;
+        }
+
+        Mall mall = mallRepository.findById(favorite.getMall().getId()).get();
+        mall.getFavorites().remove(favorite);
     }
 }

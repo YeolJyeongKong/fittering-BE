@@ -33,10 +33,7 @@ public class RedisService {
             Long productId = Long.parseLong(key.split("_")[1]);
             Integer view = Integer.parseInt(redisTemplate.opsForValue().get(key).toString());
 
-            productRepository.findById(productId).ifPresent(product -> {
-                product.updateView(view);
-            });
-
+            updateViewOfProduct(productId, view);
             redisTemplate.delete(key);
         });
 
@@ -44,10 +41,7 @@ public class RedisService {
             Long productId = Long.parseLong(key.split("_")[1]);
             Integer timeView = Integer.parseInt(redisTemplate.opsForValue().get(key).toString());
 
-            productRepository.findById(productId).ifPresent(product -> {
-                product.updateTimeView(timeView);
-            });
-
+            updateTimeViewOfProduct(productId, timeView);
             redisTemplate.delete(key);
         });
 
@@ -55,11 +49,26 @@ public class RedisService {
             Long rankId = Long.parseLong(key.split("_")[1]);
             Integer view = Integer.parseInt(redisTemplate.opsForValue().get(key).toString());
 
-            rankRepository.findById(rankId).ifPresent(rank -> {
-                rank.updateView(view);
-            });
-
+            updateViewOfRank(rankId, view);
             redisTemplate.delete(key);
+        });
+    }
+
+    private void updateViewOfProduct(Long productId, Integer view) {
+        productRepository.findById(productId).ifPresent(product -> {
+            product.updateView(view);
+        });
+    }
+
+    private void updateTimeViewOfProduct(Long productId, Integer timeView) {
+        productRepository.findById(productId).ifPresent(product -> {
+            product.updateTimeView(timeView);
+        });
+    }
+
+    private void updateViewOfRank(Long rankId, Integer view) {
+        rankRepository.findById(rankId).ifPresent(rank -> {
+            rank.updateView(view);
         });
     }
 }

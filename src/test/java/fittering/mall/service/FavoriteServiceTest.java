@@ -1,8 +1,8 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
-import fittering.mall.domain.dto.service.SignUpDto;
+import fittering.mall.controller.dto.response.ResponseMallWithProductDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
+import fittering.mall.service.dto.SignUpDto;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import fittering.mall.domain.RestPage;
-import fittering.mall.domain.dto.service.MallDto;
+import fittering.mall.service.dto.MallDto;
 import fittering.mall.domain.entity.*;
 import org.springframework.data.redis.core.RedisTemplate;
 

@@ -10,10 +10,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ViewScheduler {
 
-    private final ProductService productService;
-    private final RedisService redisService;
     private final int day = 1000 * 60 * 60 * 24;
     private final int hour = 1000 * 60 * 60;
+
+    private final ProductService productService;
+    private final RedisService redisService;
 
     @Scheduled(fixedDelay = day)
     public void initializeTimeView() {

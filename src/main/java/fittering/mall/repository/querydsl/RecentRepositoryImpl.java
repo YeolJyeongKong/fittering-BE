@@ -1,8 +1,8 @@
 package fittering.mall.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import fittering.mall.domain.dto.controller.response.QResponseProductPreviewDto;
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.controller.dto.response.QResponseProductPreviewDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +20,7 @@ import static fittering.mall.repository.querydsl.EqualMethod.userIdEq;
 public class RecentRepositoryImpl implements RecentRepositoryCustom {
 
     private static final int MAX_PRODUCT_PREVIEW_COUNT = 6;
+
     private JPAQueryFactory queryFactory;
 
     public RecentRepositoryImpl(EntityManager em) {

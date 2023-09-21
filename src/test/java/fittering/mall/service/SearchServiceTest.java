@@ -1,7 +1,8 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
-import fittering.mall.domain.dto.service.SignUpDto;
+import fittering.mall.domain.collection.Products;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
+import fittering.mall.service.dto.SignUpDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.RestPage;
-import fittering.mall.domain.dto.service.MallDto;
+import fittering.mall.service.dto.MallDto;
 import fittering.mall.domain.entity.*;
 
 import java.util.ArrayList;
@@ -131,7 +132,9 @@ class SearchServiceTest {
     @Test
     void products() {
         RestPage<ResponseProductPreviewDto> shirtProducts = searchService.products("셔츠", "M", 0L, PageRequest.of(0, 10));
-        List<Product> products = List.of(product, product2, product3);
+        Products products = Products.builder()
+                .products(List.of(product, product2, product3))
+                .build();
         for (int i=0, j=products.size()-1; i<products.size() && j>=0; i++, j--) {
             Product product = products.get(i);
             ResponseProductPreviewDto shirtProduct = shirtProducts.getContent().get(j);

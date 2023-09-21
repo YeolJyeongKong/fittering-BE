@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import fittering.mall.domain.dto.service.MallDto;
+import fittering.mall.service.dto.MallDto;
 import fittering.mall.domain.entity.*;
 import org.springframework.data.redis.core.RedisTemplate;
 

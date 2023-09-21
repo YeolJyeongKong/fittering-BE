@@ -1,12 +1,12 @@
 package fittering.mall.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import fittering.mall.domain.dto.repository.QSavedMeasurementDto;
-import fittering.mall.domain.dto.repository.QSavedUserDto;
-import fittering.mall.domain.dto.repository.SavedMeasurementDto;
-import fittering.mall.domain.dto.repository.SavedUserDto;
-import fittering.mall.domain.dto.service.MeasurementDto;
-import fittering.mall.domain.dto.service.UserDto;
+import fittering.mall.repository.dto.QSavedMeasurementDto;
+import fittering.mall.repository.dto.QSavedUserDto;
+import fittering.mall.repository.dto.SavedMeasurementDto;
+import fittering.mall.repository.dto.SavedUserDto;
+import fittering.mall.service.dto.MeasurementDto;
+import fittering.mall.service.dto.UserDto;
 import fittering.mall.domain.mapper.MeasurementMapper;
 import fittering.mall.domain.mapper.UserMapper;
 import jakarta.persistence.EntityManager;

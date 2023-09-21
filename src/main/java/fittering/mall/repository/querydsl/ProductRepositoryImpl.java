@@ -3,10 +3,10 @@ package fittering.mall.repository.querydsl;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import fittering.mall.domain.dto.controller.response.QResponseProductPreviewDto;
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
-import fittering.mall.domain.dto.service.*;
+import fittering.mall.controller.dto.response.QResponseProductPreviewDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
 import fittering.mall.domain.mapper.SizeMapper;
+import fittering.mall.service.dto.*;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +16,6 @@ import fittering.mall.domain.entity.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static fittering.mall.domain.entity.QBottom.bottom;
@@ -44,6 +43,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private static final int TIME_RANK_PRODUCT_COUNT = 18;
     private static final int AGE_RANGE_SIZE = 6;
     private static final int GENDER_SIZE = 2;
+
     private JPAQueryFactory queryFactory;
 
     public ProductRepositoryImpl(EntityManager em) {

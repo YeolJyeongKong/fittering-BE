@@ -1,8 +1,8 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallPreviewDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
+import fittering.mall.controller.dto.response.ResponseMallWithProductDto;
+import fittering.mall.controller.dto.response.ResponseMallPreviewDto;
+import fittering.mall.controller.dto.response.ResponseMallRankProductDto;
 import fittering.mall.domain.mapper.MallMapper;
 import fittering.mall.repository.*;
 import jakarta.persistence.NoResultException;
@@ -10,7 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import fittering.mall.domain.dto.service.MallPreviewDto;
+import fittering.mall.service.dto.MallPreviewDto;
 import fittering.mall.domain.entity.*;
 
 import java.util.ArrayList;
@@ -59,18 +59,7 @@ public class RankService {
             List<Product> products = mall.getProducts();
             List<ResponseMallRankProductDto> productDtos = new ArrayList<>();
 
-            int productCount = 0;
-            for (Product productProxy : products) {
-                if (isEnoughProducts(productCount)) break;
-                productCount++;
-                Product product = productRepository.findById(productProxy.getId())
-                        .orElseThrow(() -> new NoResultException("product doesn't exist"));
-                productDtos.add(ResponseMallRankProductDto.builder()
-                                                    .productId(product.getId())
-                                                    .productImage(product.getImage())
-                                                    .build());
-            }
-
+            getProductDtos(products, productDtos);
             Boolean isFavorite = favoriteRepository.isUserFavoriteMall(userId, mall.getId());
             mallRankDtos.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, rank.getView(), isFavorite));
         });
@@ -108,7 +97,21 @@ public class RankService {
                                 .build());
     }
 
-    private boolean isEnoughProducts(int count) {
+    private void getProductDtos(List<Product> products, List<ResponseMallRankProductDto> productDtos) {
+        int productCount = 0;
+        for (Product productProxy : products) {
+            if (isEnoughProducts(productCount)) break;
+            productCount++;
+            Product product = productRepository.findById(productProxy.getId())
+                    .orElseThrow(() -> new NoResultException("product doesn't exist"));
+            productDtos.add(ResponseMallRankProductDto.builder()
+                    .productId(product.getId())
+                    .productImage(product.getImage())
+                    .build());
+        }
+    }
+
+    private static boolean isEnoughProducts(int count) {
         return count >= MAX_PRODUCT_COUNT;
     }
 }

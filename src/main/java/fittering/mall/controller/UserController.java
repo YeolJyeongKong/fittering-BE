@@ -1,8 +1,9 @@
 package fittering.mall.controller;
 
-import fittering.mall.domain.dto.controller.request.*;
-import fittering.mall.domain.dto.controller.response.*;
-import fittering.mall.domain.dto.service.MeasurementDto;
+import fittering.mall.controller.dto.request.*;
+import fittering.mall.controller.dto.response.*;
+import fittering.mall.domain.collection.Products;
+import fittering.mall.service.dto.MeasurementDto;
 import fittering.mall.domain.mapper.MeasurementMapper;
 import fittering.mall.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +28,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import fittering.mall.config.auth.PrincipalDetails;
-import fittering.mall.domain.entity.Product;
 import fittering.mall.service.FavoriteService;
 import fittering.mall.service.ProductService;
 import fittering.mall.service.UserService;
@@ -244,12 +244,10 @@ public class UserController {
 
     @Cacheable(value = "recommendation", key = "#userId")
     public List<Long> findRecommendedProductIds(Long userId) {
-        List<Long> productIds = new ArrayList<>();
-        List<Product> recommendedProducts = productService.productWithRecentRecommendation(userId);
+        Products recommendedProducts = productService.productWithRecentRecommendation(userId);
 
         if(!recommendedProducts.isEmpty()) {
-            getRecommendedProductIds(productIds, recommendedProducts);
-            return productIds;
+            return new ArrayList<>(recommendedProducts.getProductIds());
         }
 
         URI uri = UriComponentsBuilder.fromUriString(ML_PRODUCT_RECOMMENDATION_API)
@@ -257,7 +255,7 @@ public class UserController {
                 .toUri();
         RequestRecommendProductDto requestRecommendProductDto = userService.recentProductIds(userId);
         ResponseRecommendProductDto responseMeasurementDto = restTemplate.postForObject(uri, requestRecommendProductDto, ResponseRecommendProductDto.class);
-        productIds = responseMeasurementDto.getProduct_ids();
+        List<Long> productIds = responseMeasurementDto.getProduct_ids();
 
         productIds.forEach(productId -> {
             productService.saveRecentRecommendation(userId, productId);
@@ -286,12 +284,10 @@ public class UserController {
 
     @Cacheable(value = "recommendationOnPick", key = "#userId")
     public List<Long> findRecommendedProductIdsOnPick(Long userId) {
-        List<Long> productIds = new ArrayList<>();
-        List<Product> recommendedProducts = productService.productWithUserRecommendation(userId);
+        Products recommendedProducts = productService.productWithUserRecommendation(userId);
 
         if (!recommendedProducts.isEmpty()) {
-            getRecommendedProductIds(productIds, recommendedProducts);
-            return productIds;
+            return new ArrayList<>(recommendedProducts.getProductIds());
         }
 
         URI uri = UriComponentsBuilder.fromUriString(ML_PRODUCT_RECOMMENDATION_WITH_MEASUREMENT_API)
@@ -301,7 +297,7 @@ public class UserController {
                 .user_id(userId)
                 .build();
         ResponseRecommendProductOnUserDto responseRecommendProductOnUserDto = restTemplate.postForObject(uri, requestRecommendProductOnUserDto, ResponseRecommendProductOnUserDto.class);
-        productIds = responseRecommendProductOnUserDto.getProduct_ids();
+        List<Long> productIds = responseRecommendProductOnUserDto.getProduct_ids();
 
         productIds.forEach(productId -> {
             productService.saveUserRecommendation(userId, productId);
@@ -336,10 +332,8 @@ public class UserController {
         return new ResponseEntity<>("즐겨찾기 삭제 완료", HttpStatus.OK);
     }
 
-    private static void getRecommendedProductIds(List<Long> productIds, List<Product> recommendedProducts) {
-        for (Product recommendedProduct : recommendedProducts) {
-            productIds.add(recommendedProduct.getId());
-        }
+    private static void getRecommendedProductIds(List<Long> productIds, Products recommendedProducts) {
+
     }
 
     private void saveSilhouetteFileNameInCache(Long userId, boolean isFront, String savedFileName) {

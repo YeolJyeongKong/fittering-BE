@@ -1,6 +1,5 @@
 package fittering.mall.domain.entity;
 
-import fittering.mall.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
