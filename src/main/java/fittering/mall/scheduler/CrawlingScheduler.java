@@ -21,13 +21,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CrawlingScheduler {
 
-    private final KafkaProducer kafkaProducer;
-    private final RestTemplate restTemplate;
+    private final int TWO_WEEK = 1000 * 60 * 60 * 24 * 14;
 
     @Value("${ML.API.PRODUCT.ENCODE}")
     private String ML_VECTOR_UPDATE_API;
 
-    private final int TWO_WEEK = 1000 * 60 * 60 * 24 * 14;
+    private final KafkaProducer kafkaProducer;
+    private final RestTemplate restTemplate;
 
     @Scheduled(fixedDelay = TWO_WEEK)
     public void updateCrawledProducts() throws JsonProcessingException {

@@ -9,8 +9,9 @@ import fittering.mall.service.UserService;
 @RequiredArgsConstructor
 public class RecentScheduler {
 
-    private final UserService userService;
     private final int day = 1000 * 60 * 60 * 24;
+
+    private final UserService userService;
 
     @Scheduled(fixedDelay = day)
     public void updateRecentLastInitializedAt() {

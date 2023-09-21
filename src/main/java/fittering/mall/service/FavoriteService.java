@@ -29,6 +29,7 @@ import java.util.List;
 public class FavoriteService {
 
     private static final int MAX_PRODUCT_COUNT = 5;
+
     private final FavoriteRepository favoriteRepository;
     private final MallRepository mallRepository;
     private final ProductRepository productRepository;

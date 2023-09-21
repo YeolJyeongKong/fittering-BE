@@ -19,7 +19,6 @@ import fittering.mall.domain.RestPage;
 import fittering.mall.domain.entity.*;
 import fittering.mall.repository.*;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -34,6 +33,9 @@ public class ProductService {
 
     private static final int MAX_PREVIEW_PRODUCT_COUNT = 4;
     private static final LocalDateTime DEFAULT_TIME = LocalDateTime.of(2000, 1, 1, 0, 0, 0, 0);
+
+    @Value("${cloud.aws.cloudfront.url}")
+    private String CLOUDFRONT_URL;
 
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
@@ -51,9 +53,6 @@ public class ProductService {
     private final FavoriteRepository favoriteRepository;
     private final RedisService redisService;
     private final S3Service s3Service;
-
-    @Value("${cloud.aws.cloudfront.url}")
-    private String CLOUDFRONT_URL;
 
     @Transactional
     public Product save(Product product) {

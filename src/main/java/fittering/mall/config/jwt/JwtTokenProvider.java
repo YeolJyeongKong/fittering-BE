@@ -21,6 +21,7 @@ public class JwtTokenProvider {
 
     private String secretKey = "fittering-secret-key";
     private long tokenValidTime = 60 * 60 * 1000L; //토큰 유효시간
+
     private final UserDetailsService userDetailsService;
 
     @PostConstruct

@@ -15,5 +15,5 @@ public class KafkaProductResponse {
     private CrawledProductDto product;
     private CrawledMallDto mall;
     private List<CrawledSizeDto> size;
-    private List<String> imagepath;
+    private List<String> imagePath;
 }

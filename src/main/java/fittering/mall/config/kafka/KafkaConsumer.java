@@ -52,7 +52,7 @@ public class KafkaConsumer {
         CrawledProductDto product = productResponse.getProduct();
         CrawledMallDto mall = productResponse.getMall();
         List<CrawledSizeDto> sizes = productResponse.getSize();
-        List<String> imagePaths = productResponse.getImagepath();
+        List<String> imagePaths = productResponse.getImagePath();
         productService.updateCrawledProducts(product, mall, sizes, imagePaths);
     }
 
@@ -66,7 +66,7 @@ public class KafkaConsumer {
                 .product(productDto)
                 .mall(mallDto)
                 .size(sizeDtos)
-                .imagepath(imagePaths)
+                .imagePath(imagePaths)
                 .build();
     }
 

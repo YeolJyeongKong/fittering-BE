@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/swagger-ui")
 public class SwaggerController {
+
     @GetMapping(path = "/swagger-ui.css", produces = "text/css")
     public String getCss() {
         String origin = toText(getClass().getResourceAsStream("/META-INF/resources/webjars/swagger-ui/4.18.2/swagger-ui.css"));

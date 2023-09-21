@@ -23,7 +23,6 @@ import static java.nio.charset.StandardCharsets.*;
 @RequiredArgsConstructor
 public class S3Service {
 
-    private final AmazonS3 amazonS3;
     private static final String IMAGE_CONTENT_TYPE = "image/*";
 
     @Value("${cloud.aws.s3.bucket.crawling}")
@@ -34,6 +33,8 @@ public class S3Service {
     private String bodyBucket;
     @Value("${cloud.aws.s3.bucket.silhouette}")
     private String silhouetteBucket;
+
+    private final AmazonS3 amazonS3;
 
     public String saveObject(MultipartFile file, Long userId, String bucket) throws IOException {
         if (bucket.equals("crawling")) {
