@@ -138,7 +138,7 @@ public class ProductController {
 
     @Operation(summary = "쇼핑몰 카테고리별 상품 조회 (소분류)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
-    @GetMapping("/malls/{mallId}/{subCategoryId}/{gender}/{filterId}")
+    @GetMapping("/malls/sub/{mallId}/{subCategoryId}/{gender}/{filterId}")
     public ResponseEntity<?> productWithSubCategoryOfMall(@PathVariable("mallId") @NotEmpty Long mallId,
                                                           @PathVariable("subCategoryId") @NotEmpty Long subCategoryId,
                                                           @PathVariable("gender") @NotEmpty String gender,
