@@ -1,6 +1,6 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
 import fittering.mall.repository.MallRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;

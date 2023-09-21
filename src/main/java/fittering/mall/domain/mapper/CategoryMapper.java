@@ -1,6 +1,6 @@
 package fittering.mall.domain.mapper;
 
-import fittering.mall.domain.dto.controller.response.ResponseProductCategoryDto;
+import fittering.mall.controller.dto.response.ResponseProductCategoryDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

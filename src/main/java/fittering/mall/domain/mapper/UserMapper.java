@@ -1,13 +1,13 @@
 package fittering.mall.domain.mapper;
 
-import fittering.mall.domain.dto.controller.request.RequestUserDto;
-import fittering.mall.domain.dto.controller.response.ResponseUserDto;
-import fittering.mall.domain.dto.service.UserDto;
-import fittering.mall.domain.dto.controller.request.RequestLoginDto;
-import fittering.mall.domain.dto.repository.SavedUserDto;
-import fittering.mall.domain.dto.service.SignUpDto;
-import fittering.mall.domain.dto.service.LoginDto;
-import fittering.mall.domain.dto.controller.request.RequestSignUpDto;
+import fittering.mall.controller.dto.request.RequestUserDto;
+import fittering.mall.controller.dto.response.ResponseUserDto;
+import fittering.mall.service.dto.UserDto;
+import fittering.mall.controller.dto.request.RequestLoginDto;
+import fittering.mall.repository.dto.SavedUserDto;
+import fittering.mall.service.dto.SignUpDto;
+import fittering.mall.service.dto.LoginDto;
+import fittering.mall.controller.dto.request.RequestSignUpDto;
 import fittering.mall.domain.entity.Measurement;
 import fittering.mall.domain.entity.User;
 import org.mapstruct.Mapper;

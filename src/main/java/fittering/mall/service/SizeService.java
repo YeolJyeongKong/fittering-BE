@@ -4,10 +4,10 @@ import fittering.mall.domain.mapper.SizeMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import fittering.mall.domain.dto.service.BottomDto;
-import fittering.mall.domain.dto.service.DressDto;
-import fittering.mall.domain.dto.service.OuterDto;
-import fittering.mall.domain.dto.service.TopDto;
+import fittering.mall.service.dto.BottomDto;
+import fittering.mall.service.dto.DressDto;
+import fittering.mall.service.dto.OuterDto;
+import fittering.mall.service.dto.TopDto;
 import fittering.mall.domain.entity.*;
 import fittering.mall.repository.*;
 

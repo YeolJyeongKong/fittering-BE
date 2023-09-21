@@ -1,7 +1,7 @@
 package fittering.mall.controller;
 
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
-import fittering.mall.domain.dto.controller.response.ResponseRelatedSearchDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
+import fittering.mall.controller.dto.response.ResponseRelatedSearchDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

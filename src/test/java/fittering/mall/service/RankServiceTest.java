@@ -1,9 +1,9 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
-import fittering.mall.domain.dto.service.MallDto;
-import fittering.mall.domain.dto.service.SignUpDto;
+import fittering.mall.controller.dto.response.ResponseMallWithProductDto;
+import fittering.mall.controller.dto.response.ResponseMallRankProductDto;
+import fittering.mall.service.dto.MallDto;
+import fittering.mall.service.dto.SignUpDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,8 +1,8 @@
 package fittering.mall.service;
 
 import fittering.mall.domain.collection.Products;
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
-import fittering.mall.domain.dto.service.SignUpDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
+import fittering.mall.service.dto.SignUpDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.RestPage;
-import fittering.mall.domain.dto.service.MallDto;
+import fittering.mall.service.dto.MallDto;
 import fittering.mall.domain.entity.*;
 
 import java.util.ArrayList;

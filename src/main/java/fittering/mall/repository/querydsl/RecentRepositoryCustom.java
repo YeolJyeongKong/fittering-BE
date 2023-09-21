@@ -1,6 +1,6 @@
 package fittering.mall.repository.querydsl;
 
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import fittering.mall.domain.entity.Recent;

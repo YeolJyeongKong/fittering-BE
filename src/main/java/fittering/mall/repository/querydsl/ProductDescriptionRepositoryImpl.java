@@ -1,8 +1,8 @@
 package fittering.mall.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import fittering.mall.domain.dto.service.ProductDescriptionDto;
-import fittering.mall.domain.dto.service.QProductDescriptionDto;
+import fittering.mall.service.dto.ProductDescriptionDto;
+import fittering.mall.service.dto.QProductDescriptionDto;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;

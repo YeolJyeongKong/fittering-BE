@@ -1,9 +1,9 @@
 package fittering.mall.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import fittering.mall.domain.dto.repository.QSavedMallPreviewDto;
-import fittering.mall.domain.dto.repository.SavedMallPreviewDto;
-import fittering.mall.domain.dto.service.MallPreviewDto;
+import fittering.mall.repository.dto.QSavedMallPreviewDto;
+import fittering.mall.repository.dto.SavedMallPreviewDto;
+import fittering.mall.service.dto.MallPreviewDto;
 import fittering.mall.domain.mapper.MallMapper;
 import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;

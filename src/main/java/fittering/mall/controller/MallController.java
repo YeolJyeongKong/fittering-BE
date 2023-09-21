@@ -1,7 +1,10 @@
 package fittering.mall.controller;
 
-import fittering.mall.domain.dto.controller.request.RequestMallDto;
-import fittering.mall.domain.dto.controller.response.*;
+import fittering.mall.controller.dto.request.RequestMallDto;
+import fittering.mall.controller.dto.response.ResponseMallDto;
+import fittering.mall.controller.dto.response.ResponseMallNameAndIdDto;
+import fittering.mall.controller.dto.response.ResponseMallPreviewDto;
+import fittering.mall.controller.dto.response.ResponseMallWithProductDto;
 import fittering.mall.domain.mapper.MallMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

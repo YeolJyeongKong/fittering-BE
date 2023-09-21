@@ -1,9 +1,10 @@
 package fittering.mall.controller;
 
-import fittering.mall.domain.dto.controller.request.RequestProductDetailDto;
-import fittering.mall.domain.dto.controller.response.*;
+import fittering.mall.controller.dto.request.RequestProductDetailDto;
+import fittering.mall.controller.dto.response.*;
 import fittering.mall.domain.mapper.ProductMapper;
 import fittering.mall.domain.mapper.SizeMapper;
+import fittering.mall.service.dto.ProductParamDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -84,7 +85,12 @@ public class ProductController {
                                                  @PathVariable("gender") @NotEmpty String gender,
                                                  @PathVariable("filterId") @NotEmpty Long filterId,
                                                  Pageable pageable) {
-        Page<ResponseProductPreviewDto> products = productService.productWithCategory(categoryId, gender, filterId, pageable);
+        ProductParamDto productParamDto = ProductParamDto.builder()
+                .categoryId(categoryId)
+                .gender(gender)
+                .filterId(filterId)
+                .build();
+        Page<ResponseProductPreviewDto> products = productService.productWithCategory(productParamDto, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -95,7 +101,12 @@ public class ProductController {
                                                     @PathVariable("gender") @NotEmpty String gender,
                                                     @PathVariable("filterId") @NotEmpty Long filterId,
                                                     Pageable pageable) {
-        Page<ResponseProductPreviewDto> products = productService.productWithSubCategory(subCategoryId, gender, filterId, pageable);
+        ProductParamDto productParamDto = ProductParamDto.builder()
+                .subCategoryId(subCategoryId)
+                .gender(gender)
+                .filterId(filterId)
+                .build();
+        Page<ResponseProductPreviewDto> products = productService.productWithSubCategory(productParamDto, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -115,9 +126,13 @@ public class ProductController {
                                                        @PathVariable("gender") @NotEmpty String gender,
                                                        @PathVariable("filterId") @NotEmpty Long filterId,
                                                        Pageable pageable) {
-        Page<ResponseProductPreviewDto> products = productService.productWithCategoryOfMall(
-                mallId, categoryId, gender, filterId, pageable
-        );
+        ProductParamDto productParamDto = ProductParamDto.builder()
+                .mallId(mallId)
+                .categoryId(categoryId)
+                .gender(gender)
+                .filterId(filterId)
+                .build();
+        Page<ResponseProductPreviewDto> products = productService.productWithCategoryOfMall(productParamDto, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -129,9 +144,13 @@ public class ProductController {
                                                           @PathVariable("gender") @NotEmpty String gender,
                                                           @PathVariable("filterId") @NotEmpty Long filterId,
                                                           Pageable pageable) {
-        Page<ResponseProductPreviewDto> products = productService.productWithSubCategoryOfMall(
-                mallId, subCategoryId, gender, filterId, pageable
-        );
+        ProductParamDto productParamDto = ProductParamDto.builder()
+                .mallId(mallId)
+                .subCategoryId(subCategoryId)
+                .gender(gender)
+                .filterId(filterId)
+                .build();
+        Page<ResponseProductPreviewDto> products = productService.productWithSubCategoryOfMall(productParamDto, pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

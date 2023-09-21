@@ -1,7 +1,6 @@
 package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fittering.mall.domain.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -9,7 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
-import fittering.mall.domain.dto.service.UserDto;
+import fittering.mall.service.dto.UserDto;
 
 import java.time.Duration;
 import java.time.LocalDate;

@@ -1,9 +1,9 @@
 package fittering.mall.domain.mapper;
 
-import fittering.mall.domain.dto.service.MeasurementDto;
-import fittering.mall.domain.dto.controller.request.RequestMeasurementDto;
-import fittering.mall.domain.dto.controller.response.ResponseMeasurementDto;
-import fittering.mall.domain.dto.repository.SavedMeasurementDto;
+import fittering.mall.service.dto.MeasurementDto;
+import fittering.mall.controller.dto.request.RequestMeasurementDto;
+import fittering.mall.controller.dto.response.ResponseMeasurementDto;
+import fittering.mall.repository.dto.SavedMeasurementDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

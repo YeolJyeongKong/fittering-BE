@@ -1,12 +1,13 @@
 package fittering.mall.service;
 
 import fittering.mall.domain.collection.Products;
-import fittering.mall.domain.dto.controller.response.ResponseBottomDto;
-import fittering.mall.domain.dto.controller.response.ResponseProductCategoryDto;
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
-import fittering.mall.domain.dto.controller.response.ResponseTopDto;
-import fittering.mall.domain.dto.service.MallDto;
-import fittering.mall.domain.dto.service.SignUpDto;
+import fittering.mall.controller.dto.response.ResponseBottomDto;
+import fittering.mall.controller.dto.response.ResponseProductCategoryDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
+import fittering.mall.controller.dto.response.ResponseTopDto;
+import fittering.mall.service.dto.MallDto;
+import fittering.mall.service.dto.ProductParamDto;
+import fittering.mall.service.dto.SignUpDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -155,8 +156,13 @@ class ProductServiceTest {
 
     @Test
     void productWithCategory() {
+        ProductParamDto productParamDto = ProductParamDto.builder()
+                .categoryId(topCategory.getId())
+                .gender("M")
+                .filterId(0L)
+                .build();
         Page<ResponseProductPreviewDto> findProductByCategory =
-                productService.productWithCategory(topCategory.getId(), "M", 0L, PageRequest.of(0, 10));
+                productService.productWithCategory(productParamDto, PageRequest.of(0, 10));
         compareProduct(product, findProductByCategory.getContent().get(4));
         compareProduct(product2, findProductByCategory.getContent().get(3));
         compareProduct(product3, findProductByCategory.getContent().get(2));
@@ -166,8 +172,14 @@ class ProductServiceTest {
 
     @Test
     void productWithCategoryOfMall() {
+        ProductParamDto productParamDto = ProductParamDto.builder()
+                .mallId(mall.getId())
+                .categoryId(topCategory.getId())
+                .gender("M")
+                .filterId(0L)
+                .build();
         Page<ResponseProductPreviewDto> findProductByCategoryOfMall =
-                productService.productWithCategoryOfMall(mall.getId(), topCategory.getId(), "M", 0L, PageRequest.of(0, 10));
+                productService.productWithCategoryOfMall(productParamDto, PageRequest.of(0, 10));
         compareProduct(product, findProductByCategoryOfMall.getContent().get(4));
         compareProduct(product2, findProductByCategoryOfMall.getContent().get(3));
         compareProduct(product3, findProductByCategoryOfMall.getContent().get(2));

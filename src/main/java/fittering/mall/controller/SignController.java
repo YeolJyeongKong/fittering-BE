@@ -1,7 +1,7 @@
 package fittering.mall.controller;
 
-import fittering.mall.domain.dto.controller.request.RequestLoginDto;
-import fittering.mall.domain.dto.controller.request.RequestSignUpDto;
+import fittering.mall.controller.dto.request.RequestLoginDto;
+import fittering.mall.controller.dto.request.RequestSignUpDto;
 import fittering.mall.domain.mapper.UserMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import fittering.mall.config.jwt.JwtTokenProvider;
-import fittering.mall.domain.dto.service.SignUpDto;
+import fittering.mall.service.dto.SignUpDto;
 import fittering.mall.domain.entity.User;
 import fittering.mall.service.UserService;
 

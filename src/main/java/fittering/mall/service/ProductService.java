@@ -3,12 +3,13 @@ package fittering.mall.service;
 import fittering.mall.config.kafka.domain.dto.CrawledMallDto;
 import fittering.mall.config.kafka.domain.dto.CrawledProductDto;
 import fittering.mall.config.kafka.domain.dto.CrawledSizeDto;
+import fittering.mall.controller.dto.response.*;
 import fittering.mall.domain.collection.Products;
-import fittering.mall.domain.dto.controller.response.*;
 import fittering.mall.domain.mapper.CategoryMapper;
 import fittering.mall.domain.mapper.MallMapper;
 import fittering.mall.domain.mapper.ProductMapper;
 import fittering.mall.domain.mapper.SizeMapper;
+import fittering.mall.service.dto.ProductParamDto;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -66,30 +67,41 @@ public class ProductService {
     }
 
     @Cacheable(value = "Product", key = "'0_' + #categoryId + '_' + #gender + '_' + #filterId + '_' + #pageable.pageNumber")
-    public RestPage<ResponseProductPreviewDto> productWithCategory(Long categoryId, String gender, Long filterId, Pageable pageable) {
+    public RestPage<ResponseProductPreviewDto> productWithCategory(ProductParamDto productParamDto, Pageable pageable) {
+        Long categoryId = productParamDto.getCategoryId();
+        String gender = productParamDto.getGender();
+        Long filterId = productParamDto.getFilterId();
         return new RestPage<>(productRepository.productWithCategory(null, categoryId, gender, filterId, pageable));
     }
 
     @Cacheable(value = "Product", key = "'1_' + #subCategoryId + '_' + #gender + '_' + #filterId + '_' + #pageable.pageNumber")
-    public RestPage<ResponseProductPreviewDto> productWithSubCategory(Long subCategoryId, String gender, Long filterId, Pageable pageable) {
+    public RestPage<ResponseProductPreviewDto> productWithSubCategory(ProductParamDto productParamDto, Pageable pageable) {
+        Long subCategoryId = productParamDto.getSubCategoryId();
+        String gender = productParamDto.getGender();
+        Long filterId = productParamDto.getFilterId();
         return new RestPage<>(productRepository.productWithSubCategory(null, subCategoryId, gender, filterId, pageable));
     }
 
     @Cacheable(value = "MallProduct", key = "#mallId + '_' + #categoryId + '_' + #gender + '_' + #filterId +  '_' + #pageable.pageNumber")
-    public RestPage<ResponseProductPreviewDto> productWithCategoryOfMall(Long mallId, Long categoryId, String gender,
-                                                             Long filterId, Pageable pageable) {
+    public RestPage<ResponseProductPreviewDto> productWithCategoryOfMall(ProductParamDto productParamDto, Pageable pageable) {
+        Long mallId = productParamDto.getMallId();
+        Long categoryId = productParamDto.getCategoryId();
+        String gender = productParamDto.getGender();
+        Long filterId = productParamDto.getFilterId();
         return new RestPage<>(productRepository.productWithCategory(mallId, categoryId, gender, filterId, pageable));
     }
 
     @Cacheable(value = "MallProduct", key = "'sub_' + #mallId + '_' + #subCategoryId + '_' + #gender + '_' + #filterId +  '_' + #pageable.pageNumber")
-    public RestPage<ResponseProductPreviewDto> productWithSubCategoryOfMall(Long mallId, Long subCategoryId, String gender,
-                                                                            Long filterId, Pageable pageable) {
+    public RestPage<ResponseProductPreviewDto> productWithSubCategoryOfMall(ProductParamDto productParamDto, Pageable pageable) {
+        Long mallId = productParamDto.getMallId();
+        Long subCategoryId = productParamDto.getSubCategoryId();
+        String gender = productParamDto.getGender();
+        Long filterId = productParamDto.getFilterId();
         return new RestPage<>(productRepository.productWithSubCategory(mallId, subCategoryId, gender, filterId, pageable));
     }
 
     @Cacheable(value = "Product", key = "'count'")
     public List<ResponseProductCategoryDto> multipleProductCountWithCategory() {
-
         List<ResponseProductCategoryDto> productCategoryDtos = new ArrayList<>();
 
         categoryRepository.findAll().forEach(category -> {
@@ -295,7 +307,12 @@ public class ProductService {
         synchronizeProduct(productDto, sizeDtos, imagePaths, category, subCategory, mall);
     }
 
-    private void synchronizeProduct(CrawledProductDto productDto, List<CrawledSizeDto> sizeDtos, List<String> imagePaths, Category category, SubCategory subCategory, Mall mall) {
+    private void synchronizeProduct(CrawledProductDto productDto,
+                                    List<CrawledSizeDto> sizeDtos,
+                                    List<String> imagePaths,
+                                    Category category,
+                                    SubCategory subCategory,
+                                    Mall mall) {
         String thumbnail = CLOUDFRONT_URL + imagePaths.get(0);
         Product product = save(ProductMapper.INSTANCE.toProduct(
                 productDto, thumbnail, 0, 0, category, subCategory, mall));

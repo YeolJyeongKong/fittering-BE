@@ -1,9 +1,9 @@
 package fittering.mall.controller;
 
+import fittering.mall.controller.dto.request.*;
+import fittering.mall.controller.dto.response.*;
 import fittering.mall.domain.collection.Products;
-import fittering.mall.domain.dto.controller.request.*;
-import fittering.mall.domain.dto.controller.response.*;
-import fittering.mall.domain.dto.service.MeasurementDto;
+import fittering.mall.service.dto.MeasurementDto;
 import fittering.mall.domain.mapper.MeasurementMapper;
 import fittering.mall.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +28,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import fittering.mall.config.auth.PrincipalDetails;
-import fittering.mall.domain.entity.Product;
 import fittering.mall.service.FavoriteService;
 import fittering.mall.service.ProductService;
 import fittering.mall.service.UserService;

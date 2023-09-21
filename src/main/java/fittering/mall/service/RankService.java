@@ -1,8 +1,8 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallPreviewDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
+import fittering.mall.controller.dto.response.ResponseMallWithProductDto;
+import fittering.mall.controller.dto.response.ResponseMallPreviewDto;
+import fittering.mall.controller.dto.response.ResponseMallRankProductDto;
 import fittering.mall.domain.mapper.MallMapper;
 import fittering.mall.repository.*;
 import jakarta.persistence.NoResultException;
@@ -10,7 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import fittering.mall.domain.dto.service.MallPreviewDto;
+import fittering.mall.service.dto.MallPreviewDto;
 import fittering.mall.domain.entity.*;
 
 import java.util.ArrayList;

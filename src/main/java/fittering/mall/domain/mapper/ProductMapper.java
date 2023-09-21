@@ -1,9 +1,9 @@
 package fittering.mall.domain.mapper;
 
 import fittering.mall.config.kafka.domain.dto.CrawledProductDto;
-import fittering.mall.domain.dto.controller.request.RequestProductDetailDto;
-import fittering.mall.domain.dto.controller.response.ResponseProductDescriptionDto;
-import fittering.mall.domain.dto.service.ProductDescriptionDto;
+import fittering.mall.controller.dto.request.RequestProductDetailDto;
+import fittering.mall.controller.dto.response.ResponseProductDescriptionDto;
+import fittering.mall.service.dto.ProductDescriptionDto;
 import fittering.mall.domain.entity.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

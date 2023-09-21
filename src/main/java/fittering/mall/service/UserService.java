@@ -1,13 +1,13 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.request.RequestRecommendProductDto;
-import fittering.mall.domain.dto.controller.request.RequestUserDto;
-import fittering.mall.domain.dto.controller.response.ResponseMeasurementDto;
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
-import fittering.mall.domain.dto.controller.response.ResponseUserDto;
-import fittering.mall.domain.dto.service.LoginDto;
-import fittering.mall.domain.dto.service.MeasurementDto;
-import fittering.mall.domain.dto.service.SignUpDto;
+import fittering.mall.controller.dto.request.RequestRecommendProductDto;
+import fittering.mall.controller.dto.request.RequestUserDto;
+import fittering.mall.controller.dto.response.ResponseMeasurementDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
+import fittering.mall.controller.dto.response.ResponseUserDto;
+import fittering.mall.service.dto.LoginDto;
+import fittering.mall.service.dto.MeasurementDto;
+import fittering.mall.service.dto.SignUpDto;
 import fittering.mall.domain.mapper.MeasurementMapper;
 import fittering.mall.domain.mapper.UserMapper;
 import jakarta.persistence.NoResultException;

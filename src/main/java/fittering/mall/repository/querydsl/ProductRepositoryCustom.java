@@ -1,10 +1,10 @@
 package fittering.mall.repository.querydsl;
 
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
-import fittering.mall.domain.dto.service.BottomProductDto;
-import fittering.mall.domain.dto.service.DressProductDto;
-import fittering.mall.domain.dto.service.OuterProductDto;
-import fittering.mall.domain.dto.service.TopProductDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
+import fittering.mall.service.dto.BottomProductDto;
+import fittering.mall.service.dto.DressProductDto;
+import fittering.mall.service.dto.OuterProductDto;
+import fittering.mall.service.dto.TopProductDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

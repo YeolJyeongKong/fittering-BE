@@ -1,14 +1,12 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.response.ResponseMallWithProductDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallRankProductDto;
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
+import fittering.mall.controller.dto.response.ResponseMallWithProductDto;
+import fittering.mall.controller.dto.response.ResponseMallRankProductDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
 import fittering.mall.domain.mapper.MallMapper;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import fittering.mall.domain.RestPage;

@@ -1,16 +1,16 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.controller.response.ResponseMallDto;
-import fittering.mall.domain.dto.controller.response.ResponseMallNameAndIdDto;
-import fittering.mall.domain.dto.controller.response.ResponseProductPreviewDto;
-import fittering.mall.domain.dto.service.MallNameAndIdDto;
+import fittering.mall.controller.dto.response.ResponseMallDto;
+import fittering.mall.controller.dto.response.ResponseMallNameAndIdDto;
+import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
+import fittering.mall.service.dto.MallNameAndIdDto;
 import fittering.mall.domain.mapper.MallMapper;
 import fittering.mall.repository.FavoriteRepository;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import fittering.mall.domain.dto.service.MallDto;
+import fittering.mall.service.dto.MallDto;
 import fittering.mall.domain.entity.Mall;
 import fittering.mall.domain.entity.Product;
 import fittering.mall.repository.MallRepository;

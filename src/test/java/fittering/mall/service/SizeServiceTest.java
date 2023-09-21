@@ -1,8 +1,8 @@
 package fittering.mall.service;
 
-import fittering.mall.domain.dto.service.BottomDto;
-import fittering.mall.domain.dto.service.MallDto;
-import fittering.mall.domain.dto.service.TopDto;
+import fittering.mall.service.dto.BottomDto;
+import fittering.mall.service.dto.MallDto;
+import fittering.mall.service.dto.TopDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
