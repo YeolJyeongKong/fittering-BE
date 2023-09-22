@@ -19,15 +19,15 @@ public class Measurement extends BaseEntity {
     @Column(name = "measurement_id")
     private Long id;
 
-    private Integer height;
-    private Integer weight;
-    private Integer arm;
-    private Integer leg;
-    private Integer shoulder;
-    private Integer waist;
-    private Integer chest;
-    private Integer thigh;
-    private Integer hip;
+    private Double height;
+    private Double weight;
+    private Double arm;
+    private Double leg;
+    private Double shoulder;
+    private Double waist;
+    private Double chest;
+    private Double thigh;
+    private Double hip;
 
     @JsonIgnore
     @OneToOne(mappedBy = "measurement", fetch = LAZY)
