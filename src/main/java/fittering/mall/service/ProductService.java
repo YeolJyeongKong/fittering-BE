@@ -66,7 +66,7 @@ public class ProductService {
                 .orElseThrow(() -> new NoResultException("product dosen't exist"));
     }
 
-    @Cacheable(value = "Product", key = "'0_' + #categoryId + '_' + #gender + '_' + #filterId + '_' + #pageable.pageNumber")
+    @Cacheable(value = "Product", key = "'0_' + #productParamDto.categoryId + '_' + #productParamDto.gender + '_' + #productParamDto.filterId + '_' + #pageable.pageNumber")
     public RestPage<ResponseProductPreviewDto> productWithCategory(ProductParamDto productParamDto, Pageable pageable) {
         Long categoryId = productParamDto.getCategoryId();
         String gender = productParamDto.getGender();
@@ -74,7 +74,7 @@ public class ProductService {
         return new RestPage<>(productRepository.productWithCategory(null, categoryId, gender, filterId, pageable));
     }
 
-    @Cacheable(value = "Product", key = "'1_' + #subCategoryId + '_' + #gender + '_' + #filterId + '_' + #pageable.pageNumber")
+    @Cacheable(value = "Product", key = "'1_' + #productParamDto.subCategoryId + '_' + #productParamDto.gender + '_' + #productParamDto.filterId + '_' + #pageable.pageNumber")
     public RestPage<ResponseProductPreviewDto> productWithSubCategory(ProductParamDto productParamDto, Pageable pageable) {
         Long subCategoryId = productParamDto.getSubCategoryId();
         String gender = productParamDto.getGender();
@@ -82,7 +82,7 @@ public class ProductService {
         return new RestPage<>(productRepository.productWithSubCategory(null, subCategoryId, gender, filterId, pageable));
     }
 
-    @Cacheable(value = "MallProduct", key = "#mallId + '_' + #categoryId + '_' + #gender + '_' + #filterId +  '_' + #pageable.pageNumber")
+    @Cacheable(value = "MallProduct", key = "#productParamDto.mallId + '_' + #productParamDto.categoryId + '_' + #productParamDto.gender + '_' + #productParamDto.filterId +  '_' + #pageable.pageNumber")
     public RestPage<ResponseProductPreviewDto> productWithCategoryOfMall(ProductParamDto productParamDto, Pageable pageable) {
         Long mallId = productParamDto.getMallId();
         Long categoryId = productParamDto.getCategoryId();
@@ -91,7 +91,7 @@ public class ProductService {
         return new RestPage<>(productRepository.productWithCategory(mallId, categoryId, gender, filterId, pageable));
     }
 
-    @Cacheable(value = "MallProduct", key = "'sub_' + #mallId + '_' + #subCategoryId + '_' + #gender + '_' + #filterId +  '_' + #pageable.pageNumber")
+    @Cacheable(value = "MallProduct", key = "'sub_' + #productParamDto.mallId + '_' + #productParamDto.subCategoryId + '_' + #productParamDto.gender + '_' + #productParamDto.filterId +  '_' + #pageable.pageNumber")
     public RestPage<ResponseProductPreviewDto> productWithSubCategoryOfMall(ProductParamDto productParamDto, Pageable pageable) {
         Long mallId = productParamDto.getMallId();
         Long subCategoryId = productParamDto.getSubCategoryId();
