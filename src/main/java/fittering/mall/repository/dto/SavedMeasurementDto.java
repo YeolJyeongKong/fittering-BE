@@ -9,19 +9,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 public class SavedMeasurementDto {
-    private Integer height;
-    private Integer weight;
-    private Integer arm;
-    private Integer leg;
-    private Integer shoulder;
-    private Integer waist;
-    private Integer chest;
-    private Integer thigh;
-    private Integer hip;
+    private Double height;
+    private Double weight;
+    private Double arm;
+    private Double leg;
+    private Double shoulder;
+    private Double waist;
+    private Double chest;
+    private Double thigh;
+    private Double hip;
 
     @QueryProjection
-    public SavedMeasurementDto(Integer height, Integer weight, Integer arm, Integer leg, Integer shoulder,
-                               Integer waist, Integer chest, Integer thigh, Integer hip) {
+    public SavedMeasurementDto(Double height, Double weight, Double arm, Double leg, Double shoulder,
+                               Double waist, Double chest, Double thigh, Double hip) {
         this.height = height;
         this.weight = weight;
         this.arm = arm;
