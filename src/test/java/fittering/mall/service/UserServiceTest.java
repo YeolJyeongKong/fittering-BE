@@ -145,7 +145,17 @@ class UserServiceTest {
         ResponseMeasurementDto measurement = userService.measurementInfo(user.getId());
         measurementCheck(measurement, new ResponseMeasurementDto());
 
-        MeasurementDto newMeasurment = new MeasurementDto(200, 100, 100, 120, 100, 99, 98, 80, 76);
+        MeasurementDto newMeasurment = MeasurementDto.builder()
+                        .height(200.0)
+                        .weight(100.0)
+                        .arm(100.0)
+                        .leg(120.0)
+                        .shoulder(100.0)
+                        .waist(99.0)
+                        .chest(98.0)
+                        .thigh(80.0)
+                        .hip(76.0)
+                        .build();
         userService.measurementUpdate(newMeasurment, user.getId());
 
         measurementCheck(MeasurementMapper.INSTANCE.toResponseMeasurementDto(newMeasurment),
