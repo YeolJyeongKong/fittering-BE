@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -23,28 +24,33 @@ public class KafkaConsumer {
     private final ProductService productService;
 
     @KafkaListener(topics = "crawling-topic-0", groupId = "crawl-group-id")
-    public void consumeCrawledProductsV0(String productJson) {
+    public void consumeCrawledProductsV0(String productJson, Acknowledgment acknowledgment) {
         updateCrawledProductsProduct(productJson);
+        acknowledgment.acknowledge();
     }
 
     @KafkaListener(topics = "crawling-topic-1", groupId = "crawl-group-id")
-    public void consumeCrawledProductsV1(String productJson) {
+    public void consumeCrawledProductsV1(String productJson, Acknowledgment acknowledgment) {
         updateCrawledProductsProduct(productJson);
+        acknowledgment.acknowledge();
     }
 
     @KafkaListener(topics = "crawling-topic-2", groupId = "crawl-group-id")
-    public void consumeCrawledProductsV2(String productJson) {
+    public void consumeCrawledProductsV2(String productJson, Acknowledgment acknowledgment) {
         updateCrawledProductsProduct(productJson);
+        acknowledgment.acknowledge();
     }
 
     @KafkaListener(topics = "crawling-topic-3", groupId = "crawl-group-id")
-    public void consumeCrawledProductsV3(String productJson) {
+    public void consumeCrawledProductsV3(String productJson, Acknowledgment acknowledgment) {
         updateCrawledProductsProduct(productJson);
+        acknowledgment.acknowledge();
     }
 
     @KafkaListener(topics = "crawling-topic-4", groupId = "crawl-group-id")
-    public void consumeCrawledProductsV4(String productJson) {
+    public void consumeCrawledProductsV4(String productJson, Acknowledgment acknowledgment) {
         updateCrawledProductsProduct(productJson);
+        acknowledgment.acknowledge();
     }
 
     private void updateCrawledProductsProduct(String productJson) {
