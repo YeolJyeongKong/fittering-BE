@@ -25,30 +25,30 @@ public class KafkaConsumer {
 
     @KafkaListener(topics = "crawling-topic-0", groupId = "crawl-group-id")
     public void consumeCrawledProductsV0(String productJson, Acknowledgment acknowledgment) {
-        updateCrawledProductsProduct(productJson);
-        acknowledgment.acknowledge();
+        processConsumedProduct(productJson, acknowledgment);
     }
 
     @KafkaListener(topics = "crawling-topic-1", groupId = "crawl-group-id")
     public void consumeCrawledProductsV1(String productJson, Acknowledgment acknowledgment) {
-        updateCrawledProductsProduct(productJson);
-        acknowledgment.acknowledge();
+        processConsumedProduct(productJson, acknowledgment);
     }
 
     @KafkaListener(topics = "crawling-topic-2", groupId = "crawl-group-id")
     public void consumeCrawledProductsV2(String productJson, Acknowledgment acknowledgment) {
-        updateCrawledProductsProduct(productJson);
-        acknowledgment.acknowledge();
+        processConsumedProduct(productJson, acknowledgment);
     }
 
     @KafkaListener(topics = "crawling-topic-3", groupId = "crawl-group-id")
     public void consumeCrawledProductsV3(String productJson, Acknowledgment acknowledgment) {
-        updateCrawledProductsProduct(productJson);
-        acknowledgment.acknowledge();
+        processConsumedProduct(productJson, acknowledgment);
     }
 
     @KafkaListener(topics = "crawling-topic-4", groupId = "crawl-group-id")
     public void consumeCrawledProductsV4(String productJson, Acknowledgment acknowledgment) {
+        processConsumedProduct(productJson, acknowledgment);
+    }
+
+    private void processConsumedProduct(String productJson, Acknowledgment acknowledgment) {
         updateCrawledProductsProduct(productJson);
         acknowledgment.acknowledge();
     }
