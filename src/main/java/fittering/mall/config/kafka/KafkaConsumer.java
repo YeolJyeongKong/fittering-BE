@@ -10,41 +10,51 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class KafkaConsumer {
 
+    public static List<Long> newProductList = new ArrayList<>();
+
     private final ProductService productService;
 
     @KafkaListener(topics = "crawling-topic-0", groupId = "crawl-group-id")
-    public void consumeCrawledProductsV0(String productJson) {
-        updateCrawledProductsProduct(productJson);
+    public void consumeCrawledProductsV0(String productJson, Acknowledgment acknowledgment) {
+        processConsumedProduct(productJson, acknowledgment);
     }
 
     @KafkaListener(topics = "crawling-topic-1", groupId = "crawl-group-id")
-    public void consumeCrawledProductsV1(String productJson) {
-        updateCrawledProductsProduct(productJson);
+    public void consumeCrawledProductsV1(String productJson, Acknowledgment acknowledgment) {
+        processConsumedProduct(productJson, acknowledgment);
     }
 
     @KafkaListener(topics = "crawling-topic-2", groupId = "crawl-group-id")
-    public void consumeCrawledProductsV2(String productJson) {
-        updateCrawledProductsProduct(productJson);
+    public void consumeCrawledProductsV2(String productJson, Acknowledgment acknowledgment) {
+        processConsumedProduct(productJson, acknowledgment);
     }
 
     @KafkaListener(topics = "crawling-topic-3", groupId = "crawl-group-id")
-    public void consumeCrawledProductsV3(String productJson) {
-        updateCrawledProductsProduct(productJson);
+    public void consumeCrawledProductsV3(String productJson, Acknowledgment acknowledgment) {
+        processConsumedProduct(productJson, acknowledgment);
     }
 
     @KafkaListener(topics = "crawling-topic-4", groupId = "crawl-group-id")
-    public void consumeCrawledProductsV4(String productJson) {
+    public void consumeCrawledProductsV4(String productJson, Acknowledgment acknowledgment) {
+        processConsumedProduct(productJson, acknowledgment);
+    }
+
+    private void processConsumedProduct(String productJson, Acknowledgment acknowledgment) {
         updateCrawledProductsProduct(productJson);
+        acknowledgment.acknowledge();
+        addProductIdFromJson(productJson);
     }
 
     private void updateCrawledProductsProduct(String productJson) {
@@ -68,6 +78,18 @@ public class KafkaConsumer {
                 .size(sizeDtos)
                 .imagePath(imagePaths)
                 .build();
+    }
+
+    private void addProductIdFromJson(String productJson) {
+        JSONObject jsonObject = new JSONObject(productJson);
+        JSONObject product = jsonObject.getJSONObject("product");
+        String productName = product.getString("name");
+        Optional<Long> optionalNewProductId = productService.getNewProductId(productName);
+
+        if (optionalNewProductId.isEmpty()) {
+            return;
+        }
+        newProductList.add(optionalNewProductId.get());
     }
 
     private CrawledProductDto createProductDto(JSONObject element) {

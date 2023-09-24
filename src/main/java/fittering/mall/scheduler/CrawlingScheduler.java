@@ -5,7 +5,6 @@ import fittering.mall.config.kafka.KafkaProducer;
 import fittering.mall.scheduler.dto.ProductIdsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -13,8 +12,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import static fittering.mall.config.kafka.KafkaConsumer.newProductList;
 
 @Slf4j
 @Component
@@ -22,6 +23,8 @@ import java.util.List;
 public class CrawlingScheduler {
 
     private final int TWO_WEEK = 1000 * 60 * 60 * 24 * 14;
+    private final int DAY = 1000 * 60 * 60 * 24;
+    private final Lock lock = new ReentrantLock();
 
     @Value("${ML.API.PRODUCT.ENCODE}")
     private String ML_VECTOR_UPDATE_API;
@@ -31,26 +34,24 @@ public class CrawlingScheduler {
 
     @Scheduled(fixedDelay = TWO_WEEK)
     public void updateCrawledProducts() throws JsonProcessingException {
-        List<String> allProductsJson = kafkaProducer.callCrawledProductCountAPI();
+        kafkaProducer.callCrawledProductCountAPI();
+    }
 
+    @Scheduled(fixedDelay = DAY)
+    public void updateMLVector() {
+        if (newProductList.isEmpty()) {
+            return;
+        }
+
+        lock.lock();
         URI uri = UriComponentsBuilder.fromUriString(ML_VECTOR_UPDATE_API)
                 .build()
                 .toUri();
-        List<Long> productIds = productsJsonToString(allProductsJson);
         ProductIdsDto productIdsDto = ProductIdsDto.builder()
-                .product_ids(productIds)
+                .product_ids(newProductList)
                 .build();
 
         restTemplate.postForObject(uri, productIdsDto, String.class);
-    }
-
-    public static List<Long> productsJsonToString(List<String> allProductsJson) {
-        List<Long> productIds = new ArrayList<>();
-        for (String productJson : allProductsJson) {
-            JSONObject jsonObject = new JSONObject(productJson);
-            JSONObject product = jsonObject.getJSONObject("product");
-            productIds.add((long) product.getInt("product_id"));
-        }
-        return productIds;
+        lock.unlock();
     }
 }
