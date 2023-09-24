@@ -387,6 +387,7 @@ public class ProductService {
         });
     }
 
+    @Transactional
     public Optional<Long> getNewProductId(String productName) {
         Optional<Product> optionalProduct = productRepository.findByName(productName);
         if (optionalProduct.isPresent()) {
