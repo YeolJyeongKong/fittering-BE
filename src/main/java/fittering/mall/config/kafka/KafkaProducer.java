@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fittering.mall.config.kafka.domain.KafkaProductRequest;
 import fittering.mall.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,18 +39,18 @@ public class KafkaProducer {
     private final ProductService productService;
     private final RestTemplate restTemplate;
 
-    public List<String> callCrawledProductCountAPI() throws JsonProcessingException {
+    public void callCrawledProductCountAPI() throws JsonProcessingException {
         URI uri = UriComponentsBuilder.fromUriString(CRAWLED_PRODUCT_COUNT_API)
                 .build()
                 .toUri();
         String responseBody = restTemplate.getForObject(uri, String.class);
         int productsCount = getProductsCountFromBody(responseBody);
         LocalDateTime timeCriteria = productService.productsOfMaxUpdatedAt();
-        return produceCrawledProducts(productsCount, timeCriteria);
+
+        produceCrawledProducts(productsCount, timeCriteria);
     }
 
-    public List<String> produceCrawledProducts(int productsCount, LocalDateTime timeCriteria) throws JsonProcessingException {
-        List<String> allProductsJson = new ArrayList<>();
+    public void produceCrawledProducts(int productsCount, LocalDateTime timeCriteria) throws JsonProcessingException {
         int batchIndex = productsCount % BATCH_SIZE == 0 ? productsCount / BATCH_SIZE : productsCount / BATCH_SIZE + 1;
         for (int i=0; i<batchIndex; ++i) {
             URI uri = UriComponentsBuilder.fromUriString(CRAWLED_PRODUCT_INFO_API)
@@ -71,12 +70,9 @@ public class KafkaProducer {
             HttpEntity<String> httpEntity = new HttpEntity<>(jsonRequest, headers);
             String responseBody = restTemplate.postForObject(uri, httpEntity, String.class);
             List<String> productsJson = getProductsJsonFromBody(responseBody);
-            allProductsJson.addAll(productsJson);
 
             sendProductJson(productsJson);
         }
-
-        return allProductsJson;
     }
 
     private static String timeCriteriaToString(LocalDateTime timeCriteria) {

@@ -15,11 +15,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class KafkaConsumer {
+
+    public static List<Long> newProductList = new ArrayList<>();
 
     private final ProductService productService;
 
@@ -51,6 +54,7 @@ public class KafkaConsumer {
     private void processConsumedProduct(String productJson, Acknowledgment acknowledgment) {
         updateCrawledProductsProduct(productJson);
         acknowledgment.acknowledge();
+        addProductIdFromJson(productJson);
     }
 
     private void updateCrawledProductsProduct(String productJson) {
@@ -74,6 +78,18 @@ public class KafkaConsumer {
                 .size(sizeDtos)
                 .imagePath(imagePaths)
                 .build();
+    }
+
+    private void addProductIdFromJson(String productJson) {
+        JSONObject jsonObject = new JSONObject(productJson);
+        JSONObject product = jsonObject.getJSONObject("product");
+        String productName = product.getString("name");
+        Optional<Long> optionalNewProductId = productService.getNewProductId(productName);
+
+        if (optionalNewProductId.isEmpty()) {
+            return;
+        }
+        newProductList.add(optionalNewProductId.get());
     }
 
     private CrawledProductDto createProductDto(JSONObject element) {

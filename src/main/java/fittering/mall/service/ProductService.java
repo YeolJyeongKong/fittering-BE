@@ -386,4 +386,13 @@ public class ProductService {
                     .build());
         });
     }
+
+    public Optional<Long> getNewProductId(String productName) {
+        Optional<Product> optionalProduct = productRepository.findByName(productName);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            return Optional.of(product.getId());
+        }
+        return Optional.empty();
+    }
 }
