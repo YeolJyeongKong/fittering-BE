@@ -104,7 +104,7 @@ public class UserController {
             userService.setPassword(userId, newPassword);
             return new ResponseEntity<>("비밀번호 변경 성공", HttpStatus.OK);
         }
-        return new ResponseEntity<>("현재 비밀번호 인증 실패", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>("현재 비밀번호 인증 실패", HttpStatus.BAD_REQUEST);
     }
 
     @Operation(summary = "체형 정보 조회")
