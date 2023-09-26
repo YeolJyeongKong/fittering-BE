@@ -82,6 +82,7 @@ public class UserService {
         return passwordEncoder.matches(inputPassword, password);
     }
 
+    @Transactional
     public void setPassword(Long userId, String newPassword) {
         User user = findById(userId);
         user.setPassword(passwordEncoder.encode(newPassword));
