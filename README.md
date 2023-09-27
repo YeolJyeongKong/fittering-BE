@@ -1,13 +1,13 @@
-## 핏터링(fittering) Back-end
-**핏터링**은 개인의 체형을 분석해 fit한 옷을 추천해주는 쇼핑몰 서비스입니다.<br>
-[fittering-BE](https://github.com/YeolJyeongKong/fittering-BE)는 핏터링 서비스에서 **백엔드 코드를 관리합니다.**<br>
+# 핏터링(fittering) Back-end
+**핏터링**은 체형 분석을 쉽게 하고, 나의 체형에 fit한 옷을 추천해주는 쇼핑몰 서비스입니다.<br>
+[fittering-BE](https://github.com/YeolJyeongKong/fittering-BE)는 핏터링 서비스의 **백엔드 코드를 관리**하는 레포지토리입니다.<br>
 <br>
 
-### 📆 기간
-23.06.11 ~ **진행중**<br>
+## 📆 개발 기간
+2023.06 ~ 2023.11<br>
 <br>
 
-### 프로젝트 구조
+## 프로젝트 구조
 다음은 [fittering-BE](https://github.com/YeolJyeongKong/fittering-BE) 구조입니다.<br>
 MVC 패턴에 맞게 디렉토리를 분리했으며, 각 레벨에서 DTO를 관리하도록 구성했습니다.
 ```
@@ -47,12 +47,13 @@ src
 - `test` : Service 내 각 함수에 대한 **JUnit** 테스트 코드 관리
 <br>
 
-### 전체 아키텍쳐
+## 아키텍처
+### 전체
 핏터링 서비스는 다음과 같은 아키텍처로 구성되어 있습니다.
 <img width="1185" alt="전체아키텍쳐" src="https://github.com/YeolJyeongKong/fittering-BE/assets/61930524/bf717a0e-dd98-41b9-a36a-04a56a2dcea1">
 <br>
 
-### 백엔드 아키텍쳐
+### 백엔드
 핏터링 서비스의 백엔드는 다음과 같은 아키텍처로 구성되어 있습니다.
 <p align="center">
   <img width="550" alt="백엔드아키텍쳐" src="https://github.com/YeolJyeongKong/fittering-BE/assets/61930524/8cce9495-2f9c-49a0-aaba-1862e44de452">
@@ -118,12 +119,12 @@ src
 - ➰  [테이블 등록, 로그인/회원가입 구현, API 문서화 #1](https://github.com/YeolJyeongKong/fittering-BE/pull/1)
 <br>
 
-### ERD
+## ERD
 ![fittering-backend-ERD](https://github.com/YeolJyeongKong/fittering-BE/assets/61930524/cbaf6bb5-b89c-473a-bb3d-4d2c5a6ae55c)
 - 생성 날짜 `created_at`, 최종 수정 날짜 `updated_at`은 모든 엔티티의 공통 필드
 <br>
 
-### 💻 개발환경
+## 💻 개발환경
 ```
 - IntelliJ IDEA Ultimate 2023.1.3
 - Java 17
@@ -135,7 +136,7 @@ src
 ```
 <br>
 
-### 📑 트러블 슈팅
+## 📑 트러블 슈팅
 - [[Spring Security] There is no PasswordEncoder mapped for the id “null”](https://yooniversal.github.io/project/post214/)
 - [[Spring] ClassNotFoundException: javax.xml.bind.DatatypeConverter](https://yooniversal.github.io/project/post220/)
 - [[Spring] cannot deserialize from Object value](https://yooniversal.github.io/project/post223/)
@@ -149,4 +150,4 @@ src
 - [[Spring] JWT를 적용하면서 발생한 에러 정리](https://yooniversal.github.io/project/post249/)
 - [[Spring] IllegalStateException: Ambiguous handler methods](https://yooniversal.github.io/project/post264/)
 - [[Spring] multipart.MultipartException: Current request is not a multipart request](https://yooniversal.github.io/project/post263/)
-- 이외 [블로그 참고](https://yooniversal.github.io)
+- [more details...](https://yooniversal.github.io/Project)
