@@ -4,7 +4,8 @@
 <br>
 
 ## 📆 개발 기간
-2023.06 ~ 2023.11<br>
+- 2023.06 ~ _진행중_
+- 기능 구현은 완료되었으나 현재 버그 수정 작업 중입니다.
 <br>
 
 ## 프로젝트 구조
@@ -106,7 +107,6 @@ src
     - [TDD, CI/CD #8](https://github.com/YeolJyeongKong/fittering-BE/pull/8)
     - [CD : docker compose 등록 #14](https://github.com/YeolJyeongKong/fittering-BE/pull/14)
     - [Github Actions : 무중단 배포 설정 완료 #17](https://github.com/YeolJyeongKong/fittering-BE/pull/17)
-<br>
 
 ### Swagger
 팀 내 API 문서 공유를 위해 **Swagger**를 적용했습니다.<br>
