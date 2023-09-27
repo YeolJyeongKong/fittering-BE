@@ -109,7 +109,8 @@ src
 <br>
 
 ### Swagger
-팀 내 API 문서 공유를 위해 **Swagger**를 적용했습니다. 다음은 문서 내용 일부입니다.<br>
+팀 내 API 문서 공유를 위해 **Swagger**를 적용했습니다.<br>
+아래는 문서 내용 일부로, 전체 문서는 [여기](https://sub.fit-tering.com/swagger-ui/index.html)에서 확인하실 수 있습니다.<br>
 
 <img width="730" alt="image" src="https://github.com/YeolJyeongKong/fittering-BE/assets/61930524/b919cff5-9d6c-469a-8024-0e9143935e6c">
 <br>
