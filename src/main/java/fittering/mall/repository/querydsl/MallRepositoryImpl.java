@@ -5,6 +5,8 @@ import fittering.mall.controller.dto.response.QResponseProductPreviewDto;
 import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
 import fittering.mall.service.dto.MallNameAndIdDto;
 import fittering.mall.service.dto.QMallNameAndIdDto;
+import fittering.mall.service.dto.QRelatedSearchDto;
+import fittering.mall.service.dto.RelatedSearchDto;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
@@ -56,9 +58,13 @@ public class MallRepositoryImpl implements MallRepositoryCustom {
     }
 
     @Override
-    public List<String> relatedSearch(String keyword) {
+    public List<RelatedSearchDto> relatedSearch(String keyword) {
         return queryFactory
-                .select(mall.name)
+                .select(new QRelatedSearchDto(
+                        mall.id.as("id"),
+                        mall.name.as("name"),
+                        mall.image.as("image")
+                ))
                 .from(mall)
                 .where(
                         mall.name.contains(keyword)
