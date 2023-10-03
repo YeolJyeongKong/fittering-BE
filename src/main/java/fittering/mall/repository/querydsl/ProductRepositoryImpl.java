@@ -196,9 +196,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     }
 
     @Override
-    public List<String> relatedSearch(String keyword) {
+    public List<RelatedSearchDto> relatedSearch(String keyword) {
         return queryFactory
-                .select(product.name)
+                .select(new QRelatedSearchDto(
+                        product.id.as("id"),
+                        product.name.as("name"),
+                        product.image.as("image")
+                ))
                 .from(product)
                 .where(
                         product.name.contains(keyword)

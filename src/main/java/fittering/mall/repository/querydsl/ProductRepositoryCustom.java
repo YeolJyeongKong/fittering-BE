@@ -1,10 +1,7 @@
 package fittering.mall.repository.querydsl;
 
 import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
-import fittering.mall.service.dto.BottomProductDto;
-import fittering.mall.service.dto.DressProductDto;
-import fittering.mall.service.dto.OuterProductDto;
-import fittering.mall.service.dto.TopProductDto;
+import fittering.mall.service.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,7 +14,7 @@ public interface ProductRepositoryCustom {
     Page<ResponseProductPreviewDto> productWithCategory(Long mallId, Long categoryId, String gender, Long filterId, Pageable pageable);
     Page<ResponseProductPreviewDto> productWithSubCategory(Long mallId, Long subCategoryId, String gender, Long filterId, Pageable pageable);
     Page<ResponseProductPreviewDto> searchProduct(String productName, String gender, Long filterId, Pageable pageable);
-    List<String> relatedSearch(String keyword);
+    List<RelatedSearchDto> relatedSearch(String keyword);
     Long productCountWithCategory(Long categoryId);
     Long productCountWithSubCategory(Long categoryId);
     Long productCountWithCategoryOfMall(String mallName, Long categoryId);
