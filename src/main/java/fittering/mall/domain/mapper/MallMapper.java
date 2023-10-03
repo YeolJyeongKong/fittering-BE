@@ -28,5 +28,5 @@ public interface MallMapper {
     MallPreviewDto toMallPreviewDto(SavedMallPreviewDto savedMallPreviewDto);
     ResponseMallPreviewDto toResponseMallPreviewDto(MallPreviewDto mallPreviewDto, Boolean isFavorite);
     ResponseMallNameAndIdDto toResponseMallNameAndIdDto(MallNameAndIdDto mallNameAndIdDto);
-    ResponseReleatedSearchDto toResponseReleatedSearchDto(RelatedSearchDto relatedSearchDto);
+    ResponseRelatedSearchMallDto toResponseRelatedSearchMallDto(RelatedSearchDto relatedSearchDto);
 }

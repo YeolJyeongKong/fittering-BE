@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseReleatedSearchDto {
+public class ResponseRelatedSearchMallDto {
     private Long id;
     private String name;
     private String image;
