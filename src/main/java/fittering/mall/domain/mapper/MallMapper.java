@@ -4,11 +4,8 @@ import fittering.mall.config.kafka.domain.dto.CrawledMallDto;
 import fittering.mall.controller.dto.request.RequestMallDto;
 import fittering.mall.controller.dto.request.RequestMallRankProductDto;
 import fittering.mall.controller.dto.response.*;
-import fittering.mall.service.dto.MallNameAndIdDto;
-import fittering.mall.service.dto.MallPreviewDto;
+import fittering.mall.service.dto.*;
 import fittering.mall.repository.dto.SavedMallPreviewDto;
-import fittering.mall.service.dto.MallDto;
-import fittering.mall.service.dto.MallRankProductDto;
 import fittering.mall.domain.entity.Mall;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -31,4 +28,5 @@ public interface MallMapper {
     MallPreviewDto toMallPreviewDto(SavedMallPreviewDto savedMallPreviewDto);
     ResponseMallPreviewDto toResponseMallPreviewDto(MallPreviewDto mallPreviewDto, Boolean isFavorite);
     ResponseMallNameAndIdDto toResponseMallNameAndIdDto(MallNameAndIdDto mallNameAndIdDto);
+    ResponseReleatedSearchDto toResponseReleatedSearchDto(RelatedSearchDto relatedSearchDto);
 }

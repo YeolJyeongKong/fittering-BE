@@ -3,8 +3,10 @@ package fittering.mall.domain.mapper;
 import fittering.mall.config.kafka.domain.dto.CrawledProductDto;
 import fittering.mall.controller.dto.request.RequestProductDetailDto;
 import fittering.mall.controller.dto.response.ResponseProductDescriptionDto;
+import fittering.mall.controller.dto.response.ResponseReleatedSearchDto;
 import fittering.mall.service.dto.ProductDescriptionDto;
 import fittering.mall.domain.entity.*;
+import fittering.mall.service.dto.RelatedSearchDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -41,4 +43,6 @@ public interface ProductMapper {
     ProductDescription toProductDescription(String productDescription);
 
     ResponseProductDescriptionDto toResponseProductDescriptionDto(ProductDescriptionDto productDescription);
+
+    ResponseReleatedSearchDto toResponseReleatedSearchDto(RelatedSearchDto relatedSearchDto);
 }
