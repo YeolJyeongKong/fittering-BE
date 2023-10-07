@@ -15,6 +15,7 @@ import static fittering.mall.domain.entity.QMall.mall;
 import static fittering.mall.domain.entity.QProduct.product;
 import static fittering.mall.domain.entity.QRecent.recent;
 import static fittering.mall.domain.entity.QUser.user;
+import static fittering.mall.repository.querydsl.EqualMethod.productIdEq;
 import static fittering.mall.repository.querydsl.EqualMethod.userIdEq;
 
 public class RecentRepositoryImpl implements RecentRepositoryCustom {
@@ -130,5 +131,19 @@ public class RecentRepositoryImpl implements RecentRepositoryCustom {
                         userIdEq(userId)
                 )
                 .fetch();
+    }
+
+    @Override
+    public Boolean isRecentProduct(Long userId, Long productId) {
+        return queryFactory
+                .select()
+                .from(recent)
+                .leftJoin(recent.user, user)
+                .leftJoin(recent.product, product)
+                .where(
+                        userIdEq(userId),
+                        productIdEq(productId)
+                )
+                .fetchFirst() != null;
     }
 }

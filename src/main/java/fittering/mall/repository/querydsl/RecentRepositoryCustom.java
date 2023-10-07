@@ -13,4 +13,5 @@ public interface RecentRepositoryCustom {
     Page<ResponseProductPreviewDto> recentProduct(Long userId, Pageable pageable);
     void initializeRecents(Long userId);
     List<Long> recentProductIds(Long userId);
+    Boolean isRecentProduct(Long userId, Long productId);
 }
