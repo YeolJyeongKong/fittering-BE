@@ -182,7 +182,10 @@ public class ProductController {
         Product product = productService.findById(productId);
         productService.updateView(productId);
         rankService.updateViewOnMall(principalDetails.getUser().getId(), product.getMall().getId());
-        userService.saveRecentProduct(principalDetails.getUser().getId(), productId);
+
+        if (!userService.isRecentProduct(principalDetails.getUser().getId(), productId)) {
+            userService.saveRecentProduct(principalDetails.getUser().getId(), productId);
+        }
 
         if(product.getType().equals(OUTER)) {
             ResponseOuterDto outerProduct = productService.outerProductDetail(principalDetails.getUser().getId(), productId);
