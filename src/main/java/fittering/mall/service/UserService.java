@@ -129,6 +129,10 @@ public class UserService {
                                         .build());
     }
 
+    public boolean isRecentProduct(Long userId, Long productId) {
+        return recentRepository.isRecentProduct(userId, productId);
+    }
+
     public User login(LoginDto loginDto) {
         Optional<User> optionalUser = userRepository.findByEmail(loginDto.getEmail());
         if (optionalUser.isEmpty()) {
