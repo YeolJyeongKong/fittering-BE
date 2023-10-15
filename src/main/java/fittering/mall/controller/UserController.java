@@ -209,7 +209,7 @@ public class UserController {
     }
 
     @Operation(summary = "체형 스마트 분석")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMeasurementDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseMeasurementDto.class)))
     @PostMapping("/users/recommendation/measurement")
     public ResponseEntity<?> recommendMeasurement(@RequestBody @Valid RequestSmartMeasurementDto requestSmartMeasurementDto,
                                                   BindingResult bindingResult) {
