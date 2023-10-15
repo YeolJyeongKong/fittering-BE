@@ -12,9 +12,9 @@ public class RequestSmartMeasurementDto {
     @NonNull
     private String side;
     @NonNull
-    private Integer height;
+    private Double height;
     @NonNull
-    private Integer weight;
+    private Double weight;
     @NonNull
     private String sex;
 }
