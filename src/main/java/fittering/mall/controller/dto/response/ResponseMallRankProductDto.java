@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class ResponseMallRankProductDto {
     private Long productId;
     private String productImage;
+    private String productName;
 }

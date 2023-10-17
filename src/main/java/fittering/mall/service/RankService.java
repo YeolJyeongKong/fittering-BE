@@ -107,6 +107,7 @@ public class RankService {
             productDtos.add(ResponseMallRankProductDto.builder()
                     .productId(product.getId())
                     .productImage(product.getImage())
+                    .productName(product.getName())
                     .build());
         }
     }
