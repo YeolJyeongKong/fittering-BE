@@ -23,14 +23,14 @@ import fittering.mall.service.SearchService;
 @Tag(name = "검색", description = "검색 서비스 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v1")
 public class SearchController {
 
     private final SearchService searchService;
 
     @Operation(summary = "검색")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseProductPreviewDto.class)))
-    @GetMapping("/search/{keyword}/{gender}/{filterId}")
+    @GetMapping("/auth/search/{keyword}/{gender}/{filterId}")
     public ResponseEntity<?> search(@PathVariable("keyword") @NotEmpty String keyword,
                                     @PathVariable("gender") @NotEmpty String gender,
                                     @PathVariable("filterId") @NotEmpty Long filterId,

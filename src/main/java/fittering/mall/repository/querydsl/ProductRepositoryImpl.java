@@ -43,6 +43,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
     private static final int TIME_RANK_PRODUCT_COUNT = 18;
     private static final int AGE_RANGE_SIZE = 6;
     private static final int GENDER_SIZE = 2;
+    private static final int RELATED_PRODUCTS_COUNT = 8;
 
     private JPAQueryFactory queryFactory;
 
@@ -207,6 +208,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .where(
                         product.name.contains(keyword)
                 )
+                .limit(RELATED_PRODUCTS_COUNT)
                 .fetch();
     }
 
