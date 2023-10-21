@@ -19,7 +19,7 @@ import static fittering.mall.repository.querydsl.EqualMethod.mallNameEq;
 
 public class MallRepositoryImpl implements MallRepositoryCustom {
 
-    private static final int RELATED_PRODUCTS_COUNT = 8;
+    private static final int RELATED_MALLS_COUNT = 8;
 
     private JPAQueryFactory queryFactory;
 
@@ -71,7 +71,7 @@ public class MallRepositoryImpl implements MallRepositoryCustom {
                 .where(
                         mall.name.contains(keyword)
                 )
-                .limit(RELATED_PRODUCTS_COUNT)
+                .limit(RELATED_MALLS_COUNT)
                 .fetch();
     }
 
