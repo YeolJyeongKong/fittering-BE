@@ -18,6 +18,6 @@ public class ControllerUtils {
     }
 
     public static boolean isInvalidEmail(String email) {
-        return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+        return email.matches("[0-9a-zA-Z]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$");
     }
 }
