@@ -135,8 +135,8 @@ public class RecentRepositoryImpl implements RecentRepositoryCustom {
 
     @Override
     public Boolean isRecentProduct(Long userId, Long productId) {
-        return queryFactory
-                .select()
+        Long recentProductCount = queryFactory
+                .select(recent.count())
                 .from(recent)
                 .leftJoin(recent.user, user)
                 .leftJoin(recent.product, product)
@@ -144,6 +144,7 @@ public class RecentRepositoryImpl implements RecentRepositoryCustom {
                         userIdEq(userId),
                         productIdEq(productId)
                 )
-                .fetchFirst() != null;
+                .fetchOne();
+        return recentProductCount != null;
     }
 }
