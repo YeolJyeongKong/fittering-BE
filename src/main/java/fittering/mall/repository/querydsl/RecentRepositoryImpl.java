@@ -145,6 +145,6 @@ public class RecentRepositoryImpl implements RecentRepositoryCustom {
                         productIdEq(productId)
                 )
                 .fetchOne();
-        return recentProductCount != null;
+        return recentProductCount != null && recentProductCount > 0;
     }
 }
