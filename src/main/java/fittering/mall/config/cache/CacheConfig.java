@@ -14,6 +14,8 @@ import java.time.Duration;
 @Configuration
 public class CacheConfig {
 
+    private static final int TWENTY_FIVE_HOURS = 3600 * 25;
+
     /**
      * Spring Boot가 기본적으로 RedisCacheManager를 자동 설정해줘서 RedisCacheConfiguration 없어도 사용 가능
      * Bean을 새로 선언하면 직접 설정한 RedisCacheConfiguration 이 적용됨
@@ -21,7 +23,7 @@ public class CacheConfig {
     @Bean
     public RedisCacheConfiguration redisCacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofSeconds(3600))
+                .entryTtl(Duration.ofSeconds(TWENTY_FIVE_HOURS))
                 .disableCachingNullValues()
                 .serializeKeysWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
