@@ -30,7 +30,7 @@ public class RedisService {
     @Transactional
     public void batchUpdateView() {
         redisTemplate.keys("Batch:Product_view_*").forEach(key -> {
-            Long productId = Long.parseLong(key.split("_")[1]);
+            Long productId = Long.parseLong(key.split("_")[2]);
             Integer view = Integer.parseInt(redisTemplate.opsForValue().get(key).toString());
 
             updateViewOfProduct(productId, view);
@@ -38,7 +38,7 @@ public class RedisService {
         });
 
         redisTemplate.keys("Batch:Product_timeView_*").forEach(key -> {
-            Long productId = Long.parseLong(key.split("_")[1]);
+            Long productId = Long.parseLong(key.split("_")[2]);
             Integer timeView = Integer.parseInt(redisTemplate.opsForValue().get(key).toString());
 
             updateTimeViewOfProduct(productId, timeView);
@@ -46,7 +46,7 @@ public class RedisService {
         });
 
         redisTemplate.keys("Batch:Rank_view_*").forEach(key -> {
-            Long rankId = Long.parseLong(key.split("_")[1]);
+            Long rankId = Long.parseLong(key.split("_")[2]);
             Integer view = Integer.parseInt(redisTemplate.opsForValue().get(key).toString());
 
             updateViewOfRank(rankId, view);
