@@ -107,6 +107,7 @@ public class User extends BaseEntity {
         year = userDto.getYear();
         month = userDto.getMonth();
         day = userDto.getDay();
+        ageRange = getAgeRange(year, month, day);
     }
 
     public void setPassword(String password) {
