@@ -72,7 +72,7 @@ public class OAuthController {
 
     @GetMapping("/login/oauth/apple")
     public String loginAppleOAuth() {
-        return loginUrl(APPLE_AUTH_URL, APPLE_CLIENT_ID, APPLE_REDIRECT_URI, APPLE_RESPONSE_TYPE, APPLE_NONCE);
+        return loginUrlWithNonce(APPLE_AUTH_URL, APPLE_CLIENT_ID, APPLE_REDIRECT_URI, APPLE_RESPONSE_TYPE, APPLE_NONCE);
     }
 
     @GetMapping("/login/apple")
@@ -93,7 +93,7 @@ public class OAuthController {
 
     @GetMapping("/login/oauth/kakao")
     public String loginKakaoOAuth() {
-        return loginUrl(KAKAO_AUTH_URL, KAKAO_CLIENT_ID, KAKAO_REDIRECT_URI, KAKAO_RESPONSE_TYPE, KAKAO_SCOPE);
+        return loginUrlWithScope(KAKAO_AUTH_URL, KAKAO_CLIENT_ID, KAKAO_REDIRECT_URI, KAKAO_RESPONSE_TYPE, KAKAO_SCOPE);
     }
 
     @GetMapping("/login/kakao")
@@ -122,7 +122,7 @@ public class OAuthController {
 
     @GetMapping("/login/oauth/google")
     public String loginGoogleOAuth() {
-        return loginUrl(GOOGLE_AUTH_URL, GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI, GOOGLE_RESPONSE_TYPE, GOOGLE_SCOPE);
+        return loginUrlWithScope(GOOGLE_AUTH_URL, GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI, GOOGLE_RESPONSE_TYPE, GOOGLE_SCOPE);
     }
 
     @GetMapping("/login/google")
@@ -149,12 +149,20 @@ public class OAuthController {
         return redirectWithToken(MAIN_LOGIN_URL, jwtTokenProvider.createToken(user.getEmail(), user.getRoles()));
     }
 
-    private static String loginUrl(String authUrl, String clientId, String redirectUri, String responseType, String nonce) {
+    private static String loginUrlWithNonce(String authUrl, String clientId, String redirectUri, String responseType, String nonce) {
         return "redirect:" + authUrl
                 + "?client_id=" + clientId
                 + "&redirect_uri=" + redirectUri
                 + "&response_type=" + responseType
                 + "&nonce=" + nonce;
+    }
+
+    private static String loginUrlWithScope(String authUrl, String clientId, String redirectUri, String responseType, String scope) {
+        return "redirect:" + authUrl
+                + "?client_id=" + clientId
+                + "&redirect_uri=" + redirectUri
+                + "&response_type=" + responseType
+                + "&scope=" + scope;
     }
 
     private static String redirectWithToken(String mainUrl, String token) {
