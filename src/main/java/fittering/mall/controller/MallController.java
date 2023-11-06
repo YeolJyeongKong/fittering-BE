@@ -69,8 +69,16 @@ public class MallController {
     @Operation(summary = "쇼핑몰 이름 및 ID 리스트 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallNameAndIdDto.class))))
     @GetMapping("/malls/list")
-    public ResponseEntity<?> mallList() {
+    public ResponseEntity<?> mallNameAndIdList() {
         List<ResponseMallNameAndIdDto> mallList = mallService.findMallNameAndIdList();
+        return new ResponseEntity<>(mallList, HttpStatus.OK);
+    }
+
+    @Operation(summary = "쇼핑몰 전체 리스트 조회")
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallWithProductDto.class))))
+    @GetMapping("/malls/preview/list")
+    public ResponseEntity<?> mallList() {
+        List<ResponseMallWithProductDto> mallList = mallService.findAll();
         return new ResponseEntity<>(mallList, HttpStatus.OK);
     }
 
