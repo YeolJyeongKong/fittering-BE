@@ -1,8 +1,6 @@
 package fittering.mall.service;
 
-import fittering.mall.controller.dto.response.ResponseMallDto;
-import fittering.mall.controller.dto.response.ResponseMallNameAndIdDto;
-import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
+import fittering.mall.controller.dto.response.*;
 import fittering.mall.service.dto.MallNameAndIdDto;
 import fittering.mall.domain.mapper.MallMapper;
 import fittering.mall.repository.FavoriteRepository;
@@ -22,6 +20,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MallService {
+
+    private static final int MAX_PRODUCT_COUNT = 5;
 
     private final MallRepository mallRepository;
     private final ProductRepository productRepository;
@@ -62,5 +62,36 @@ public class MallService {
             responseMallNameAndIdList.add(MallMapper.INSTANCE.toResponseMallNameAndIdDto(mallNameAndId));
         });
         return responseMallNameAndIdList;
+    }
+
+    public List<ResponseMallWithProductDto> findAll() {
+        List<ResponseMallWithProductDto> responseMallWithProductDtoList = new ArrayList<>();
+        mallRepository.findAll().forEach(mall -> {
+            List<Product> products = mall.getProducts();
+            List<ResponseMallRankProductDto> productDtos = new ArrayList<>();
+
+            getProductDtos(products, productDtos);
+            responseMallWithProductDtoList.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, 0, false));
+        });
+        return responseMallWithProductDtoList;
+    }
+
+    private void getProductDtos(List<Product> products, List<ResponseMallRankProductDto> productDtos) {
+        int productCount = 0;
+        for (Product productProxy : products) {
+            if (isEnoughProducts(productCount)) break;
+            productCount++;
+            Product product = productRepository.findById(productProxy.getId())
+                    .orElseThrow(() -> new NoResultException("product doesn't exist"));
+            productDtos.add(ResponseMallRankProductDto.builder()
+                    .productId(product.getId())
+                    .productImage(product.getImage())
+                    .productName(product.getName())
+                    .build());
+        }
+    }
+
+    private static boolean isEnoughProducts(int count) {
+        return count >= MAX_PRODUCT_COUNT;
     }
 }
