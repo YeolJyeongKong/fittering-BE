@@ -101,51 +101,62 @@ public class ProductService {
     }
 
     @Cacheable(value = "Product", key = "'count'")
-    public List<ResponseProductCategoryDto> multipleProductCountWithCategory() {
-        List<ResponseProductCategoryDto> productCategoryDtos = new ArrayList<>();
-
+    public ResponseProductAllCategoryDto multipleProductCountWithCategory() {
+        List<ResponseProductCategoryDto> mainCategoryDtos = new ArrayList<>();
         categoryRepository.findAll().forEach(category -> {
             ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
                     category.getName(),
                     productRepository.productCountWithCategory(category.getId())
             );
-            productCategoryDtos.add(categoryDto);
+            mainCategoryDtos.add(categoryDto);
         });
 
+        List<ResponseProductCategoryDto> subCategoryDtos = new ArrayList<>();
         subCategoryRepository.findAll().forEach(subCategory -> {
             ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
                     subCategory.getName(),
                     productRepository.productCountWithSubCategory(subCategory.getId())
             );
-            productCategoryDtos.add(categoryDto);
+            subCategoryDtos.add(categoryDto);
         });
 
-        return productCategoryDtos;
+        ResponseProductAllCategoryDto allCategoryDto = ResponseProductAllCategoryDto.builder()
+                .main(mainCategoryDtos)
+                .sub(subCategoryDtos)
+                .build();
+
+        return allCategoryDto;
     }
 
     @Cacheable(value = "MallProduct", key = "#mallId + '_' + 'count'")
-    public List<ResponseProductCategoryDto> productCountWithCategoryOfMall(Long mallId) {
+    public ResponseProductAllCategoryDto productCountWithCategoryOfMall(Long mallId) {
         Mall mall = mallRepository.findById(mallId)
                 .orElseThrow(() -> new NoResultException("mall doesn't exist"));
-        List<ResponseProductCategoryDto> productCategoryDtos = new ArrayList<>();
 
+        List<ResponseProductCategoryDto> mainCategoryDtos = new ArrayList<>();
         categoryRepository.findAll().forEach(category -> {
             ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
                     category.getName(),
                     productRepository.productCountWithCategoryOfMall(mall.getName(), category.getId())
             );
-            productCategoryDtos.add(categoryDto);
+            mainCategoryDtos.add(categoryDto);
         });
 
+        List<ResponseProductCategoryDto> subCategoryDtos = new ArrayList<>();
         subCategoryRepository.findAll().forEach(subCategory -> {
             ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
                     subCategory.getName(),
                     productRepository.productCountWithSubCategoryOfMall(mall.getName(), subCategory.getId())
             );
-            productCategoryDtos.add(categoryDto);
+            subCategoryDtos.add(categoryDto);
         });
 
-        return productCategoryDtos;
+        ResponseProductAllCategoryDto allCategoryDto = ResponseProductAllCategoryDto.builder()
+                .main(mainCategoryDtos)
+                .sub(subCategoryDtos)
+                .build();
+
+        return allCategoryDto;
     }
 
     public List<ResponseProductPreviewDto> recommendProduct(List<Long> productIds, boolean preview) {
