@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseProductCategoryDto {
-    private Long categoryId;
-    private Long count;
+public class ResponseProductAllCategoryDto {
+    List<ResponseProductCategoryDto> main;
+    List<ResponseProductCategoryDto> sub;
 }

@@ -111,10 +111,10 @@ public class ProductController {
     }
 
     @Operation(summary = "카테고리별 상품 개수 조회")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductCategoryDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductAllCategoryDto.class))))
     @GetMapping("/categories/count")
     public ResponseEntity<?> multipleProductCountWithCategory() {
-        List<ResponseProductCategoryDto> categoryWithProductCounts = productService.multipleProductCountWithCategory();
+        ResponseProductAllCategoryDto categoryWithProductCounts = productService.multipleProductCountWithCategory();
         return new ResponseEntity<>(categoryWithProductCounts, HttpStatus.OK);
     }
 
@@ -155,10 +155,10 @@ public class ProductController {
     }
 
     @Operation(summary = "쇼핑몰 내 카테고리별 상품 개수 조회")
-    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductCategoryDto.class))))
+    @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductAllCategoryDto.class))))
     @GetMapping("/malls/{mallId}/categories/count")
     public ResponseEntity<?> productCountWithCategoryOfMall(@PathVariable("mallId") @NotEmpty Long mallId) {
-        List<ResponseProductCategoryDto> categoryWithProductCounts = productService.productCountWithCategoryOfMall(mallId);
+        ResponseProductAllCategoryDto categoryWithProductCounts = productService.productCountWithCategoryOfMall(mallId);
         return new ResponseEntity<>(categoryWithProductCounts, HttpStatus.OK);
     }
 
