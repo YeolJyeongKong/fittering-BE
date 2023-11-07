@@ -105,7 +105,7 @@ public class ProductService {
         List<ResponseProductCategoryDto> mainCategoryDtos = new ArrayList<>();
         categoryRepository.findAll().forEach(category -> {
             ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
-                    category.getName(),
+                    category.getId(),
                     productRepository.productCountWithCategory(category.getId())
             );
             mainCategoryDtos.add(categoryDto);
@@ -114,7 +114,7 @@ public class ProductService {
         List<ResponseProductCategoryDto> subCategoryDtos = new ArrayList<>();
         subCategoryRepository.findAll().forEach(subCategory -> {
             ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
-                    subCategory.getName(),
+                    subCategory.getId(),
                     productRepository.productCountWithSubCategory(subCategory.getId())
             );
             subCategoryDtos.add(categoryDto);
@@ -136,7 +136,7 @@ public class ProductService {
         List<ResponseProductCategoryDto> mainCategoryDtos = new ArrayList<>();
         categoryRepository.findAll().forEach(category -> {
             ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
-                    category.getName(),
+                    category.getId(),
                     productRepository.productCountWithCategoryOfMall(mall.getName(), category.getId())
             );
             mainCategoryDtos.add(categoryDto);
@@ -145,7 +145,7 @@ public class ProductService {
         List<ResponseProductCategoryDto> subCategoryDtos = new ArrayList<>();
         subCategoryRepository.findAll().forEach(subCategory -> {
             ResponseProductCategoryDto categoryDto = CategoryMapper.INSTANCE.toResponseProductCategoryDto(
-                    subCategory.getName(),
+                    subCategory.getId(),
                     productRepository.productCountWithSubCategoryOfMall(mall.getName(), subCategory.getId())
             );
             subCategoryDtos.add(categoryDto);

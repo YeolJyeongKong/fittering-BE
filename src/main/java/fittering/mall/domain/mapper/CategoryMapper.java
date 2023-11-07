@@ -8,5 +8,5 @@ import org.mapstruct.factory.Mappers;
 public interface CategoryMapper {
     CategoryMapper INSTANCE = Mappers.getMapper(CategoryMapper.class);
 
-    ResponseProductCategoryDto toResponseProductCategoryDto(String category, Long count);
+    ResponseProductCategoryDto toResponseProductCategoryDto(Long categoryId, Long count);
 }
