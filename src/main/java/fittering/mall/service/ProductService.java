@@ -120,12 +120,10 @@ public class ProductService {
             subCategoryDtos.add(categoryDto);
         });
 
-        ResponseProductAllCategoryDto allCategoryDto = ResponseProductAllCategoryDto.builder()
+        return ResponseProductAllCategoryDto.builder()
                 .main(mainCategoryDtos)
                 .sub(subCategoryDtos)
                 .build();
-
-        return allCategoryDto;
     }
 
     @Cacheable(value = "MallProduct", key = "#mallId + '_' + 'count'")
@@ -151,12 +149,10 @@ public class ProductService {
             subCategoryDtos.add(categoryDto);
         });
 
-        ResponseProductAllCategoryDto allCategoryDto = ResponseProductAllCategoryDto.builder()
+        return ResponseProductAllCategoryDto.builder()
                 .main(mainCategoryDtos)
                 .sub(subCategoryDtos)
                 .build();
-
-        return allCategoryDto;
     }
 
     public List<ResponseProductPreviewDto> recommendProduct(List<Long> productIds, boolean preview) {
