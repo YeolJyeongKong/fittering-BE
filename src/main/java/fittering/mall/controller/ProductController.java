@@ -22,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import fittering.mall.config.auth.PrincipalDetails;
 import fittering.mall.domain.entity.*;
 import fittering.mall.service.*;
 
@@ -178,32 +177,32 @@ public class ProductController {
     })
     @GetMapping("/auth/products/{productId}")
     public ResponseEntity<?> productDetail(@PathVariable("productId") @NotEmpty Long productId,
-                                           @AuthenticationPrincipal PrincipalDetails principalDetails) {
+                                           @AuthenticationPrincipal User user) {
         Product product = productService.findById(productId);
         productService.updateView(productId);
-        rankService.updateViewOnMall(principalDetails.getUser().getId(), product.getMall().getId());
+        rankService.updateViewOnMall(user.getId(), product.getMall().getId());
 
-        if (!userService.isRecentProduct(principalDetails.getUser().getId(), productId)) {
-            userService.saveRecentProduct(principalDetails.getUser().getId(), productId);
+        if (!userService.isRecentProduct(user.getId(), productId)) {
+            userService.saveRecentProduct(user.getId(), productId);
         }
 
         if(product.getType().equals(OUTER)) {
-            ResponseOuterDto outerProduct = productService.outerProductDetail(principalDetails.getUser().getId(), productId);
+            ResponseOuterDto outerProduct = productService.outerProductDetail(user.getId(), productId);
             return new ResponseEntity<>(outerProduct, HttpStatus.OK);
         }
 
         if(product.getType().equals(TOP)) {
-            ResponseTopDto topProduct = productService.topProductDetail(principalDetails.getUser().getId(), productId);
+            ResponseTopDto topProduct = productService.topProductDetail(user.getId(), productId);
             return new ResponseEntity<>(topProduct, HttpStatus.OK);
         }
 
         if(product.getType().equals(DRESS)) {
-            ResponseDressDto dressProduct = productService.dressProductDetail(principalDetails.getUser().getId(), productId);
+            ResponseDressDto dressProduct = productService.dressProductDetail(user.getId(), productId);
             return new ResponseEntity<>(dressProduct, HttpStatus.OK);
         }
 
         if(product.getType().equals(BOTTOM)) {
-            ResponseBottomDto bottomProduct = productService.bottomProductDetail(principalDetails.getUser().getId(), productId);
+            ResponseBottomDto bottomProduct = productService.bottomProductDetail(user.getId(), productId);
             return new ResponseEntity<>(bottomProduct, HttpStatus.OK);
         }
 
