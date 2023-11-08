@@ -1,47 +1,53 @@
 package fittering.mall.controller;
 
-import fittering.mall.config.SecurityConfig;
+import fittering.mall.config.WithCustomMockUser;
 import fittering.mall.config.jwt.JwtAuthenticationFilter;
 import fittering.mall.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(
-        controllers = CategoryController.class,
-        excludeFilters = @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                classes = {
-                        SecurityConfig.class,
-                        JwtAuthenticationFilter.class
-                }
-        )
-)
+@WebMvcTest(controllers = CategoryController.class)
 @Slf4j
 class CategoryControllerTest {
+
+    @Autowired
+    private WebApplicationContext context;
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
+    JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockBean
     private CategoryService categoryService;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+    }
 
     @DisplayName("카테고리를 등록한다.")
     @Test
-    @WithMockUser(username = "test", roles = "USER")
+    @WithCustomMockUser
     void createCategory() throws Exception {
         //given
         String categoryName = "상의";
@@ -58,7 +64,7 @@ class CategoryControllerTest {
 
     @DisplayName("10 이상 길이 이상 카테고리 이름은 등록할 수 없다.")
     @Test
-    @WithMockUser(username = "test", roles = "USER")
+    @WithCustomMockUser
     void createCategoryWithOverCategoryName() throws Exception {
         //given
         String categoryName = "1234567890a";
@@ -75,7 +81,7 @@ class CategoryControllerTest {
 
     @DisplayName("빈 카테고리 이름은 등록할 수 없다.")
     @Test
-    @WithMockUser(username = "test", roles = "USER")
+    @WithCustomMockUser
     void createCategoryWithEmptyCategoryName() throws Exception {
         //given
         String categoryName = "";
@@ -91,7 +97,7 @@ class CategoryControllerTest {
 
     @DisplayName("서브 카테고리를 등록한다.")
     @Test
-    @WithMockUser(username = "test", roles = "USER")
+    @WithCustomMockUser
     void createSubCategory() throws Exception {
         //given
         String mainCategoryName = "상의";
@@ -109,7 +115,7 @@ class CategoryControllerTest {
 
     @DisplayName("서브 카테고리 등록 시 10 이상 길이 이상 서브 카테고리 이름은 등록할 수 없다.")
     @Test
-    @WithMockUser(username = "test", roles = "USER")
+    @WithCustomMockUser
     void createSubCategoryWithOverSubCategoryName() throws Exception {
         //given
         String mainCategoryName = "상의";
@@ -127,7 +133,7 @@ class CategoryControllerTest {
 
     @DisplayName("서브 카테고리 등록 시 10 이상 길이 이상 메인 카테고리 이름은 등록할 수 없다.")
     @Test
-    @WithMockUser(username = "test", roles = "USER")
+    @WithCustomMockUser
     void createSubCategoryWithOverCategoryName() throws Exception {
         //given
         String mainCategoryName = "1234567890a";
@@ -145,7 +151,7 @@ class CategoryControllerTest {
 
     @DisplayName("서브 카테고리 등록 시 빈 서브 카테고리 이름은 등록할 수 없다.")
     @Test
-    @WithMockUser(username = "test", roles = "USER")
+    @WithCustomMockUser
     void createSubCategoryWithEmptySubCategoryName() throws Exception {
         //given
         String mainCategoryName = "상의";
@@ -162,7 +168,7 @@ class CategoryControllerTest {
 
     @DisplayName("서브 카테고리 등록 시 빈 메인 카테고리 이름은 등록할 수 없다.")
     @Test
-    @WithMockUser(username = "test", roles = "USER")
+    @WithCustomMockUser
     void createSubCategoryWithEmptyCategoryName() throws Exception {
         //given
         String mainCategoryName = "";
