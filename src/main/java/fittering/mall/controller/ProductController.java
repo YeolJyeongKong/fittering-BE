@@ -84,6 +84,9 @@ public class ProductController {
                                                  @PathVariable("gender") @NotEmpty String gender,
                                                  @PathVariable("filterId") @NotEmpty Long filterId,
                                                  Pageable pageable) {
+        if (gender.length() > 1) {
+            return new ResponseEntity<>("성별은 1자 이하여야 합니다.", HttpStatus.BAD_REQUEST);
+        }
         ProductParamDto productParamDto = ProductParamDto.builder()
                 .categoryId(categoryId)
                 .gender(gender)
@@ -100,6 +103,9 @@ public class ProductController {
                                                     @PathVariable("gender") @NotEmpty String gender,
                                                     @PathVariable("filterId") @NotEmpty Long filterId,
                                                     Pageable pageable) {
+        if (gender.length() > 1) {
+            return new ResponseEntity<>("성별은 1자 이하여야 합니다.", HttpStatus.BAD_REQUEST);
+        }
         ProductParamDto productParamDto = ProductParamDto.builder()
                 .subCategoryId(subCategoryId)
                 .gender(gender)
@@ -213,6 +219,9 @@ public class ProductController {
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/products/rank/{gender}")
     public ResponseEntity<?> productOfTimeRank(@PathVariable("gender") @NotEmpty String gender) {
+        if (gender.length() > 1) {
+            return new ResponseEntity<>("성별은 1자 이하여야 합니다.", HttpStatus.BAD_REQUEST);
+        }
         List<ResponseProductPreviewDto> productsOfTimeRank = productService.productsOfTimeRank(gender);
         return new ResponseEntity<>(productsOfTimeRank, HttpStatus.OK);
     }
