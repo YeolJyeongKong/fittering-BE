@@ -1,5 +1,6 @@
 package fittering.mall.controller.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -10,23 +11,25 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestProductDetailDto {
-    @NonNull
+    @NotNull(message = "상품 가격은 필수입니다.")
     private Integer price;
-    @NonNull @Length(max = 50)
+    @Length(max = 50, message = "상품 이름은 50자 이하여야 합니다.")
+    @NotNull(message = "상품 이름은 필수입니다.")
     private String name;
-    @NonNull @Length(max = 1)
+    @NotNull(message = "상품 성별 정보는 필수입니다.")
+    @Length(max = 1, message = "상품 성별 정보는 1자 이하여야 합니다.")
     private String gender;
-    @NonNull
+    @NotNull(message = "상품 종류는 필수입니다.")
     private Integer type;
-    @NonNull
+    @NotNull(message = "상품 이미지는 필수입니다.")
     private String image;
-    @NonNull
+    @NotNull(message = "상품 출처는 필수입니다.")
     private String origin;
-    @NonNull
+    @NotNull(message = "상품 카테고리는 필수입니다.")
     private String categoryName;
-    @NonNull
+    @NotNull(message = "상품 서브 카테고리는 필수입니다.")
     private String subCategoryName;
-    @NonNull
+    @NotNull(message = "상품 쇼핑몰 이름은 필수입니다.")
     private String mallName;
     private List<RequestOuterDto> outerSizes;
     private List<RequestTopDto> topSizes;
