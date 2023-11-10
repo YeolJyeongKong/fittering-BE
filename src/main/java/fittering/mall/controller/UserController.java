@@ -80,8 +80,8 @@ public class UserController {
     @Operation(summary = "마이페이지 수정")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = RequestUserDto.class)))
     @PostMapping("/users/mypage")
-    public ResponseEntity<?> edit(@RequestBody @Valid RequestUserDto requestUserDto,
-                                  @AuthenticationPrincipal User user,
+    public ResponseEntity<?> edit(@AuthenticationPrincipal User user,
+                                  @RequestBody @Valid RequestUserDto requestUserDto,
                                   BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return getValidationErrorResponse(bindingResult);
@@ -118,8 +118,8 @@ public class UserController {
     @Operation(summary = "체형 정보 수정")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = MeasurementDto.class)))
     @PostMapping("/users/mysize")
-    public ResponseEntity<?> measurementEdit(@RequestBody @Valid RequestMeasurementDto requestMeasurementDto,
-                                             @AuthenticationPrincipal User user,
+    public ResponseEntity<?> measurementEdit(@AuthenticationPrincipal User user,
+                                             @RequestBody @Valid RequestMeasurementDto requestMeasurementDto,
                                              BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return getValidationErrorResponse(bindingResult);
@@ -159,8 +159,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/users/favorite_goods")
     public ResponseEntity<?> favoriteProduct(@AuthenticationPrincipal User user, Pageable pageable) {
-        Page<ResponseProductPreviewDto> products = favoriteService.userFavoriteProduct(
-                                                user.getId(), pageable);
+        Page<ResponseProductPreviewDto> products = favoriteService.userFavoriteProduct(user.getId(), pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -307,8 +306,8 @@ public class UserController {
     @Operation(summary = "회원 탈퇴")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(mediaType = "application/json", schema = @Schema(type = "string"), examples = @ExampleObject(value = "\"회원 탈퇴 완료\"")))
     @DeleteMapping("/users")
-    public ResponseEntity<?> deleteUser(@RequestBody @Valid RequestUserCheckDto requestUserCheckDto,
-                                        @AuthenticationPrincipal User user,
+    public ResponseEntity<?> deleteUser(@AuthenticationPrincipal User user,
+                                        @RequestBody @Valid RequestUserCheckDto requestUserCheckDto,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return getValidationErrorResponse(bindingResult);
