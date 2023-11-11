@@ -30,9 +30,9 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
     public List<Favorite> userFavoriteMall(Long userId) {
         return queryFactory
                 .selectFrom(favorite)
-                .join(favorite.user, user)
-                .join(favorite.mall, mall)
-                .join(mall.products, product)
+                .leftJoin(favorite.user, user)
+                .leftJoin(favorite.mall, mall)
+                .leftJoin(mall.products, product)
                 .where(
                         userIdEq(userId),
                         favorite.product.isNull()
