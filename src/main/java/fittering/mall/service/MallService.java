@@ -27,6 +27,7 @@ public class MallService {
     private final ProductRepository productRepository;
     private final FavoriteRepository favoriteRepository;
 
+    @Transactional
     public Mall save(MallDto mallDto) {
         return mallRepository.save(MallMapper.INSTANCE.toMall(mallDto));
     }

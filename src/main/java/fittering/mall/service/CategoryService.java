@@ -7,6 +7,7 @@ import fittering.mall.domain.entity.Category;
 import fittering.mall.domain.entity.SubCategory;
 import fittering.mall.repository.CategoryRepository;
 import fittering.mall.repository.SubCategoryRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,12 +16,14 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final SubCategoryRepository subCategoryRepository;
 
+    @Transactional
     public Category save(String categoryName) {
         return categoryRepository.save(Category.builder()
                                         .name(categoryName)
                                         .build());
     }
 
+    @Transactional
     public SubCategory saveSubCategory(String categoryName, String subCategoryName) {
         Category category = findByName(categoryName);
         return subCategoryRepository.save(SubCategory.builder()
