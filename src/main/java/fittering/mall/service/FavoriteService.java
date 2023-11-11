@@ -33,22 +33,6 @@ public class FavoriteService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
-    public List<ResponseMallWithProductDto> userFavoriteMall(Long userId) {
-
-        List<Favorite> favoriteMalls = favoriteRepository.userFavoriteMall(userId);
-        List<ResponseMallWithProductDto> userFavoriteMallDtos = new ArrayList<>();
-
-        favoriteMalls.forEach(favorite -> {
-            Mall mall = favorite.getMall();
-            List<Product> products = mall.getProducts();
-            List<ResponseMallRankProductDto> productDtos = new ArrayList<>();
-
-            getProductDtos(products, productDtos);
-            userFavoriteMallDtos.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, 0, true));
-        });
-        return userFavoriteMallDtos;
-    }
-
     @Transactional
     public Favorite saveFavoriteMall(Long userId, Long mallId) {
         User user = userRepository.findById(userId)
@@ -66,12 +50,20 @@ public class FavoriteService {
         favoriteRepository.deleteByUserIdAndMallId(userId, mallId);
     }
 
-    public RestPage<ResponseProductPreviewDto> userFavoriteProduct(Long userId, Pageable pageable) {
-        return new RestPage<>(favoriteRepository.userFavoriteProduct(userId, pageable));
-    }
+    public List<ResponseMallWithProductDto> userFavoriteMall(Long userId) {
 
-    public List<ResponseProductPreviewDto> userFavoriteProductPreview(Long userId) {
-        return favoriteRepository.userFavoriteProductPreview(userId);
+        List<Favorite> favoriteMalls = favoriteRepository.userFavoriteMall(userId);
+        List<ResponseMallWithProductDto> userFavoriteMallDtos = new ArrayList<>();
+
+        favoriteMalls.forEach(favorite -> {
+            Mall mall = favorite.getMall();
+            List<Product> products = mall.getProducts();
+            List<ResponseMallRankProductDto> productDtos = new ArrayList<>();
+
+            getProductDtos(products, productDtos);
+            userFavoriteMallDtos.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, 0, true));
+        });
+        return userFavoriteMallDtos;
     }
 
     @Transactional
@@ -81,14 +73,22 @@ public class FavoriteService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new NoResultException("product doesn't exist"));
         return favoriteRepository.save(Favorite.builder()
-                                        .user(user)
-                                        .product(product)
-                                        .build());
+                .user(user)
+                .product(product)
+                .build());
     }
 
     @Transactional
     public void deleteFavoriteProduct(Long userId, Long productId) {
         favoriteRepository.deleteByUserIdAndProductId(userId, productId);
+    }
+
+    public RestPage<ResponseProductPreviewDto> userFavoriteProduct(Long userId, Pageable pageable) {
+        return new RestPage<>(favoriteRepository.userFavoriteProduct(userId, pageable));
+    }
+
+    public List<ResponseProductPreviewDto> userFavoriteProductPreview(Long userId) {
+        return favoriteRepository.userFavoriteProductPreview(userId);
     }
 
     private void getProductDtos(List<Product> products, List<ResponseMallRankProductDto> productDtos) {
