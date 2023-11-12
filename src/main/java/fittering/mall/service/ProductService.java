@@ -54,7 +54,6 @@ public class ProductService {
     private final BottomRepository bottomRepository;
     private final FavoriteRepository favoriteRepository;
     private final RedisService redisService;
-    private final S3Service s3Service;
 
     @Transactional
     public Product save(Product product) {
