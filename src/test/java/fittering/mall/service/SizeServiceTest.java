@@ -1,154 +1,239 @@
 package fittering.mall.service;
 
-import fittering.mall.service.dto.BottomDto;
-import fittering.mall.service.dto.MallDto;
-import fittering.mall.service.dto.TopDto;
+import fittering.mall.repository.*;
+import fittering.mall.service.dto.*;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.entity.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("test")
 @Transactional
 @SpringBootTest
 class SizeServiceTest {
 
     @Autowired
-    SizeService sizeService;
+    private SizeService sizeService;
+
     @Autowired
-    CategoryService categoryService;
+    private CategoryService categoryService;
+
     @Autowired
-    MallService mallService;
+    private MallService mallService;
+
     @Autowired
-    ProductService productService;
+    private ProductService productService;
+
     @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private SizeRepository sizeRepository;
+
+    @Autowired
+    private OuterRepository outerRepository;
+
+    @Autowired
+    private TopRepository topRepository;
+
+    @Autowired
+    private DressRepository dressRepository;
+
+    @Autowired
+    private BottomRepository bottomRepository;
+
+    @Autowired
+    private MallRepository mallRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private SubCategoryRepository subCategoryRepository;
 
     @AfterEach
-    void End() {
+    void tearDown() {
         redisTemplate.keys("*").forEach(key -> redisTemplate.delete(key));
+        sizeRepository.deleteAllInBatch();
+        outerRepository.deleteAllInBatch();
+        topRepository.deleteAllInBatch();
+        dressRepository.deleteAllInBatch();
+        bottomRepository.deleteAllInBatch();
+        productRepository.deleteAllInBatch();
+        subCategoryRepository.deleteAllInBatch();
+        categoryRepository.deleteAllInBatch();
+        mallRepository.deleteAllInBatch();
     }
 
+    @DisplayName("아우터 상품의 사이즈를 구할 수 있다.")
     @Test
-    void saveTop() {
-        Category category = categoryService.save("top");
-        SubCategory subCategory = categoryService.saveSubCategory("top", "shirt");
-        Mall mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
-        List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
-        Product product = productService.save(Product.builder()
+    void getOuterSize() {
+        //given
+        OuterDto outerDto = OuterDto.builder()
+                .name("size")
+                .full(100.0)
+                .shoulder(100.0)
+                .chest(100.0)
+                .sleeve(100.0)
+                .build();
+        Category outerCategory = categoryService.save("outer");
+        SubCategory outerSubCategory = categoryService.saveSubCategory("outer", "coat");
+        Mall mall = mallService.save(createMall(1));
+        Product product = productService.save(createProduct(1, outerCategory, outerSubCategory, mall));
+
+        //when
+        Outer target = sizeService.saveOuter(outerDto, product).getOuter();
+
+        //then
+        assertThat(target.getId()).isNotNull();
+        assertThat(target)
+                .extracting("full", "shoulder", "chest", "sleeve")
+                .containsExactlyInAnyOrder(
+                        100.0, 100.0, 100.0, 100.0
+                );
+    }
+
+    @DisplayName("상의 상품의 사이즈를 구할 수 있다.")
+    @Test
+    void getTopSize() {
+        //given
+        TopDto topDto = TopDto.builder()
+                .name("size")
+                .full(100.0)
+                .shoulder(100.0)
+                .chest(100.0)
+                .sleeve(100.0)
+                .build();
+        Category topCategory = categoryService.save("top");
+        SubCategory topSubCategory = categoryService.saveSubCategory("top", "shirt");
+        Mall mall = mallService.save(createMall(1));
+        Product product = productService.save(createProduct(1, topCategory, topSubCategory, mall));
+
+        //when
+        Top target = sizeService.saveTop(topDto, product).getTop();
+
+        //then
+        assertThat(target.getId()).isNotNull();
+        assertThat(target)
+                .extracting("full", "shoulder", "chest", "sleeve")
+                .containsExactlyInAnyOrder(
+                        100.0, 100.0, 100.0, 100.0
+                );
+    }
+
+    @DisplayName("원피스 상품의 사이즈를 구할 수 있다.")
+    @Test
+    void getDressSize() {
+        //given
+        DressDto dressDto = DressDto.builder()
+                .name("size")
+                .full(100.0)
+                .shoulder(100.0)
+                .chest(100.0)
+                .waist(100.0)
+                .armHall(100.0)
+                .hip(100.0)
+                .sleeve(100.0)
+                .sleeveWidth(100.0)
+                .bottomWidth(100.0)
+                .build();
+        Category dressCategory = categoryService.save("dress");
+        SubCategory dressSubCategory = categoryService.saveSubCategory("dress", "dress");
+        Mall mall = mallService.save(createMall(1));
+        Product product = productService.save(createProduct(1, dressCategory, dressSubCategory, mall));
+
+        //when
+        Dress target = sizeService.saveDress(dressDto, product).getDress();
+
+        //then
+        assertThat(target.getId()).isNotNull();
+        assertThat(target)
+                .extracting("full", "shoulder", "chest", "waist", "armHall", "hip", "sleeve", "sleeveWidth", "bottomWidth")
+                .containsExactlyInAnyOrder(
+                        100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0, 100.0
+                );
+    }
+
+    @DisplayName("하의 상품의 사이즈를 구할 수 있다.")
+    @Test
+    void getBottomSize() {
+        //given
+        BottomDto bottomDto = BottomDto.builder()
+                .name("size")
+                .full(100.0)
+                .waist(100.0)
+                .thigh(100.0)
+                .rise(100.0)
+                .bottomWidth(100.0)
+                .hipWidth(100.0)
+                .build();
+        Category bottomCategory = categoryService.save("bottom");
+        SubCategory bottomSubCategory = categoryService.saveSubCategory("bottom", "pants");
+        Mall mall = mallService.save(createMall(1));
+        Product product = productService.save(createProduct(1, bottomCategory, bottomSubCategory, mall));
+
+        //when
+        Bottom target = sizeService.saveBottom(bottomDto, product).getBottom();
+
+        //then
+        assertThat(target.getId()).isNotNull();
+        assertThat(target)
+                .extracting("full", "waist", "thigh", "rise", "bottomWidth", "hipWidth")
+                .containsExactlyInAnyOrder(
+                        100.0, 100.0, 100.0, 100.0, 100.0, 100.0
+                );
+    }
+
+    private MallDto createMall(int number) {
+        return MallDto.builder()
+                .name("testMall" + number)
+                .url("https://www.test-mall.com")
+                .image("image.jpg")
+                .description("desc")
+                .view(0)
+                .products(new ArrayList<>())
+                .build();
+    }
+
+    private Product createProduct(int number, Category category, SubCategory subCategory, Mall mall) {
+        return Product.builder()
                 .price(10000)
-                .name("tp1")
+                .name("product" + number)
                 .gender("M")
                 .type(0)
                 .image("image.jpg")
                 .view(0)
                 .timeView(0)
-                .origin("https://test.com/product/1")
+                .origin("https://test.com/product/" + number)
                 .category(category)
                 .subCategory(subCategory)
                 .mall(mall)
                 .disabled(0)
-                .build());
-        List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
-
-        TopDto topDto1 = new TopDto("S", 68.0, 50.0, 53.0, 24.0);
-        TopDto topDto2 = new TopDto("M", 69.5, 51.5, 55.5, 25.0);
-        TopDto topDto3 = new TopDto("L", 71.0, 53.0, 58.0, 26.0);
-
-        Size topSize1 = sizeService.saveTop(topDto1, product);
-        Size topSize2 = sizeService.saveTop(topDto2, product);
-        Size topSize3 = sizeService.saveTop(topDto3, product);
-
-        compareTopSize(topDto1, topSize1);
-        compareTopSize(topDto2, topSize2);
-        compareTopSize(topDto3, topSize3);
+                .build();
     }
 
-    @Test
-    void saveBottom() {
-        Category category = categoryService.save("top");
-        SubCategory subCategory = categoryService.saveSubCategory("top", "shirt");
-        Mall mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
-        List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
-        Product product = productService.save(Product.builder()
-                .price(10000)
-                .name("tp1")
+    private SignUpDto createUser() {
+        return SignUpDto.builder()
+                .username("testuser")
+                .password("password")
+                .email("test@email.com")
                 .gender("M")
-                .type(0)
-                .image("image.jpg")
-                .view(0)
-                .timeView(0)
-                .origin("https://test.com/product/1")
-                .category(category)
-                .subCategory(subCategory)
-                .mall(mall)
-                .disabled(0)
-                .build());
-        List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
-
-        BottomDto bottomDto1 = new BottomDto("S", 104.0, 37.5, 51.5, 33.8, 28.0, 26.0);
-        BottomDto bottomDto2 = new BottomDto("M", 105.0, 40.0, 54.0, 35.0, 29.0, 27.0);
-        BottomDto bottomDto3 = new BottomDto("L", 106.0, 42.5, 56.5, 36.2, 30.0, 28.0);
-
-        Size bottomSize1 = sizeService.saveBottom(bottomDto1, product);
-        Size bottomSize2 = sizeService.saveBottom(bottomDto2, product);
-        Size bottomSize3 = sizeService.saveBottom(bottomDto3, product);
-
-        compareBottomSize(bottomDto1, bottomSize1);
-        compareBottomSize(bottomDto2, bottomSize2);
-        compareBottomSize(bottomDto3, bottomSize3);
-    }
-
-    @Test
-    void setProduct() {
-        Category category = categoryService.save("top");
-        SubCategory subCategory = categoryService.saveSubCategory("top", "shirt");
-        Mall mall = mallService.save(new MallDto(1L, "testMall1", "test.com", "image.jpg", "desc", 0, new ArrayList<>()));
-        List<String> descImgsStr = new ArrayList<>(){{ add("descImage.jpg"); }};
-        Product product = productService.save(Product.builder()
-                .price(10000)
-                .name("tp1")
-                .gender("M")
-                .type(0)
-                .image("image.jpg")
-                .view(0)
-                .timeView(0)
-                .origin("https://test.com/product/1")
-                .category(category)
-                .subCategory(subCategory)
-                .mall(mall)
-                .disabled(0)
-                .build());
-        List<ProductDescription> descImgs = List.of(new ProductDescription(descImgsStr.get(0), product));
-
-        BottomDto bottomDto = new BottomDto("S", 104.0, 37.5, 51.5, 33.8, 28.0, 26.0);
-        Size bottomSize = sizeService.saveBottom(bottomDto, product);
-
-        assertEquals(bottomSize.getProduct(), product);
-    }
-
-    private static void compareTopSize(TopDto topDto, Size topSize) {
-        assertEquals(topDto.getName(), topSize.getName());
-        assertEquals(topDto.getFull(), topSize.getTop().getFull());
-        assertEquals(topDto.getShoulder(), topSize.getTop().getShoulder());
-        assertEquals(topDto.getChest(), topSize.getTop().getChest());
-        assertEquals(topDto.getSleeve(), topSize.getTop().getSleeve());
-    }
-
-    private static void compareBottomSize(BottomDto bottomDto, Size bottomSize) {
-        assertEquals(bottomDto.getName(), bottomSize.getName());
-        assertEquals(bottomDto.getFull(), bottomSize.getBottom().getFull());
-        assertEquals(bottomDto.getWaist(), bottomSize.getBottom().getWaist());
-        assertEquals(bottomDto.getThigh(), bottomSize.getBottom().getThigh());
-        assertEquals(bottomDto.getRise(), bottomSize.getBottom().getRise());
-        assertEquals(bottomDto.getBottomWidth(), bottomSize.getBottom().getBottomWidth());
-        assertEquals(bottomDto.getHipWidth(), bottomSize.getBottom().getHipWidth());
+                .year(1990)
+                .month(1)
+                .day(1)
+                .build();
     }
 }
