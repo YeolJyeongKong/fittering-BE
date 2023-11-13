@@ -250,7 +250,7 @@ public class ProductService {
 
     public List<ResponseProductDescriptionDto> getProductDescriptions(Long productId) {
         List<ResponseProductDescriptionDto> responseProductDescriptionDtos = new ArrayList<>();
-        productDescriptionRepository.getProductDescrtiptions(productId).forEach(productDescription ->
+        productDescriptionRepository.getProductDescriptions(productId).forEach(productDescription ->
                 responseProductDescriptionDtos.add(ProductMapper.INSTANCE.toResponseProductDescriptionDto(productDescription))
         );
         return responseProductDescriptionDtos;
