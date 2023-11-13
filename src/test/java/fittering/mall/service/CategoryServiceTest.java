@@ -32,7 +32,7 @@ class CategoryServiceTest {
     RedisTemplate<String, Object> redisTemplate;
 
     @AfterEach
-    void End() {
+    void tearDown() {
         redisTemplate.keys("*").forEach(key -> redisTemplate.delete(key));
         subCategoryRepository.deleteAllInBatch();
         categoryRepository.deleteAllInBatch();
