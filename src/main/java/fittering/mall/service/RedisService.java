@@ -2,8 +2,8 @@ package fittering.mall.service;
 
 import fittering.mall.repository.ProductRepository;
 import fittering.mall.repository.RankRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
