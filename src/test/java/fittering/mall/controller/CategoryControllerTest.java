@@ -1,18 +1,11 @@
 package fittering.mall.controller;
 
+import fittering.mall.config.ControllerTestSupport;
 import fittering.mall.config.WithCustomMockUser;
-import fittering.mall.config.jwt.JwtAuthenticationFilter;
-import fittering.mall.service.CategoryService;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
@@ -21,21 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = CategoryController.class)
-@Slf4j
-class CategoryControllerTest {
-
-    @Autowired
-    private WebApplicationContext context;
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @MockBean
-    private CategoryService categoryService;
+class CategoryControllerTest extends ControllerTestSupport {
 
     @BeforeEach
     void setUp() {

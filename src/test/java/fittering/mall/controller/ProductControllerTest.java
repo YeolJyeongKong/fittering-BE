@@ -1,8 +1,7 @@
 package fittering.mall.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import fittering.mall.config.ControllerTestSupport;
 import fittering.mall.config.WithCustomMockUser;
-import fittering.mall.config.jwt.JwtAuthenticationFilter;
 import fittering.mall.controller.dto.request.RequestProductDetailDto;
 import fittering.mall.controller.dto.response.ResponseOuterDto;
 import fittering.mall.controller.dto.response.ResponseProductCategoryDto;
@@ -10,20 +9,14 @@ import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
 import fittering.mall.domain.RestPage;
 import fittering.mall.domain.entity.Mall;
 import fittering.mall.domain.entity.Product;
-import fittering.mall.service.*;
 import fittering.mall.service.dto.ProductParamDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
@@ -36,38 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = ProductController.class)
-class ProductControllerTest {
-
-    @Autowired
-    private WebApplicationContext context;
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
-    JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @MockBean
-    private ProductService productService;
-
-    @MockBean
-    private CategoryService categoryService;
-
-    @MockBean
-    private MallService mallService;
-
-    @MockBean
-    private UserService userService;
-
-    @MockBean
-    private SizeService sizeService;
-
-    @MockBean
-    private RankService rankService;
+class ProductControllerTest extends ControllerTestSupport {
 
     @BeforeEach
     void setUp() {

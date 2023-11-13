@@ -1,37 +1,25 @@
 package fittering.mall.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import fittering.mall.config.ControllerTestSupport;
 import fittering.mall.config.WithCustomMockUser;
-import fittering.mall.config.jwt.JwtAuthenticationFilter;
 import fittering.mall.controller.dto.request.RequestMeasurementDto;
 import fittering.mall.controller.dto.request.RequestSmartMeasurementDto;
 import fittering.mall.controller.dto.request.RequestUserCheckDto;
 import fittering.mall.controller.dto.request.RequestUserDto;
 import fittering.mall.controller.dto.response.*;
 import fittering.mall.domain.collection.Products;
-import fittering.mall.service.FavoriteService;
-import fittering.mall.service.ProductService;
-import fittering.mall.service.S3Service;
-import fittering.mall.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -44,38 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = UserController.class)
-class UserControllerTest {
-
-    @Autowired
-    private WebApplicationContext context;
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
-    JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @MockBean
-    private UserService userService;
-
-    @MockBean
-    private ProductService productService;
-
-    @MockBean
-    private FavoriteService favoriteService;
-
-    @MockBean
-    private S3Service s3Service;
-
-    @MockBean
-    private RestTemplate restTemplate;
-
-    @MockBean
-    private RedisTemplate<String, Object> redisTemplate;
+class UserControllerTest extends ControllerTestSupport {
 
     @Mock
     private HashOperations hashOperations;
