@@ -53,9 +53,9 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
                         mall.url.as("mallUrl")
                 ))
                 .from(favorite)
-                .join(favorite.user, user)
-                .join(favorite.product, product)
-                .join(product.mall, mall)
+                .leftJoin(favorite.user, user)
+                .leftJoin(favorite.product, product)
+                .leftJoin(product.mall, mall)
                 .where(
                         userIdEq(userId),
                         favorite.mall.isNull()
@@ -91,9 +91,9 @@ public class FavoriteRepositoryImpl implements FavoriteRepositoryCustom {
                         mall.url.as("mallUrl")
                 ))
                 .from(favorite)
-                .join(favorite.user, user)
-                .join(favorite.product, product)
-                .join(product.mall, mall)
+                .leftJoin(favorite.user, user)
+                .leftJoin(favorite.product, product)
+                .leftJoin(product.mall, mall)
                 .where(
                         userIdEq(userId),
                         favorite.mall.isNull()
