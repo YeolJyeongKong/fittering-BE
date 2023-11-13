@@ -25,13 +25,10 @@ import static fittering.mall.domain.entity.QFavorite.favorite;
 import static fittering.mall.domain.entity.QMall.mall;
 import static fittering.mall.domain.entity.QOuter.outer;
 import static fittering.mall.domain.entity.QProduct.product;
-import static fittering.mall.domain.entity.QRecent.recent;
-import static fittering.mall.domain.entity.QRecentRecommendation.recentRecommendation;
 import static fittering.mall.domain.entity.QSize.size;
 import static fittering.mall.domain.entity.QSubCategory.subCategory;
 import static fittering.mall.domain.entity.QTop.top;
 import static fittering.mall.domain.entity.QUser.user;
-import static fittering.mall.domain.entity.QUserRecommendation.userRecommendation;
 import static fittering.mall.repository.querydsl.EqualMethod.*;
 
 public class ProductRepositoryImpl implements ProductRepositoryCustom {
@@ -513,58 +510,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         }
 
         return SizeMapper.INSTANCE.toBottomProductDto(favoriteCount, productInfo, "", null, bottomDtos);
-    }
-
-    @Override
-    public Long findFavoriteCount(Long favoriteId) {
-        Long nullableCount = queryFactory
-                .select(product.count())
-                .from(product)
-                .leftJoin(product.favorites, favorite)
-                .where(
-                        favoriteIdEq(favoriteId)
-                )
-                .fetchOne();
-        return nullableCount != null ? nullableCount : 0L;
-    }
-
-    @Override
-    public Long findRecentCount(Long recentId) {
-        Long nullableCount = queryFactory
-                .select(product.count())
-                .from(product)
-                .leftJoin(product.recents, recent)
-                .where(
-                        recentIdEq(recentId)
-                )
-                .fetchOne();
-        return nullableCount != null ? nullableCount : 0L;
-    }
-
-    @Override
-    public Long findRecentRecommendation(Long recentRecommendationId) {
-        Long nullableCount = queryFactory
-                .select(product.count())
-                .from(product)
-                .leftJoin(product.recentRecommendations, recentRecommendation)
-                .where(
-                        recentRecommendationIdEq(recentRecommendationId)
-                )
-                .fetchOne();
-        return nullableCount != null ? nullableCount : 0L;
-    }
-
-    @Override
-    public Long findUserRecommendation(Long userRecommendationId) {
-        Long nullableCount = queryFactory
-                .select(product.count())
-                .from(product)
-                .leftJoin(product.userRecommendations, userRecommendation)
-                .where(
-                        userRecommendationIdEq(userRecommendationId)
-                )
-                .fetchOne();
-        return nullableCount != null ? nullableCount : 0L;
     }
 
     @Override
