@@ -3,7 +3,7 @@ package fittering.mall.repository.querydsl;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
-import static fittering.mall.domain.entity.QRecent.recent;
+import static fittering.mall.domain.entity.QUserRecommendation.userRecommendation;
 import static fittering.mall.repository.querydsl.EqualMethod.userIdEq;
 
 public class UserRecommendationRepositoryImpl implements UserRecommendationRepositoryCustom {
@@ -17,7 +17,7 @@ public class UserRecommendationRepositoryImpl implements UserRecommendationRepos
     @Override
     public void deleteByUserId(Long userId) {
         queryFactory
-                .delete(recent)
+                .delete(userRecommendation)
                 .where(
                         userIdEq(userId)
                 )

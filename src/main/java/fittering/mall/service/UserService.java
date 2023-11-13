@@ -11,7 +11,7 @@ import fittering.mall.service.dto.SignUpDto;
 import fittering.mall.domain.mapper.MeasurementMapper;
 import fittering.mall.domain.mapper.UserMapper;
 import jakarta.persistence.NoResultException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -175,9 +175,9 @@ public class UserService {
     }
 
     @Transactional
-    public boolean updatePasswordToken(String email) {
+    public boolean updatePasswordToken(String email, LocalDateTime updatedTime) {
         User user = findByEmail(email);
-        return user.updatePasswordToken();
+        return user.updatePasswordToken(updatedTime);
     }
 
     @Transactional
@@ -214,9 +214,9 @@ public class UserService {
     }
 
     @Transactional
-    public void updateRecentLastInitializedAtOfUsers() {
+    public void updateRecentLastInitializedAtOfUsers(LocalDateTime updatedTime) {
         userRepository.findAll().forEach(user -> {
-            updateRecentLastInitializedAtOfUser(user);
+            updateRecentLastInitializedAtOfUser(user, updatedTime);
         });
     }
 
@@ -247,16 +247,15 @@ public class UserService {
         return user.getEmail().equals(email);
     }
 
-    private void updateRecentLastInitializedAtOfUser(User user) {
+    private void updateRecentLastInitializedAtOfUser(User user, LocalDateTime updatedTime) {
         if (user.getRecentLastInitializedAt() == null) {
-            user.updateRecentLastInitializedAt();
+            user.updateRecentLastInitializedAt(updatedTime);
             return;
         }
 
         LocalDateTime initializeAt = user.getRecentLastInitializedAt();
-        LocalDateTime now = LocalDateTime.now();
-        if (ChronoUnit.WEEKS.between(initializeAt, now) >= 1) {
-            user.updateRecentLastInitializedAt();
+        if (ChronoUnit.WEEKS.between(initializeAt, updatedTime) >= 1) {
+            user.updateRecentLastInitializedAt(updatedTime);
             recentRepository.initializeRecents(user.getId());
         }
     }

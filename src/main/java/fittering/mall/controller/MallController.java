@@ -5,6 +5,7 @@ import fittering.mall.controller.dto.response.ResponseMallDto;
 import fittering.mall.controller.dto.response.ResponseMallNameAndIdDto;
 import fittering.mall.controller.dto.response.ResponseMallPreviewDto;
 import fittering.mall.controller.dto.response.ResponseMallWithProductDto;
+import fittering.mall.domain.entity.User;
 import fittering.mall.domain.mapper.MallMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -22,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import fittering.mall.config.auth.PrincipalDetails;
 import fittering.mall.service.FavoriteService;
 import fittering.mall.service.MallService;
 import fittering.mall.service.RankService;
@@ -60,9 +60,9 @@ public class MallController {
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseMallDto.class)))
     @GetMapping("/auth/malls/{mallId}")
     public ResponseEntity<?> mallRank(@PathVariable("mallId") @NotEmpty Long mallId,
-                                      @AuthenticationPrincipal PrincipalDetails principalDetails) {
-        ResponseMallDto responseMallDto = mallService.findById(principalDetails.getUser().getId(), mallId);
-        rankService.updateViewOnMall(principalDetails.getUser().getId(), mallId);
+                                      @AuthenticationPrincipal User user) {
+        ResponseMallDto responseMallDto = mallService.findById(user.getId(), mallId);
+        rankService.updateViewOnMall(user.getId(), mallId);
         return new ResponseEntity<>(responseMallDto, HttpStatus.OK);
     }
 
@@ -85,36 +85,32 @@ public class MallController {
     @Operation(summary = "쇼핑몰 랭킹 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallWithProductDto.class))))
     @GetMapping("/auth/malls/rank")
-    public ResponseEntity<?> mallRank(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        List<ResponseMallWithProductDto> malls = rankService.mallRank(principalDetails.getUser().getId());
+    public ResponseEntity<?> mallRank(@AuthenticationPrincipal User user) {
+        List<ResponseMallWithProductDto> malls = rankService.mallRank(user.getId());
         return new ResponseEntity<>(malls, HttpStatus.OK);
     }
 
     @Operation(summary = "쇼핑몰 랭킹 조회 (미리보기)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseMallPreviewDto.class)))
     @GetMapping("/auth/malls/rank/preview")
-    public ResponseEntity<?> mallRankPreview(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                             Pageable pageable) {
-        List<ResponseMallPreviewDto> malls = rankService.mallRankPreview(principalDetails.getUser().getId(),
-                                                                         pageable, MALL_RANK_SIZE);
+    public ResponseEntity<?> mallRankPreview(@AuthenticationPrincipal User user, Pageable pageable) {
+        List<ResponseMallPreviewDto> malls = rankService.mallRankPreview(user.getId(), pageable, MALL_RANK_SIZE);
         return new ResponseEntity<>(malls, HttpStatus.OK);
     }
 
     @Operation(summary = "모바일 환경 쇼핑몰 랭킹 조회 (미리보기)")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(schema = @Schema(implementation = ResponseMallPreviewDto.class)))
     @GetMapping("/auth/malls/rank/preview/mobile")
-    public ResponseEntity<?> mallRankPreviewMobile(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                                   Pageable pageable) {
-        List<ResponseMallPreviewDto> malls = rankService.mallRankPreview(principalDetails.getUser().getId(),
-                                                                         pageable, MOBILE_MALL_RANK_SIZE);
+    public ResponseEntity<?> mallRankPreviewMobile(@AuthenticationPrincipal User user, Pageable pageable) {
+        List<ResponseMallPreviewDto> malls = rankService.mallRankPreview(user.getId(), pageable, MOBILE_MALL_RANK_SIZE);
         return new ResponseEntity<>(malls, HttpStatus.OK);
     }
 
     @Operation(summary = "즐겨찾기 쇼핑몰 상세 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallWithProductDto.class))))
     @GetMapping("/auth/malls/favorite_malls")
-    public ResponseEntity<?> favoriteMall(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        List<ResponseMallWithProductDto> malls = favoriteService.userFavoriteMall(principalDetails.getUser().getId());
+    public ResponseEntity<?> favoriteMall(@AuthenticationPrincipal User user) {
+        List<ResponseMallWithProductDto> malls = favoriteService.userFavoriteMall(user.getId());
         return new ResponseEntity<>(malls, HttpStatus.OK);
     }
 }

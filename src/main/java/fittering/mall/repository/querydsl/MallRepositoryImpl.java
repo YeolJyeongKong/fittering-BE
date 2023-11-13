@@ -47,19 +47,6 @@ public class MallRepositoryImpl implements MallRepositoryCustom {
     }
 
     @Override
-    public Long findFavoriteCount(Long favoriteId) {
-        Long nullableCount = queryFactory
-                .select(mall.count())
-                .from(mall)
-                .leftJoin(mall.favorites, favorite)
-                .where(
-                        favoriteIdEq(favoriteId)
-                )
-                .fetchOne();
-        return nullableCount != null ? nullableCount : 0L;
-    }
-
-    @Override
     public List<RelatedSearchDto> relatedSearch(String keyword) {
         return queryFactory
                 .select(new QRelatedSearchDto(

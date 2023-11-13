@@ -22,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import fittering.mall.config.auth.PrincipalDetails;
 import fittering.mall.domain.entity.*;
 import fittering.mall.service.*;
 
@@ -85,6 +84,9 @@ public class ProductController {
                                                  @PathVariable("gender") @NotEmpty String gender,
                                                  @PathVariable("filterId") @NotEmpty Long filterId,
                                                  Pageable pageable) {
+        if (gender.length() > 1) {
+            return new ResponseEntity<>("성별은 1자 이하여야 합니다.", HttpStatus.BAD_REQUEST);
+        }
         ProductParamDto productParamDto = ProductParamDto.builder()
                 .categoryId(categoryId)
                 .gender(gender)
@@ -101,6 +103,9 @@ public class ProductController {
                                                     @PathVariable("gender") @NotEmpty String gender,
                                                     @PathVariable("filterId") @NotEmpty Long filterId,
                                                     Pageable pageable) {
+        if (gender.length() > 1) {
+            return new ResponseEntity<>("성별은 1자 이하여야 합니다.", HttpStatus.BAD_REQUEST);
+        }
         ProductParamDto productParamDto = ProductParamDto.builder()
                 .subCategoryId(subCategoryId)
                 .gender(gender)
@@ -178,32 +183,32 @@ public class ProductController {
     })
     @GetMapping("/auth/products/{productId}")
     public ResponseEntity<?> productDetail(@PathVariable("productId") @NotEmpty Long productId,
-                                           @AuthenticationPrincipal PrincipalDetails principalDetails) {
+                                           @AuthenticationPrincipal User user) {
         Product product = productService.findById(productId);
         productService.updateView(productId);
-        rankService.updateViewOnMall(principalDetails.getUser().getId(), product.getMall().getId());
+        rankService.updateViewOnMall(user.getId(), product.getMall().getId());
 
-        if (!userService.isRecentProduct(principalDetails.getUser().getId(), productId)) {
-            userService.saveRecentProduct(principalDetails.getUser().getId(), productId);
+        if (!userService.isRecentProduct(user.getId(), productId)) {
+            userService.saveRecentProduct(user.getId(), productId);
         }
 
         if(product.getType().equals(OUTER)) {
-            ResponseOuterDto outerProduct = productService.outerProductDetail(principalDetails.getUser().getId(), productId);
+            ResponseOuterDto outerProduct = productService.outerProductDetail(user.getId(), productId);
             return new ResponseEntity<>(outerProduct, HttpStatus.OK);
         }
 
         if(product.getType().equals(TOP)) {
-            ResponseTopDto topProduct = productService.topProductDetail(principalDetails.getUser().getId(), productId);
+            ResponseTopDto topProduct = productService.topProductDetail(user.getId(), productId);
             return new ResponseEntity<>(topProduct, HttpStatus.OK);
         }
 
         if(product.getType().equals(DRESS)) {
-            ResponseDressDto dressProduct = productService.dressProductDetail(principalDetails.getUser().getId(), productId);
+            ResponseDressDto dressProduct = productService.dressProductDetail(user.getId(), productId);
             return new ResponseEntity<>(dressProduct, HttpStatus.OK);
         }
 
         if(product.getType().equals(BOTTOM)) {
-            ResponseBottomDto bottomProduct = productService.bottomProductDetail(principalDetails.getUser().getId(), productId);
+            ResponseBottomDto bottomProduct = productService.bottomProductDetail(user.getId(), productId);
             return new ResponseEntity<>(bottomProduct, HttpStatus.OK);
         }
 
@@ -214,6 +219,9 @@ public class ProductController {
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseProductPreviewDto.class))))
     @GetMapping("/products/rank/{gender}")
     public ResponseEntity<?> productOfTimeRank(@PathVariable("gender") @NotEmpty String gender) {
+        if (gender.length() > 1) {
+            return new ResponseEntity<>("성별은 1자 이하여야 합니다.", HttpStatus.BAD_REQUEST);
+        }
         List<ResponseProductPreviewDto> productsOfTimeRank = productService.productsOfTimeRank(gender);
         return new ResponseEntity<>(productsOfTimeRank, HttpStatus.OK);
     }

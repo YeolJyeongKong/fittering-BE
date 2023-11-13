@@ -19,7 +19,7 @@ public class ProductDescriptionRepositoryImpl implements ProductDescriptionRepos
     }
 
     @Override
-    public List<ProductDescriptionDto> getProductDescrtiptions(Long productId) {
+    public List<ProductDescriptionDto> getProductDescriptions(Long productId) {
         return queryFactory
                 .select(new QProductDescriptionDto(
                         productDescription.url

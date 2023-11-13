@@ -52,7 +52,7 @@ public class S3Service {
         return null;
     }
 
-    public String saveObjectWithBucket(MultipartFile file, Long userId, String bucket) throws IOException {
+    private String saveObjectWithBucket(MultipartFile file, Long userId, String bucket) throws IOException {
         String fileName = userId + "_" + LocalDateTime.now();
         byte[] fileBytes = file.getBytes();
         InputStream fileInputStream = new ByteArrayInputStream(fileBytes);

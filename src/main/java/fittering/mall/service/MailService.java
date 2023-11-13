@@ -2,14 +2,12 @@ package fittering.mall.service;
 
 import fittering.mall.service.dto.CustomMailMessage;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import fittering.mall.service.dto.MailDto;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MailService {

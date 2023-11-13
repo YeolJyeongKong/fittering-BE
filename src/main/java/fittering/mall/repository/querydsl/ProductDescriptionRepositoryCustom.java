@@ -5,5 +5,5 @@ import fittering.mall.service.dto.ProductDescriptionDto;
 import java.util.List;
 
 public interface ProductDescriptionRepositoryCustom {
-    List<ProductDescriptionDto> getProductDescrtiptions(Long productId);
+    List<ProductDescriptionDto> getProductDescriptions(Long productId);
 }

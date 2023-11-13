@@ -1,5 +1,6 @@
 package fittering.mall.controller.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -7,9 +8,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestMeasurementDto {
-    @NonNull
+    @NotNull(message = "키를 입력해주세요.")
     private Double height;
-    @NonNull
+    @NotNull(message = "몸무게를 입력해주세요.")
     private Double weight;
     private Double arm;
     private Double leg;

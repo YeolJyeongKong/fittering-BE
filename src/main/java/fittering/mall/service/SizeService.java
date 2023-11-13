@@ -1,8 +1,8 @@
 package fittering.mall.service;
 
 import fittering.mall.domain.mapper.SizeMapper;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import fittering.mall.service.dto.BottomDto;
 import fittering.mall.service.dto.DressDto;

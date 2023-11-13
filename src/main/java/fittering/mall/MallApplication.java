@@ -8,17 +8,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@EnableJpaAuditing
+//@EnableJpaAuditing
 @EnableScheduling
 @SpringBootApplication
 public class MallApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MallApplication.class, args);
-	}
-
-	@Bean
-	JPAQueryFactory jpaQueryFactory(EntityManager em) {
-		return new JPAQueryFactory(em);
 	}
 }

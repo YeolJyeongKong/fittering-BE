@@ -11,8 +11,8 @@ import fittering.mall.domain.mapper.ProductMapper;
 import fittering.mall.domain.mapper.SizeMapper;
 import fittering.mall.service.dto.ProductParamDto;
 import jakarta.persistence.NoResultException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
@@ -54,7 +54,6 @@ public class ProductService {
     private final BottomRepository bottomRepository;
     private final FavoriteRepository favoriteRepository;
     private final RedisService redisService;
-    private final S3Service s3Service;
 
     @Transactional
     public Product save(Product product) {
@@ -258,7 +257,7 @@ public class ProductService {
 
     public List<ResponseProductDescriptionDto> getProductDescriptions(Long productId) {
         List<ResponseProductDescriptionDto> responseProductDescriptionDtos = new ArrayList<>();
-        productDescriptionRepository.getProductDescrtiptions(productId).forEach(productDescription ->
+        productDescriptionRepository.getProductDescriptions(productId).forEach(productDescription ->
                 responseProductDescriptionDtos.add(ProductMapper.INSTANCE.toResponseProductDescriptionDto(productDescription))
         );
         return responseProductDescriptionDtos;

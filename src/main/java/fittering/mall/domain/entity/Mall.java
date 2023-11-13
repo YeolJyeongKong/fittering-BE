@@ -42,7 +42,8 @@ public class Mall extends BaseEntity {
     private List<Favorite> favorites = new ArrayList<>();
 
     @Builder
-    public Mall(String name, String url, String image, String description) {
+    public Mall(Long id, String name, String url, String image, String description) {
+        this.id = id;
         this.name = name;
         this.url = url;
         this.image = image;

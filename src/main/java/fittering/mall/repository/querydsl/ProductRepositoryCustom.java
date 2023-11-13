@@ -23,10 +23,6 @@ public interface ProductRepositoryCustom {
     TopProductDto topProductDetail(Long productId);
     DressProductDto dressProductDetail(Long productId);
     BottomProductDto bottomProductDetail(Long productId);
-    Long findFavoriteCount(Long favoriteId);
-    Long findRecentCount(Long recentId);
-    Long findRecentRecommendation(Long recentRecommendationId);
-    Long findUserRecommendation(Long userRecommendationId);
     List<Integer> findPopularAgeRangePercents(Long productId);
     List<Integer> findPopularGenderPercents(Long productId);
     List<ResponseProductPreviewDto> timeRank(String gender);

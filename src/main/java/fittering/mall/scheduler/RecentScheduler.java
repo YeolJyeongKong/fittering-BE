@@ -5,6 +5,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import fittering.mall.service.UserService;
 
+import java.time.LocalDateTime;
+
 @Component
 @RequiredArgsConstructor
 public class RecentScheduler {
@@ -15,6 +17,6 @@ public class RecentScheduler {
 
     @Scheduled(fixedDelay = day)
     public void updateRecentLastInitializedAt() {
-        userService.updateRecentLastInitializedAtOfUsers();
+        userService.updateRecentLastInitializedAtOfUsers(LocalDateTime.now());
     }
 }

@@ -114,24 +114,22 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
-    public boolean updatePasswordToken() {
-        LocalDateTime now = LocalDateTime.now();
-
+    public boolean updatePasswordToken(LocalDateTime updatedTime) {
         if(passwordToken == null) {
-            passwordToken = now;
+            passwordToken = updatedTime;
             return true;
         }
 
-        if(Duration.between(passwordToken, now).getSeconds() < 3600) {
+        if(Duration.between(passwordToken, updatedTime).getSeconds() < 3600) {
             return false;
         }
 
-        passwordToken = now;
+        passwordToken = updatedTime;
         return true;
     }
 
-    public void updateRecentLastInitializedAt() {
-        recentLastInitializedAt = LocalDateTime.now();
+    public void updateRecentLastInitializedAt(LocalDateTime updatedTime) {
+        recentLastInitializedAt = updatedTime;
     }
 
     public static Integer getAgeRange(Integer year, Integer month, Integer day) {
