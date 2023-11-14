@@ -1,5 +1,6 @@
 package fittering.mall.service;
 
+import fittering.mall.config.IntegrationTestSupport;
 import fittering.mall.controller.dto.response.ResponseMallPreviewDto;
 import fittering.mall.controller.dto.response.ResponseMallWithProductDto;
 import fittering.mall.repository.RankRepository;
@@ -10,10 +11,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.entity.*;
 
@@ -22,10 +21,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-@ActiveProfiles("test")
 @Transactional
-@SpringBootTest
-class RankServiceTest {
+class RankServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private RankService rankService;

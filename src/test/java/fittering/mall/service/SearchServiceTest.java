@@ -1,5 +1,6 @@
 package fittering.mall.service;
 
+import fittering.mall.config.IntegrationTestSupport;
 import fittering.mall.controller.dto.response.ResponseRelatedSearchMallDto;
 import fittering.mall.controller.dto.response.ResponseRelatedSearchProductDto;
 import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
@@ -9,10 +10,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.RestPage;
 import fittering.mall.service.dto.MallDto;
@@ -24,10 +23,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
-@ActiveProfiles("test")
 @Transactional
-@SpringBootTest
-class SearchServiceTest {
+class SearchServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private SearchService searchService;

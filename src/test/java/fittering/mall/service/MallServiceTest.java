@@ -1,10 +1,10 @@
 package fittering.mall.service;
 
+import fittering.mall.config.IntegrationTestSupport;
 import fittering.mall.controller.dto.response.ResponseMallDto;
 import fittering.mall.controller.dto.response.ResponseMallNameAndIdDto;
 import fittering.mall.controller.dto.response.ResponseMallWithProductDto;
 import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
-import fittering.mall.domain.mapper.MallMapper;
 import fittering.mall.repository.CategoryRepository;
 import fittering.mall.repository.MallRepository;
 import fittering.mall.repository.ProductRepository;
@@ -15,21 +15,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import fittering.mall.service.dto.MallDto;
 import fittering.mall.domain.entity.*;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-@ActiveProfiles("test")
 @Transactional
-@SpringBootTest
-class MallServiceTest {
+class MallServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private MallService mallService;

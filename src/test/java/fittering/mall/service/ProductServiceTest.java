@@ -1,26 +1,22 @@
 package fittering.mall.service;
 
+import fittering.mall.config.IntegrationTestSupport;
 import fittering.mall.config.kafka.domain.dto.CrawledMallDto;
 import fittering.mall.config.kafka.domain.dto.CrawledProductDto;
 import fittering.mall.config.kafka.domain.dto.CrawledSizeDto;
 import fittering.mall.controller.dto.response.*;
 import fittering.mall.domain.RestPage;
-import fittering.mall.domain.collection.Products;
 import fittering.mall.repository.*;
 import fittering.mall.service.dto.MallDto;
 import fittering.mall.service.dto.ProductParamDto;
 import fittering.mall.service.dto.SignUpDto;
 import jakarta.persistence.NoResultException;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.entity.*;
 
@@ -30,10 +26,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-@ActiveProfiles("test")
 @Transactional
-@SpringBootTest
-class ProductServiceTest {
+class ProductServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private ProductService productService;

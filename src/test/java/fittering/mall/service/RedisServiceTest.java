@@ -1,5 +1,6 @@
 package fittering.mall.service;
 
+import fittering.mall.config.IntegrationTestSupport;
 import fittering.mall.domain.entity.*;
 import fittering.mall.repository.*;
 import fittering.mall.service.dto.MallDto;
@@ -8,9 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -18,10 +17,8 @@ import java.util.ArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@ActiveProfiles("test")
 @Transactional
-@SpringBootTest
-class RedisServiceTest {
+class RedisServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private RedisService redisService;

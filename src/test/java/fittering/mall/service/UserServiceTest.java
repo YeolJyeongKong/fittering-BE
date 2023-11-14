@@ -1,5 +1,6 @@
 package fittering.mall.service;
 
+import fittering.mall.config.IntegrationTestSupport;
 import fittering.mall.controller.dto.request.RequestRecommendProductDto;
 import fittering.mall.controller.dto.request.RequestUserDto;
 import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
@@ -13,12 +14,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import fittering.mall.domain.entity.*;
 import fittering.mall.repository.*;
@@ -29,10 +28,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-@ActiveProfiles("test")
 @Transactional
-@SpringBootTest
-class UserServiceTest {
+class UserServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private UserService userService;

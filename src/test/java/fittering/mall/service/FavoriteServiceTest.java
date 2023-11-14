@@ -1,5 +1,6 @@
 package fittering.mall.service;
 
+import fittering.mall.config.IntegrationTestSupport;
 import fittering.mall.controller.dto.response.ResponseMallWithProductDto;
 import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
 import fittering.mall.repository.FavoriteRepository;
@@ -13,23 +14,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import fittering.mall.domain.RestPage;
 import fittering.mall.service.dto.MallDto;
 import fittering.mall.domain.entity.*;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-@ActiveProfiles("test")
 @Transactional
-@SpringBootTest
-class FavoriteServiceTest {
+class FavoriteServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private FavoriteService favoriteService;
