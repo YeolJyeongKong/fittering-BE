@@ -32,34 +32,34 @@ import static org.assertj.core.api.Assertions.*;
 class FavoriteServiceTest {
 
     @Autowired
-    FavoriteService favoriteService;
+    private FavoriteService favoriteService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    MallService mallService;
+    private MallService mallService;
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
     @Autowired
-    CategoryService categoryService;
+    private CategoryService categoryService;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    MallRepository mallRepository;
+    private MallRepository mallRepository;
 
     @Autowired
-    FavoriteRepository favoriteRepository;
+    private FavoriteRepository favoriteRepository;
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @AfterEach
     void tearDown() {

@@ -29,10 +29,10 @@ class OAuthServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    MeasurementRepository measurementRepository;
+    private MeasurementRepository measurementRepository;
 
     @Autowired
-    BCryptPasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder passwordEncoder;
 
     @AfterEach
     void tearDown() {

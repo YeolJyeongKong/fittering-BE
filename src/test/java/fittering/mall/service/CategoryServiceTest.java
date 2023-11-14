@@ -23,13 +23,16 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CategoryServiceTest {
 
     @Autowired
-    CategoryService categoryService;
+    private CategoryService categoryService;
+
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
+
     @Autowired
-    SubCategoryRepository subCategoryRepository;
+    private SubCategoryRepository subCategoryRepository;
+
     @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @AfterEach
     void tearDown() {

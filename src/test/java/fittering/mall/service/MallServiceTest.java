@@ -32,28 +32,28 @@ import static org.assertj.core.api.Assertions.*;
 class MallServiceTest {
 
     @Autowired
-    MallService mallService;
+    private MallService mallService;
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
     @Autowired
-    CategoryService categoryService;
+    private CategoryService categoryService;
 
     @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
-    MallRepository mallRepository;
+    private MallRepository mallRepository;
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    SubCategoryRepository subCategoryRepository;
+    private SubCategoryRepository subCategoryRepository;
 
 
     @AfterEach

@@ -51,7 +51,7 @@ class SearchServiceTest {
     private SubCategoryRepository subCategoryRepository;
 
     @Autowired
-    TopRepository topRepository;
+    private TopRepository topRepository;
 
     @Autowired
     private MallRepository mallRepository;

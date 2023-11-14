@@ -28,28 +28,28 @@ import static org.assertj.core.api.Assertions.*;
 class RankServiceTest {
 
     @Autowired
-    RankService rankService;
+    private RankService rankService;
 
     @Autowired
-    MallService mallService;
+    private MallService mallService;
 
     @Autowired
-    RedisService redisService;
+    private RedisService redisService;
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
     @Autowired
-    CategoryService categoryService;
+    private CategoryService categoryService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    RankRepository rankRepository;
+    private RankRepository rankRepository;
 
     @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @AfterEach
     void tearDown() {

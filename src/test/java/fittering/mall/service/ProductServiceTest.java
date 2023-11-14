@@ -36,67 +36,67 @@ import static org.assertj.core.api.Assertions.*;
 class ProductServiceTest {
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
     @Autowired
-    CategoryService categoryService;
+    private CategoryService categoryService;
 
     @Autowired
-    MallService mallService;
+    private MallService mallService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    RankService rankService;
+    private RankService rankService;
 
     @Autowired
-    RedisService redisService;
+    private RedisService redisService;
 
     @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
 
     @Autowired
-    MallRepository mallRepository;
+    private MallRepository mallRepository;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     @Autowired
-    SubCategoryRepository subCategoryRepository;
+    private SubCategoryRepository subCategoryRepository;
 
     @Autowired
-    SizeRepository sizeRepository;
+    private SizeRepository sizeRepository;
 
     @Autowired
-    OuterRepository outerRepository;
+    private OuterRepository outerRepository;
 
     @Autowired
-    TopRepository topRepository;
+    private TopRepository topRepository;
 
     @Autowired
-    DressRepository dressRepository;
+    private DressRepository dressRepository;
 
     @Autowired
-    BottomRepository bottomRepository;
+    private BottomRepository bottomRepository;
 
     @Autowired
-    RankRepository rankRepository;
+    private RankRepository rankRepository;
 
     @Autowired
-    RecentRecommendationRepository recentRecommendationRepository;
+    private RecentRecommendationRepository recentRecommendationRepository;
 
     @Autowired
-    UserRecommendationRepository userRecommendationRepository;
+    private UserRecommendationRepository userRecommendationRepository;
 
     @Autowired
-    ProductDescriptionRepository productDescriptionRepository;
+    private ProductDescriptionRepository productDescriptionRepository;
 
     @AfterEach
     void tearDown() {

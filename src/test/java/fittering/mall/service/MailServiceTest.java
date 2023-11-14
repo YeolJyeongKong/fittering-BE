@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 class MailServiceTest {
 
     @Mock
-    JavaMailSender mailSender;
+    private JavaMailSender mailSender;
 
     @InjectMocks
     private MailService mailService;
