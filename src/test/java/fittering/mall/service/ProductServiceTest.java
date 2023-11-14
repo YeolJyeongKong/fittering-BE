@@ -292,16 +292,20 @@ class ProductServiceTest {
         productService.save(createProduct(3, bottomCategory, bottomSubCategory, mall));
 
         //when
-        List<ResponseProductCategoryDto> target = productService.multipleProductCountWithCategory();
+        ResponseProductAllCategoryDto target = productService.multipleProductCountWithCategory();
 
         //then
-        assertThat(target).hasSize(4)
-                .extracting("category", "count")
+        assertThat(target.getMain()).hasSize(2)
+                .extracting("categoryId", "count")
                 .containsExactlyInAnyOrder(
-                        tuple(topCategory.getName(), 1L),
-                        tuple(bottomCategory.getName(), 2L),
-                        tuple(topSubCategory.getName(), 1L),
-                        tuple(bottomSubCategory.getName(), 2L)
+                        tuple(topCategory.getId(), 1L),
+                        tuple(bottomCategory.getId(), 2L)
+                );
+        assertThat(target.getSub()).hasSize(2)
+                .extracting("categoryId", "count")
+                .containsExactlyInAnyOrder(
+                        tuple(topSubCategory.getId(), 1L),
+                        tuple(bottomSubCategory.getId(), 2L)
                 );
     }
 
@@ -320,16 +324,20 @@ class ProductServiceTest {
         productService.save(createProduct(3, bottomCategory, bottomSubCategory, mall));
 
         //when
-        List<ResponseProductCategoryDto> target = productService.productCountWithCategoryOfMall(mall.getId());
+        ResponseProductAllCategoryDto target = productService.productCountWithCategoryOfMall(mall.getId());
 
         //then
-        assertThat(target).hasSize(4)
-                .extracting("category", "count")
+        assertThat(target.getMain()).hasSize(2)
+                .extracting("categoryId", "count")
                 .containsExactlyInAnyOrder(
-                        tuple(topCategory.getName(), 1L),
-                        tuple(bottomCategory.getName(), 2L),
-                        tuple(topSubCategory.getName(), 1L),
-                        tuple(bottomSubCategory.getName(), 2L)
+                        tuple(topCategory.getId(), 1L),
+                        tuple(bottomCategory.getId(), 2L)
+                );
+        assertThat(target.getSub()).hasSize(2)
+                .extracting("categoryId", "count")
+                .containsExactlyInAnyOrder(
+                        tuple(topSubCategory.getId(), 1L),
+                        tuple(bottomSubCategory.getId(), 2L)
                 );
     }
 

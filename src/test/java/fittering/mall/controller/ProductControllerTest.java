@@ -4,11 +4,13 @@ import fittering.mall.config.ControllerTestSupport;
 import fittering.mall.config.WithCustomMockUser;
 import fittering.mall.controller.dto.request.RequestProductDetailDto;
 import fittering.mall.controller.dto.response.ResponseOuterDto;
+import fittering.mall.controller.dto.response.ResponseProductAllCategoryDto;
 import fittering.mall.controller.dto.response.ResponseProductCategoryDto;
 import fittering.mall.controller.dto.response.ResponseProductPreviewDto;
 import fittering.mall.domain.RestPage;
 import fittering.mall.domain.entity.Mall;
 import fittering.mall.domain.entity.Product;
+import fittering.mall.service.CategoryService;
 import fittering.mall.service.dto.ProductParamDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -607,12 +609,20 @@ class ProductControllerTest extends ControllerTestSupport {
     @WithCustomMockUser
     void getCountOfCategory() throws Exception {
         //given
-        ResponseProductCategoryDto countOfProducts = ResponseProductCategoryDto.builder()
-                .category("bottom")
+        ResponseProductCategoryDto productCountOfMainCategory = ResponseProductCategoryDto.builder()
+                .categoryId(1L)
                 .count(1L)
                 .build();
+        ResponseProductCategoryDto productCountOfSubCategory = ResponseProductCategoryDto.builder()
+                .categoryId(1L)
+                .count(1L)
+                .build();
+        ResponseProductAllCategoryDto productCountOfMainAndSubCategory = ResponseProductAllCategoryDto.builder()
+                .main(List.of(productCountOfMainCategory))
+                .sub(List.of(productCountOfSubCategory))
+                .build();
 
-        when(productService.multipleProductCountWithCategory()).thenReturn(List.of(countOfProducts));
+        when(productService.multipleProductCountWithCategory()).thenReturn(productCountOfMainAndSubCategory);
 
         //when //then
         mockMvc.perform(
@@ -696,12 +706,20 @@ class ProductControllerTest extends ControllerTestSupport {
     void getCountOfCategoryOnMall() throws Exception {
         //given
         Long mallId = 1L;
-        ResponseProductCategoryDto countOfProducts = ResponseProductCategoryDto.builder()
-                .category("bottom")
+        ResponseProductCategoryDto productCountOfMainCategory = ResponseProductCategoryDto.builder()
+                .categoryId(1L)
                 .count(1L)
                 .build();
+        ResponseProductCategoryDto productCountOfSubCategory = ResponseProductCategoryDto.builder()
+                .categoryId(1L)
+                .count(1L)
+                .build();
+        ResponseProductAllCategoryDto productCountOfMainAndSubCategory = ResponseProductAllCategoryDto.builder()
+                .main(List.of(productCountOfMainCategory))
+                .sub(List.of(productCountOfSubCategory))
+                .build();
 
-        when(productService.productCountWithCategoryOfMall(mallId)).thenReturn(List.of(countOfProducts));
+        when(productService.productCountWithCategoryOfMall(mallId)).thenReturn(productCountOfMainAndSubCategory);
 
         //when //then
         mockMvc.perform(
