@@ -1,6 +1,7 @@
 package fittering.mall.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fittering.mall.config.auth.domain.Oauth2UserInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -9,12 +10,19 @@ import lombok.Getter;
 import lombok.NonNull;
 import org.hibernate.validator.constraints.Length;
 import fittering.mall.service.dto.UserDto;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static jakarta.persistence.FetchType.*;
 
@@ -22,7 +30,7 @@ import static jakarta.persistence.FetchType.*;
 @Getter
 @Builder
 @AllArgsConstructor
-public class User extends BaseEntity {
+public class User extends BaseEntity implements UserDetails, OAuth2User {
 
     @Id @GeneratedValue
     @Column(name = "user_id")
@@ -98,7 +106,14 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", fetch = LAZY)
     private List<RecentRecommendation> recentRecommendations = new ArrayList<>();
 
-    protected User() {
+    @Transient
+    private Oauth2UserInfo oAuth2UserInfo;
+
+    public User() {
+    }
+
+    public User(Oauth2UserInfo oAuth2UserInfo) {
+        this.oAuth2UserInfo = oAuth2UserInfo;
     }
 
     public void update(UserDto userDto) {
@@ -145,5 +160,52 @@ public class User extends BaseEntity {
         if (age <= 33) return 3;
         if (age <= 39) return 4;
         return 5;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return oAuth2UserInfo.getAttributes();
+    }
+
+//    @Override
+//    public String getPassword() {
+//        return user.getPassword();
+//    }
+
+//    @Override
+//    public String getUsername() {
+//        return username;
+//    }
+
+    @Override
+    public String getName() {
+        return oAuth2UserInfo.getProviderId();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

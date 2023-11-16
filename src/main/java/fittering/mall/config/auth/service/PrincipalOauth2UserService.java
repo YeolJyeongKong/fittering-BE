@@ -1,7 +1,7 @@
-package fittering.mall.config.auth;
+package fittering.mall.config.auth.service;
 
+import fittering.mall.config.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -23,7 +23,6 @@ import java.util.UUID;
 
 import static fittering.mall.domain.entity.User.getAgeRange;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
