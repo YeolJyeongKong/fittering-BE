@@ -1,5 +1,6 @@
-package fittering.mall.config.auth;
+package fittering.mall.config.auth.service;
 
+import fittering.mall.config.auth.PrincipalDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

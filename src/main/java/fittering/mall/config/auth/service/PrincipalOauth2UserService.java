@@ -1,5 +1,6 @@
-package fittering.mall.config.auth;
+package fittering.mall.config.auth.service;
 
+import fittering.mall.config.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
