@@ -1,4 +1,4 @@
-package fittering.mall.config.auth;
+package fittering.mall.config.auth.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,7 +32,7 @@ public class CustomUserDetailService implements UserDetailsService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             grantedAuthorities.add(new SimpleGrantedAuthority("USER"));
-            return new PrincipalDetails(user);
+            return user;
         }
         // DB에 정보가 존재하지 않으므로 exception 호출
         throw new UsernameNotFoundException("user doesn't exist, email : " + email);
