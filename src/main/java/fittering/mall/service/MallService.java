@@ -65,14 +65,15 @@ public class MallService {
         return responseMallNameAndIdList;
     }
 
-    public List<ResponseMallWithProductDto> findAll() {
+    public List<ResponseMallWithProductDto> findAll(Long userId) {
         List<ResponseMallWithProductDto> responseMallWithProductDtoList = new ArrayList<>();
         mallRepository.findAll().forEach(mall -> {
             List<Product> products = mall.getProducts();
             List<ResponseMallRankProductDto> productDtos = new ArrayList<>();
 
             getProductDtos(products, productDtos);
-            responseMallWithProductDtoList.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, 0, false));
+            Boolean isFavorite = favoriteRepository.isUserFavoriteMall(userId, mall.getId());
+            responseMallWithProductDtoList.add(MallMapper.INSTANCE.toResponseMallWithProductDto(mall, productDtos, 0, isFavorite));
         });
         return responseMallWithProductDtoList;
     }

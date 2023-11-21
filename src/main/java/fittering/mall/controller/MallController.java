@@ -76,9 +76,9 @@ public class MallController {
 
     @Operation(summary = "쇼핑몰 전체 리스트 조회")
     @ApiResponse(responseCode = "200", description = "SUCCESS", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ResponseMallWithProductDto.class))))
-    @GetMapping("/malls/preview/list")
-    public ResponseEntity<?> mallList() {
-        List<ResponseMallWithProductDto> mallList = mallService.findAll();
+    @GetMapping("/auth/malls/preview/list")
+    public ResponseEntity<?> mallList(@AuthenticationPrincipal User user) {
+        List<ResponseMallWithProductDto> mallList = mallService.findAll(user.getId());
         return new ResponseEntity<>(mallList, HttpStatus.OK);
     }
 

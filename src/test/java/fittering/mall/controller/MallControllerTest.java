@@ -204,11 +204,11 @@ class MallControllerTest extends ControllerTestSupport {
                 .name("열졍콩몰2")
                 .build();
 
-        when(mallService.findAll()).thenReturn(List.of(mall1, mall2));
+        when(mallService.findAll(1L)).thenReturn(List.of(mall1, mall2));
 
         //when //then
         mockMvc.perform(
-                        get("/api/v1/malls/preview/list")
+                        get("/api/v1/auth/malls/preview/list")
                                 .with(csrf())
                 )
                 .andDo(print())
