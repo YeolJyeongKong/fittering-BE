@@ -219,7 +219,7 @@ class MallServiceTest extends IntegrationTestSupport {
         Mall savedMall3 = mallService.save(createMall());
 
         //when
-        List<ResponseMallWithProductDto> target = mallService.findAll();
+        List<ResponseMallWithProductDto> target = mallService.findAll(1L);
 
         //then
         assertThat(target).hasSize(3)
