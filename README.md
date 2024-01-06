@@ -105,7 +105,7 @@ src
   + ➰
     - [TDD, CI/CD #8](https://github.com/YeolJyeongKong/fittering-BE/pull/8)
     - [CD : docker compose 등록 #14](https://github.com/YeolJyeongKong/fittering-BE/pull/14)
-    - [Github Actions : 무중단 배포 설정 완료 #17](https://github.com/YeolJyeongKong/fittering-BE/pull/17)
+    - [Github Actions : 자동화 배포 설정 완료 #17](https://github.com/YeolJyeongKong/fittering-BE/pull/17)
 
 ### Swagger
 팀 내 API 문서 공유를 위해 **Swagger**를 적용했습니다.<br>
